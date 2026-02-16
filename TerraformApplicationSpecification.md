@@ -6,7 +6,7 @@
 
 ## Overview
 
-This specification defines the complete Terraform configuration to build a Windows 365-compatible developer image containing OpenClaw, Claude Code, and their full dependency chain. The infrastructure uses a single resource group and Azure VM Image Builder (AIB) to produce versioned images in an Azure Compute Gallery. The solution is manually invoked via `terraform apply` — there is no CI/CD pipeline.
+This specification defines the complete Terraform configuration to build a Windows 365-compatible developer image containing OpenClaw, Claude Code, OpenSpec, and their full dependency chain. The infrastructure uses a single resource group and Azure VM Image Builder (AIB) to produce versioned images in an Azure Compute Gallery. The solution is manually invoked via `terraform apply` — there is no CI/CD pipeline.
 
 ### What This Deploys
 
@@ -550,7 +550,7 @@ locals {
       restartTimeout    = "10m"
       restartCheckCommand = "powershell -command \"node --version; python --version\""
     },
-    # ── Phase 2: Developer Tools (VS Code, Git, GitHub Desktop, PowerShell 7) ──
+    # ── Phase 2: Developer Tools (VS Code, Git, GitHub Desktop) ──
     {
       type        = "PowerShell"
       name        = "InstallDevTools"
@@ -577,7 +577,7 @@ locals {
 
         # ═══ VISUAL STUDIO CODE ═══
         Write-Host "=== Installing Visual Studio Code (System) ==="
-        $VSCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64/stable"
+        $VSCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64-system/stable"
         $VSCodeInstaller = "$env:TEMP\VSCodeSetup-x64.exe"
         Get-InstallerWithRetry -Uri $VSCodeUrl -OutFile $VSCodeInstaller
 
@@ -620,7 +620,7 @@ locals {
         PWSH
       ]
     },
-    # ── Phase 3: AI Agents (OpenClaw + Claude Code) ──
+    # ── Phase 3: AI Agents (OpenClaw + Claude Code + OpenSpec) ──
     {
       type        = "PowerShell"
       name        = "InstallAIAgents"
@@ -708,6 +708,7 @@ locals {
             npmVersion      = (npm --version 2>&1).ToString()
             pythonVersion   = (python --version 2>&1).ToString()
             gitVersion      = (git --version 2>&1).ToString()
+            pwshVersion     = (pwsh --version 2>&1).ToString()
             openclawVersion = (openclaw --version 2>&1).ToString()
             claudeVersion   = (claude --version 2>&1).ToString()
             openspecVersion = (openspec --version 2>&1).ToString()
@@ -1195,7 +1196,7 @@ Remove-AzGalleryImageVersion `
 |---|---|
 | API keys baked into image | Never. Each user manages their own ANTHROPIC_API_KEY after login. |
 | AI agent runs as SYSTEM | OpenClaw runs in user context (Active Setup + user-level startup). Do not register as a SYSTEM service. |
-| Supply chain (npm packages) | Pinned to specific versions (`openclaw@${var.openclaw_version}`, `openspec@${var.openspec_version}`). npm audit runs during build and fails on high/critical vulnerabilities. |
+| Supply chain (npm packages) | Pinned to specific versions (`openclaw@${var.openclaw_version}`, `@anthropic-ai/claude-code@${var.claude_code_version}`, `openspec@${var.openspec_version}`). npm audit runs during build and fails on high/critical vulnerabilities. |
 | SBOM | Software Bill of Materials generated during build and stored at `C:\ProgramData\ImageBuild\sbom-*.json`. |
 | Build script integrity | Scripts are inline in the Terraform configuration — no external storage dependencies. Changes are tracked via source control. |
 | Image sprawl / cost | `end_of_life_date` set to 90 days from build. Retain only 3 versions. Tear down build infrastructure after each build. |
