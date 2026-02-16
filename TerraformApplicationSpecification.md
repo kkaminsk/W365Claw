@@ -12,7 +12,7 @@ This specification defines the complete Terraform configuration to build a Windo
 
 1. **Azure Compute Gallery** with a Windows 365-compliant image definition
 2. **User-assigned managed identity** with least-privilege RBAC for AIB
-3. **Azure VM Image Builder template** with inline PowerShell customizers that install Node.js, Python, PowerShell 7, VS Code, Git, GitHub Desktop, OpenClaw, Claude Code, and enterprise configuration
+3. **Azure VM Image Builder template** with inline PowerShell customizers that install Node.js, Python, PowerShell 7, VS Code, Git, GitHub Desktop, OpenClaw, Claude Code, OpenSpec, and enterprise configuration
 
 ### What Is Out of Scope
 
@@ -255,7 +255,7 @@ variable "source_image_version" {
 variable "node_version" {
   description = "Node.js version to install (must be >= 22)"
   type        = string
-  default     = "v22.13.0"
+  default     = "v24.13.1"
 
   validation {
     condition     = can(regex("^v(2[2-9]|[3-9][0-9])\\.\\d+\\.\\d+$", var.node_version))
@@ -266,13 +266,19 @@ variable "node_version" {
 variable "python_version" {
   description = "Python version to install"
   type        = string
-  default     = "3.12.1"
+  default     = "3.14.3"
 }
 
 variable "git_version" {
   description = "Git for Windows version to install"
   type        = string
-  default     = "2.43.0"
+  default     = "2.53.0"
+}
+
+variable "pwsh_version" {
+  description = "PowerShell 7 (LTS) version to install"
+  type        = string
+  default     = "7.4.13"
 }
 
 variable "openclaw_version" {
@@ -285,6 +291,12 @@ variable "claude_code_version" {
   description = "Claude Code (@anthropic-ai/claude-code) npm package version to install"
   type        = string
   default     = "2.1.42"
+}
+
+variable "openspec_version" {
+  description = "OpenSpec (@fission-ai/openspec) npm package version to install"
+  type        = string
+  default     = "latest"
 }
 
 # ─── OpenClaw Configuration ───────────────────────────────────────────────
@@ -512,9 +524,10 @@ locals {
         Write-Host "[VERIFY] pip: $(python -m pip --version)"
 
         # ═══ POWERSHELL 7 ═══
-        Write-Host "=== Installing PowerShell 7 ==="
-        $PwshUrl = "https://github.com/PowerShell/PowerShell/releases/latest/download/PowerShell-7.4.7-win-x64.msi"
-        $PwshInstaller = "$env:TEMP\PowerShell-7-x64.msi"
+        $PwshVersion = "${var.pwsh_version}"
+        Write-Host "=== Installing PowerShell $PwshVersion ==="
+        $PwshUrl = "https://github.com/PowerShell/PowerShell/releases/download/v$PwshVersion/PowerShell-$PwshVersion-win-x64.msi"
+        $PwshInstaller = "$env:TEMP\PowerShell-$PwshVersion-win-x64.msi"
         Get-InstallerWithRetry -Uri $PwshUrl -OutFile $PwshInstaller
 
         $proc = Start-Process -FilePath "msiexec.exe" `
@@ -659,6 +672,16 @@ locals {
         if (-not $claudeCheck) { Write-Error "claude not found in PATH after installation"; exit 1 }
         Write-Host "[VERIFY] Claude Code: $(claude --version 2>&1)"
 
+        # ═══ OPENSPEC ═══
+        Write-Host "=== Installing OpenSpec ${var.openspec_version} (global) ==="
+        npm install -g @fission-ai/openspec@${var.openspec_version} 2>&1 | Write-Host
+        if ($LASTEXITCODE -ne 0) { Write-Error "OpenSpec npm install failed ($LASTEXITCODE)"; exit 1 }
+        Update-SessionEnvironment
+
+        $openspecCheck = Get-Command openspec -ErrorAction SilentlyContinue
+        if (-not $openspecCheck) { Write-Error "openspec not found in PATH after installation"; exit 1 }
+        Write-Host "[VERIFY] OpenSpec: $(openspec --version 2>&1)"
+
         # ═══ NPM AUDIT ═══
         Write-Host "=== Running npm audit on global packages ==="
         $auditResult = npm audit --global --audit-level=high 2>&1
@@ -687,6 +710,7 @@ locals {
             gitVersion      = (git --version 2>&1).ToString()
             openclawVersion = (openclaw --version 2>&1).ToString()
             claudeVersion   = (claude --version 2>&1).ToString()
+            openspecVersion = (openspec --version 2>&1).ToString()
         } | ConvertTo-Json -Depth 3
         Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
         Write-Host "[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"
@@ -948,8 +972,10 @@ module "image_builder" {
   node_version           = var.node_version
   python_version         = var.python_version
   git_version            = var.git_version
+  pwsh_version           = var.pwsh_version
   openclaw_version       = var.openclaw_version
   claude_code_version    = var.claude_code_version
+  openspec_version       = var.openspec_version
   openclaw_default_model = var.openclaw_default_model
   openclaw_gateway_port  = var.openclaw_gateway_port
   tags                   = var.tags
@@ -1068,11 +1094,13 @@ source_image_sku       = "win11-24h2-ent"
 source_image_version   = "26100.2894.250113"
 
 # Software Versions (pinned)
-node_version          = "v22.13.0"
-python_version        = "3.12.1"
-git_version           = "2.43.0"
+node_version          = "v24.13.1"
+python_version        = "3.14.3"
+git_version           = "2.53.0"
+pwsh_version          = "7.4.13"
 openclaw_version      = "2026.2.14"
 claude_code_version   = "2.1.42"
+openspec_version      = "latest"
 
 # OpenClaw
 openclaw_default_model = "anthropic/claude-opus-4-6"
@@ -1167,7 +1195,7 @@ Remove-AzGalleryImageVersion `
 |---|---|
 | API keys baked into image | Never. Each user manages their own ANTHROPIC_API_KEY after login. |
 | AI agent runs as SYSTEM | OpenClaw runs in user context (Active Setup + user-level startup). Do not register as a SYSTEM service. |
-| Supply chain (npm packages) | Pinned to specific versions (`openclaw@${var.openclaw_version}`). npm audit runs during build and fails on high/critical vulnerabilities. |
+| Supply chain (npm packages) | Pinned to specific versions (`openclaw@${var.openclaw_version}`, `openspec@${var.openspec_version}`). npm audit runs during build and fails on high/critical vulnerabilities. |
 | SBOM | Software Bill of Materials generated during build and stored at `C:\ProgramData\ImageBuild\sbom-*.json`. |
 | Build script integrity | Scripts are inline in the Terraform configuration — no external storage dependencies. Changes are tracked via source control. |
 | Image sprawl / cost | `end_of_life_date` set to 90 days from build. Retain only 3 versions. Tear down build infrastructure after each build. |
@@ -1180,12 +1208,13 @@ Remove-AzGalleryImageVersion `
 After the image build completes and before importing into Windows 365:
 
 - [ ] Image version appears in ACG with correct replication status
-- [ ] `node --version` returns v22+ (test by creating a VM from the image)
-- [ ] `python --version` returns 3.12+
-- [ ] `pwsh --version` returns PowerShell 7+
+- [ ] `node --version` returns v24+ (test by creating a VM from the image)
+- [ ] `python --version` returns 3.14+
+- [ ] `pwsh --version` returns PowerShell 7.4+
 - [ ] `git --version` returns expected version
 - [ ] `openclaw --version` returns expected version
 - [ ] `claude --version` returns expected version
+- [ ] `openspec --version` returns expected version
 - [ ] VS Code installed in `C:\Program Files\Microsoft VS Code`
 - [ ] `C:\ProgramData\ClaudeCode\managed-settings.json` exists with `defaultMode: "allow"`
 - [ ] `C:\ProgramData\OpenClaw\template-config.json` exists with model `claude-opus-4-6`
