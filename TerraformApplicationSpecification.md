@@ -995,11 +995,11 @@ output "next_steps" {
     ══════════════════════════════════════════════════════════════════
 
     1. VERIFY IMAGE VERSION
-       az sig image-version list \
-         --resource-group ${var.resource_group_name} \
-         --gallery-name ${var.gallery_name} \
-         --gallery-image-definition ${var.image_definition_name} \
-         --output table
+       Get-AzGalleryImageVersion `
+         -ResourceGroupName "${var.resource_group_name}" `
+         -GalleryName "${var.gallery_name}" `
+         -GalleryImageDefinitionName "${var.image_definition_name}" |
+         Format-Table Name, ProvisioningState, PublishingProfile
 
     2. TEAR DOWN BUILD INFRASTRUCTURE (cost optimization)
        Keep only the gallery and image — destroy everything else:
@@ -1094,14 +1094,14 @@ tags = {
 
 ### First Deployment
 
-```bash
-cd terraform
+```powershell
+Set-Location terraform
 
 # Initialise (local backend — no remote state configuration needed)
 terraform init
 
 # Plan
-terraform plan -var-file="terraform.tfvars" -out=tfplan
+terraform plan -var-file="terraform.tfvars" -out tfplan
 
 # Apply (deploys infra + triggers image build)
 terraform apply tfplan
@@ -1112,16 +1112,16 @@ terraform destroy
 
 ### Version Bump (New Image Build)
 
-```bash
+```powershell
 # Increment the version and build
-terraform apply \
-  -var="image_version=1.1.0" \
-  -var="exclude_from_latest=true"
+terraform apply `
+  -var='image_version=1.1.0' `
+  -var='exclude_from_latest=true'
 
 # After pilot validation, promote
-terraform apply \
-  -var="image_version=1.1.0" \
-  -var="exclude_from_latest=false"
+terraform apply `
+  -var='image_version=1.1.0' `
+  -var='exclude_from_latest=false'
 
 # Tear down build resources
 terraform destroy
@@ -1129,10 +1129,10 @@ terraform destroy
 
 ### Hotfix
 
-```bash
-terraform apply \
-  -var="image_version=1.0.1" \
-  -var="exclude_from_latest=false"
+```powershell
+terraform apply `
+  -var='image_version=1.0.1' `
+  -var='exclude_from_latest=false'
 
 # Tear down build resources
 terraform destroy
@@ -1142,20 +1142,21 @@ terraform destroy
 
 Retain only the 3 most recent image versions. Remove older versions to reduce storage costs:
 
-```bash
+```powershell
 # List all versions
-az sig image-version list \
-  --resource-group rg-w365-images \
-  --gallery-name acgW365Dev \
-  --gallery-image-definition W365-W11-25H2-ENU \
-  --output table
+Get-AzGalleryImageVersion `
+  -ResourceGroupName "rg-w365-images" `
+  -GalleryName "acgW365Dev" `
+  -GalleryImageDefinitionName "W365-W11-25H2-ENU" |
+  Format-Table Name, ProvisioningState, PublishingProfile
 
 # Delete a specific old version
-az sig image-version delete \
-  --resource-group rg-w365-images \
-  --gallery-name acgW365Dev \
-  --gallery-image-definition W365-W11-25H2-ENU \
-  --gallery-image-version 1.0.0
+Remove-AzGalleryImageVersion `
+  -ResourceGroupName "rg-w365-images" `
+  -GalleryName "acgW365Dev" `
+  -GalleryImageDefinitionName "W365-W11-25H2-ENU" `
+  -Name "1.0.0" `
+  -Force
 ```
 
 ---
