@@ -51,6 +51,7 @@ module "image_builder" {
   python_version         = var.python_version
   git_version            = var.git_version
   pwsh_version           = var.pwsh_version
+  azure_cli_version      = var.azure_cli_version
   openclaw_version       = var.openclaw_version
   claude_code_version    = var.claude_code_version
   openspec_version       = var.openspec_version

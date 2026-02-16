@@ -12,7 +12,7 @@ This specification defines the complete Terraform configuration to build a Windo
 
 1. **Azure Compute Gallery** with a Windows 365-compliant image definition
 2. **User-assigned managed identity** with least-privilege RBAC for AIB
-3. **Azure VM Image Builder template** with inline PowerShell customizers that install Node.js, Python, PowerShell 7, VS Code, Git, GitHub Desktop, OpenClaw, Claude Code, OpenSpec, and enterprise configuration
+3. **Azure VM Image Builder template** with inline PowerShell customizers that install Node.js, Python, PowerShell 7, VS Code, Git, GitHub Desktop, Azure CLI, OpenClaw, Claude Code, OpenSpec, and enterprise configuration
 
 ### What Is Out of Scope
 
@@ -279,6 +279,12 @@ variable "pwsh_version" {
   description = "PowerShell 7 (LTS) version to install"
   type        = string
   default     = "7.4.13"
+}
+
+variable "azure_cli_version" {
+  description = "Azure CLI version to install"
+  type        = string
+  default     = "2.83.0"
 }
 
 variable "openclaw_version" {
@@ -614,8 +620,22 @@ locals {
         if ($proc.ExitCode -ne 0) { Write-Error "GitHub Desktop installation failed ($($proc.ExitCode))"; exit 1 }
         Write-Host "[VERIFY] GitHub Desktop provisioner installed"
 
+        # ═══ AZURE CLI ═══
+        $AzCliVersion = "${var.azure_cli_version}"
+        Write-Host "=== Installing Azure CLI $AzCliVersion ==="
+        $AzCliUrl = "https://azcliprod.blob.core.windows.net/msi/azure-cli-$AzCliVersion-x64.msi"
+        $AzCliInstaller = "$env:TEMP\azure-cli-$AzCliVersion-x64.msi"
+        Get-InstallerWithRetry -Uri $AzCliUrl -OutFile $AzCliInstaller
+
+        $proc = Start-Process -FilePath "msiexec.exe" `
+            -ArgumentList "/i `"$AzCliInstaller`" /qn /norestart ALLUSERS=1" `
+            -Wait -PassThru
+        if ($proc.ExitCode -ne 0) { Write-Error "Azure CLI installation failed ($($proc.ExitCode))"; exit 1 }
+        Update-SessionEnvironment
+        Write-Host "[VERIFY] Azure CLI: $(az --version 2>&1 | Select-Object -First 1)"
+
         # ═══ CLEANUP ═══
-        Remove-Item -Path $VSCodeInstaller, $GitInstaller, $GHDesktopInstaller -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path $VSCodeInstaller, $GitInstaller, $GHDesktopInstaller, $AzCliInstaller -Force -ErrorAction SilentlyContinue
         Write-Host "=== Phase 2 Complete: Developer tools installed ==="
         PWSH
       ]
@@ -709,6 +729,7 @@ locals {
             pythonVersion   = (python --version 2>&1).ToString()
             gitVersion      = (git --version 2>&1).ToString()
             pwshVersion     = (pwsh --version 2>&1).ToString()
+            azCliVersion    = (az --version 2>&1 | Select-Object -First 1).ToString()
             openclawVersion = (openclaw --version 2>&1).ToString()
             claudeVersion   = (claude --version 2>&1).ToString()
             openspecVersion = (openspec --version 2>&1).ToString()
@@ -974,6 +995,7 @@ module "image_builder" {
   python_version         = var.python_version
   git_version            = var.git_version
   pwsh_version           = var.pwsh_version
+  azure_cli_version      = var.azure_cli_version
   openclaw_version       = var.openclaw_version
   claude_code_version    = var.claude_code_version
   openspec_version       = var.openspec_version
@@ -1099,6 +1121,7 @@ node_version          = "v24.13.1"
 python_version        = "3.14.3"
 git_version           = "2.53.0"
 pwsh_version          = "7.4.13"
+azure_cli_version     = "2.83.0"
 openclaw_version      = "2026.2.14"
 claude_code_version   = "2.1.42"
 openspec_version      = "latest"
@@ -1213,6 +1236,7 @@ After the image build completes and before importing into Windows 365:
 - [ ] `python --version` returns 3.14+
 - [ ] `pwsh --version` returns PowerShell 7.4+
 - [ ] `git --version` returns expected version
+- [ ] `az --version` returns expected Azure CLI version
 - [ ] `openclaw --version` returns expected version
 - [ ] `claude --version` returns expected version
 - [ ] `openspec --version` returns expected version

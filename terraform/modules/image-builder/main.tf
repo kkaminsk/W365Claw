@@ -170,8 +170,22 @@ locals {
         if ($proc.ExitCode -ne 0) { Write-Error "GitHub Desktop installation failed ($($proc.ExitCode))"; exit 1 }
         Write-Host "[VERIFY] GitHub Desktop provisioner installed"
 
+        # ═══ AZURE CLI ═══
+        $AzCliVersion = "${var.azure_cli_version}"
+        Write-Host "=== Installing Azure CLI $AzCliVersion ==="
+        $AzCliUrl = "https://azcliprod.blob.core.windows.net/msi/azure-cli-$AzCliVersion-x64.msi"
+        $AzCliInstaller = "$env:TEMP\azure-cli-$AzCliVersion-x64.msi"
+        Get-InstallerWithRetry -Uri $AzCliUrl -OutFile $AzCliInstaller
+
+        $proc = Start-Process -FilePath "msiexec.exe" `
+            -ArgumentList "/i `"$AzCliInstaller`" /qn /norestart ALLUSERS=1" `
+            -Wait -PassThru
+        if ($proc.ExitCode -ne 0) { Write-Error "Azure CLI installation failed ($($proc.ExitCode))"; exit 1 }
+        Update-SessionEnvironment
+        Write-Host "[VERIFY] Azure CLI: $(az --version 2>&1 | Select-Object -First 1)"
+
         # ═══ CLEANUP ═══
-        Remove-Item -Path $VSCodeInstaller, $GitInstaller, $GHDesktopInstaller -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path $VSCodeInstaller, $GitInstaller, $GHDesktopInstaller, $AzCliInstaller -Force -ErrorAction SilentlyContinue
         Write-Host "=== Phase 2 Complete: Developer tools installed ==="
         PWSH
       ]
@@ -262,6 +276,7 @@ locals {
             pythonVersion   = (python --version 2>&1).ToString()
             gitVersion      = (git --version 2>&1).ToString()
             pwshVersion     = (pwsh --version 2>&1).ToString()
+            azCliVersion    = (az --version 2>&1 | Select-Object -First 1).ToString()
             openclawVersion = (openclaw --version 2>&1).ToString()
             claudeVersion   = (claude --version 2>&1).ToString()
             openspecVersion = (openspec --version 2>&1).ToString()

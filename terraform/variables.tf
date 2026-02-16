@@ -163,6 +163,12 @@ variable "pwsh_version" {
   default     = "7.4.13"
 }
 
+variable "azure_cli_version" {
+  description = "Azure CLI version to install"
+  type        = string
+  default     = "2.83.0"
+}
+
 variable "openclaw_version" {
   description = "OpenClaw npm package version to install"
   type        = string

@@ -88,6 +88,11 @@ variable "pwsh_version" {
   type        = string
 }
 
+variable "azure_cli_version" {
+  description = "Azure CLI version to install"
+  type        = string
+}
+
 variable "openclaw_version" {
   description = "OpenClaw npm package version"
   type        = string
