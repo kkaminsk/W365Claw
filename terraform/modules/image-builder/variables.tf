@@ -88,16 +88,6 @@ variable "pwsh_version" {
   type        = string
 }
 
-variable "vscode_version" {
-  description = "VS Code version to install (pinned for reproducibility)"
-  type        = string
-}
-
-variable "github_desktop_version" {
-  description = "GitHub Desktop version to install (pinned for reproducibility)"
-  type        = string
-}
-
 variable "openclaw_version" {
   description = "OpenClaw npm package version"
   type        = string
@@ -105,6 +95,11 @@ variable "openclaw_version" {
 
 variable "claude_code_version" {
   description = "Claude Code npm package version"
+  type        = string
+}
+
+variable "openspec_version" {
+  description = "OpenSpec npm package version"
   type        = string
 }
 

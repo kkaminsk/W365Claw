@@ -133,8 +133,7 @@ locals {
 
         # ═══ VISUAL STUDIO CODE ═══
         Write-Host "=== Installing Visual Studio Code (System) ==="
-        $VSCodeVersion = "${var.vscode_version}"
-        $VSCodeUrl = "https://update.code.visualstudio.com/$VSCodeVersion/win32-x64/stable"
+        $VSCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64-system/stable"
         $VSCodeInstaller = "$env:TEMP\VSCodeSetup-x64.exe"
         Get-InstallerWithRetry -Uri $VSCodeUrl -OutFile $VSCodeInstaller
 
@@ -161,8 +160,7 @@ locals {
 
         # ═══ GITHUB DESKTOP ═══
         Write-Host "=== Installing GitHub Desktop (Machine-Wide Provisioner) ==="
-        $GHDesktopVersion = "${var.github_desktop_version}"
-        $GHDesktopUrl = "https://github.com/desktop/desktop/releases/download/release-$GHDesktopVersion/GitHubDesktopSetup-x64.msi"
+        $GHDesktopUrl = "https://central.github.com/deployments/desktop/desktop/latest/GitHubDesktopSetup-x64.msi"
         $GHDesktopInstaller = "$env:TEMP\GitHubDesktop-x64.msi"
         Get-InstallerWithRetry -Uri $GHDesktopUrl -OutFile $GHDesktopInstaller
 
@@ -227,6 +225,16 @@ locals {
         if (-not $claudeCheck) { Write-Error "claude not found in PATH after installation"; exit 1 }
         Write-Host "[VERIFY] Claude Code: $(claude --version 2>&1)"
 
+        # ═══ OPENSPEC ═══
+        Write-Host "=== Installing OpenSpec ${var.openspec_version} (global) ==="
+        npm install -g @fission-ai/openspec@${var.openspec_version} 2>&1 | Write-Host
+        if ($LASTEXITCODE -ne 0) { Write-Error "OpenSpec npm install failed ($LASTEXITCODE)"; exit 1 }
+        Update-SessionEnvironment
+
+        $openspecCheck = Get-Command openspec -ErrorAction SilentlyContinue
+        if (-not $openspecCheck) { Write-Error "openspec not found in PATH after installation"; exit 1 }
+        Write-Host "[VERIFY] OpenSpec: $(openspec --version 2>&1)"
+
         # ═══ NPM AUDIT ═══
         Write-Host "=== Running npm audit on global packages ==="
         $auditResult = npm audit --global --audit-level=high 2>&1
@@ -253,8 +261,10 @@ locals {
             npmVersion      = (npm --version 2>&1).ToString()
             pythonVersion   = (python --version 2>&1).ToString()
             gitVersion      = (git --version 2>&1).ToString()
+            pwshVersion     = (pwsh --version 2>&1).ToString()
             openclawVersion = (openclaw --version 2>&1).ToString()
             claudeVersion   = (claude --version 2>&1).ToString()
+            openspecVersion = (openspec --version 2>&1).ToString()
         } | ConvertTo-Json -Depth 3
         Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
         Write-Host "[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"

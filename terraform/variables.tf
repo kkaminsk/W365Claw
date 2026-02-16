@@ -137,7 +137,7 @@ variable "source_image_version" {
 variable "node_version" {
   description = "Node.js version to install (must be >= 22)"
   type        = string
-  default     = "v22.13.0"
+  default     = "v24.13.1"
 
   validation {
     condition     = can(regex("^v(2[2-9]|[3-9][0-9])\\.\\d+\\.\\d+$", var.node_version))
@@ -148,31 +148,19 @@ variable "node_version" {
 variable "python_version" {
   description = "Python version to install"
   type        = string
-  default     = "3.12.1"
+  default     = "3.14.3"
 }
 
 variable "git_version" {
   description = "Git for Windows version to install"
   type        = string
-  default     = "2.43.0"
+  default     = "2.53.0"
 }
 
 variable "pwsh_version" {
-  description = "PowerShell 7 version to install"
+  description = "PowerShell 7 (LTS) version to install"
   type        = string
-  default     = "7.4.7"
-}
-
-variable "vscode_version" {
-  description = "VS Code version to install (pinned for reproducibility)"
-  type        = string
-  default     = "1.96.4"
-}
-
-variable "github_desktop_version" {
-  description = "GitHub Desktop version to install (pinned for reproducibility)"
-  type        = string
-  default     = "3.4.12"
+  default     = "7.4.13"
 }
 
 variable "openclaw_version" {
@@ -185,6 +173,12 @@ variable "claude_code_version" {
   description = "Claude Code (@anthropic-ai/claude-code) npm package version to install"
   type        = string
   default     = "2.1.42"
+}
+
+variable "openspec_version" {
+  description = "OpenSpec (@fission-ai/openspec) npm package version to install"
+  type        = string
+  default     = "latest"
 }
 
 # ─── OpenClaw Configuration ───────────────────────────────────────────────

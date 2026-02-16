@@ -51,10 +51,9 @@ module "image_builder" {
   python_version         = var.python_version
   git_version            = var.git_version
   pwsh_version           = var.pwsh_version
-  vscode_version         = var.vscode_version
-  github_desktop_version = var.github_desktop_version
   openclaw_version       = var.openclaw_version
   claude_code_version    = var.claude_code_version
+  openspec_version       = var.openspec_version
   openclaw_default_model = var.openclaw_default_model
   openclaw_gateway_port  = var.openclaw_gateway_port
   tags                   = var.tags
