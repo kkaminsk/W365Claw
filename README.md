@@ -35,12 +35,28 @@ openspec/
 ## Prerequisites
 
 - Terraform >= 1.5
+- Azure CLI >= 2.60 (for authentication)
+- Git >= 2.40
+- Az PowerShell module >= 12.0 (for post-build verification)
 - Azure subscription with these resource providers registered:
   - `Microsoft.Compute`
   - `Microsoft.VirtualMachineImages`
   - `Microsoft.Network`
   - `Microsoft.ManagedIdentity`
-- PowerShell with the `Az` module (for verification and cleanup commands)
+
+## Getting Started
+
+Run the prerequisite script to check and install everything automatically:
+
+```powershell
+# Interactive — prompts before each installation
+.\scripts\Initialize-BuildWorkstation.ps1
+
+# Non-interactive — installs everything without prompting
+.\scripts\Initialize-BuildWorkstation.ps1 -Force
+```
+
+The script checks all prerequisites, installs what's missing (via winget), logs into Azure, registers resource providers, and runs `terraform init`. See [ConfigurationSpecification.md](ConfigurationSpecification.md) for full details.
 
 ## Quick Start
 
