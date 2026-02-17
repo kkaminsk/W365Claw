@@ -8,7 +8,8 @@ The image installs and configures:
 
 - **Runtimes:** Node.js, Python, PowerShell 7
 - **Developer Tools:** VS Code, Git, GitHub Desktop
-- **AI Agents:** OpenClaw, Claude Code
+- **AI Agents:** OpenClaw, Claude Code, OpenAI Codex CLI
+- **AI Dev Tools:** GitHub Copilot (VS Code extension)
 - **Enterprise Config:** Claude Code managed settings, OpenClaw config hydration via Active Setup, Teams VDI optimisation
 - **Security:** SBOM generation, npm audit gate (fails on high/critical vulnerabilities)
 

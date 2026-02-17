@@ -15,7 +15,7 @@ W365Claw builds Windows 365 developer images using Terraform and Azure VM Image 
 
 ## Key Conventions
 
-- **PowerShell everywhere.** No Azure CLI (`az`), no bash. All commands, scripts, and documentation use PowerShell and the `Az` module.
+- **PowerShell everywhere.** All commands, scripts, and documentation use PowerShell and the `Az` module. Exception: Azure CLI (`az`) is used for authentication (`az login`), resource provider registration, and is shipped as an end-user tool in the image.
 - **Pinned versions.** All software (Node.js, Python, Git, PowerShell 7, VS Code, GitHub Desktop, OpenClaw, Claude Code) is version-pinned via Terraform variables.
 - **Least-privilege RBAC.** The AIB managed identity gets exactly 4 roles — no Contributor or Owner.
 - **Inline scripts only.** No storage accounts or external script URIs. Everything is embedded in the AIB template.

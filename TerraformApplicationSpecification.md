@@ -1,7 +1,5 @@
 # Terraform Application Specification: OpenClaw & Claude Code Developer Image for Windows 365
 
-*Companion to: [Building an OpenClaw and Claude Code Developer Image for Windows 365 Using Azure Compute Gallery](./BuildingOpenClawforWindows365UsingAzureComputeGallery.md)*
-
 ---
 
 ## Overview
@@ -86,10 +84,6 @@ terraform {
     azapi = {
       source  = "azure/azapi"
       version = "~> 2.0"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.6"
     }
     time = {
       source  = "hashicorp/time"
@@ -1296,5 +1290,3 @@ After Windows 365 provisioning:
 - [ ] Teams media optimisation is active
 
 ---
-
-*This specification is a companion to [Building an OpenClaw and Claude Code Developer Image for Windows 365 Using Azure Compute Gallery](./BuildingOpenClawforWindows365UsingAzureComputeGallery.md). Refer to the blog article for architectural rationale, the reprovisioning model, and detailed discussion of design decisions.*
