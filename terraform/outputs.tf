@@ -44,11 +44,11 @@ output "next_steps" {
          Format-Table Name, ProvisioningState, PublishingProfile
 
     2. TEAR DOWN BUILD INFRASTRUCTURE (cost optimization)
-       Keep only the gallery and image — destroy everything else:
-       terraform destroy
+       Remove the AIB template and build resources (gallery is protected):
+       .\scripts\Teardown-BuildResources.ps1
 
-       NOTE: The image version persists in the gallery independently
-       of the AIB template and other build resources.
+       NOTE: Do NOT run 'terraform destroy' — the gallery and image
+       definition have prevent_destroy = true and destroy will fail.
 
     3. IMPORT INTO WINDOWS 365 (Portal)
        Intune > Devices > Windows 365 > Custom images > Add

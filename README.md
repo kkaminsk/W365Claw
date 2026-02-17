@@ -73,7 +73,9 @@ terraform plan -var-file="terraform.tfvars" -out tfplan
 terraform apply tfplan
 
 # After build completes and image is verified, tear down build resources
-terraform destroy
+# NOTE: Do NOT run `terraform destroy` — gallery resources have prevent_destroy = true.
+# Use the targeted teardown script instead:
+..\scripts\Teardown-BuildResources.ps1
 ```
 
 ## Version Bump
@@ -118,6 +120,6 @@ The image definition includes all required feature flags:
 
 ## Cost
 
-All infrastructure (identity, AIB template, build VM) can be destroyed after the build. Only the gallery image version persists — and that's what Windows 365 provisioning policies consume.
+Build-time infrastructure (identity, AIB template, build VM) can be removed after the build. The gallery and image versions are protected by `prevent_destroy` and persist for Windows 365 provisioning.
 
-**Workflow:** `terraform apply` → wait for build (~60-90 min) → verify → `terraform destroy`
+**Workflow:** `terraform apply` → wait for build (~60-90 min) → verify → `.\scripts\Teardown-BuildResources.ps1`
