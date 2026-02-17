@@ -187,6 +187,12 @@ variable "openspec_version" {
   default     = "latest"
 }
 
+variable "codex_version" {
+  description = "OpenAI Codex CLI (@openai/codex) npm package version to install"
+  type        = string
+  default     = "0.101.0"
+}
+
 # ─── OpenClaw Configuration ───────────────────────────────────────────────
 
 variable "openclaw_default_model" {

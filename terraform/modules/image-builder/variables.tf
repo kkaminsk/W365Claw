@@ -108,6 +108,11 @@ variable "openspec_version" {
   type        = string
 }
 
+variable "codex_version" {
+  description = "OpenAI Codex CLI npm package version"
+  type        = string
+}
+
 variable "openclaw_default_model" {
   description = "Default LLM model for OpenClaw"
   type        = string

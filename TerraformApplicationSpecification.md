@@ -12,7 +12,7 @@ This specification defines the complete Terraform configuration to build a Windo
 
 1. **Azure Compute Gallery** with a Windows 365-compliant image definition
 2. **User-assigned managed identity** with least-privilege RBAC for AIB
-3. **Azure VM Image Builder template** with inline PowerShell customizers that install Node.js, Python, PowerShell 7, VS Code, Git, GitHub Desktop, Azure CLI, OpenClaw, Claude Code, OpenSpec, and enterprise configuration
+3. **Azure VM Image Builder template** with inline PowerShell customizers that install Node.js, Python, PowerShell 7, VS Code (with GitHub Copilot), Git, GitHub Desktop, Azure CLI, OpenClaw, Claude Code, OpenSpec, OpenAI Codex CLI, and enterprise configuration
 
 ### What Is Out of Scope
 
@@ -303,6 +303,12 @@ variable "openspec_version" {
   description = "OpenSpec (@fission-ai/openspec) npm package version to install"
   type        = string
   default     = "latest"
+}
+
+variable "codex_version" {
+  description = "OpenAI Codex CLI (@openai/codex) npm package version to install"
+  type        = string
+  default     = "0.101.0"
 }
 
 # ─── OpenClaw Configuration ───────────────────────────────────────────────
@@ -634,6 +640,18 @@ locals {
         Update-SessionEnvironment
         Write-Host "[VERIFY] Azure CLI: $(az --version 2>&1 | Select-Object -First 1)"
 
+        # ═══ GITHUB COPILOT (VS Code Extension) ═══
+        Write-Host "=== Installing GitHub Copilot VS Code Extension ==="
+        $codeBin = "C:\Program Files\Microsoft VS Code\bin\code.cmd"
+        if (Test-Path $codeBin) {
+            & $codeBin --install-extension GitHub.copilot --force 2>&1 | Write-Host
+            & $codeBin --install-extension GitHub.copilot-chat --force 2>&1 | Write-Host
+            Write-Host "[VERIFY] GitHub Copilot extensions installed"
+        } else {
+            Write-Error "VS Code not found at expected path — cannot install Copilot extension"
+            exit 1
+        }
+
         # ═══ CLEANUP ═══
         Remove-Item -Path $VSCodeInstaller, $GitInstaller, $GHDesktopInstaller, $AzCliInstaller -Force -ErrorAction SilentlyContinue
         Write-Host "=== Phase 2 Complete: Developer tools installed ==="
@@ -702,6 +720,16 @@ locals {
         if (-not $openspecCheck) { Write-Error "openspec not found in PATH after installation"; exit 1 }
         Write-Host "[VERIFY] OpenSpec: $(openspec --version 2>&1)"
 
+        # ═══ OPENAI CODEX CLI ═══
+        Write-Host "=== Installing OpenAI Codex CLI ${var.codex_version} (global) ==="
+        npm install -g @openai/codex@${var.codex_version} 2>&1 | Write-Host
+        if ($LASTEXITCODE -ne 0) { Write-Error "Codex CLI npm install failed ($LASTEXITCODE)"; exit 1 }
+        Update-SessionEnvironment
+
+        $codexCheck = Get-Command codex -ErrorAction SilentlyContinue
+        if (-not $codexCheck) { Write-Error "codex not found in PATH after installation"; exit 1 }
+        Write-Host "[VERIFY] Codex CLI: $(codex --version 2>&1)"
+
         # ═══ NPM AUDIT ═══
         Write-Host "=== Running npm audit on global packages ==="
         $auditResult = npm audit --global --audit-level=high 2>&1
@@ -733,6 +761,7 @@ locals {
             openclawVersion = (openclaw --version 2>&1).ToString()
             claudeVersion   = (claude --version 2>&1).ToString()
             openspecVersion = (openspec --version 2>&1).ToString()
+            codexVersion   = (codex --version 2>&1).ToString()
         } | ConvertTo-Json -Depth 3
         Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
         Write-Host "[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"
@@ -999,6 +1028,7 @@ module "image_builder" {
   openclaw_version       = var.openclaw_version
   claude_code_version    = var.claude_code_version
   openspec_version       = var.openspec_version
+  codex_version          = var.codex_version
   openclaw_default_model = var.openclaw_default_model
   openclaw_gateway_port  = var.openclaw_gateway_port
   tags                   = var.tags
@@ -1125,6 +1155,7 @@ azure_cli_version     = "2.83.0"
 openclaw_version      = "2026.2.14"
 claude_code_version   = "2.1.42"
 openspec_version      = "latest"
+codex_version         = "0.101.0"
 
 # OpenClaw
 openclaw_default_model = "anthropic/claude-opus-4-6"
@@ -1219,7 +1250,7 @@ Remove-AzGalleryImageVersion `
 |---|---|
 | API keys baked into image | Never. Each user manages their own ANTHROPIC_API_KEY after login. |
 | AI agent runs as SYSTEM | OpenClaw runs in user context (Active Setup + user-level startup). Do not register as a SYSTEM service. |
-| Supply chain (npm packages) | Pinned to specific versions (`openclaw@${var.openclaw_version}`, `@anthropic-ai/claude-code@${var.claude_code_version}`, `openspec@${var.openspec_version}`). npm audit runs during build and fails on high/critical vulnerabilities. |
+| Supply chain (npm packages) | Pinned to specific versions (`openclaw@${var.openclaw_version}`, `@anthropic-ai/claude-code@${var.claude_code_version}`, `openspec@${var.openspec_version}`, `@openai/codex@${var.codex_version}`). npm audit runs during build and fails on high/critical vulnerabilities. |
 | SBOM | Software Bill of Materials generated during build and stored at `C:\ProgramData\ImageBuild\sbom-*.json`. |
 | Build script integrity | Scripts are inline in the Terraform configuration — no external storage dependencies. Changes are tracked via source control. |
 | Image sprawl / cost | `end_of_life_date` set to 90 days from build. Retain only 3 versions. Tear down build infrastructure after each build. |
@@ -1240,7 +1271,10 @@ After the image build completes and before importing into Windows 365:
 - [ ] `openclaw --version` returns expected version
 - [ ] `claude --version` returns expected version
 - [ ] `openspec --version` returns expected version
+- [ ] `codex --version` returns expected version
 - [ ] VS Code installed in `C:\Program Files\Microsoft VS Code`
+- [ ] GitHub Copilot extension installed (`code --list-extensions` includes `GitHub.copilot`)
+- [ ] GitHub Copilot Chat extension installed (`code --list-extensions` includes `GitHub.copilot-chat`)
 - [ ] `C:\ProgramData\ClaudeCode\managed-settings.json` exists with `defaultMode: "allow"`
 - [ ] `C:\ProgramData\OpenClaw\template-config.json` exists with model `claude-opus-4-6`
 - [ ] Active Setup registry key exists for OpenClaw config hydration

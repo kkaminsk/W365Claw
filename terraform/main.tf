@@ -55,6 +55,7 @@ module "image_builder" {
   openclaw_version       = var.openclaw_version
   claude_code_version    = var.claude_code_version
   openspec_version       = var.openspec_version
+  codex_version          = var.codex_version
   openclaw_default_model = var.openclaw_default_model
   openclaw_gateway_port  = var.openclaw_gateway_port
   tags                   = var.tags
