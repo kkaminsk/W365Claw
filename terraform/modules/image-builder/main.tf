@@ -362,7 +362,7 @@ locals {
         $managedSettings = @{
             autoUpdatesChannel = "stable"
             permissions = @{
-                defaultMode = "allow"
+                defaultMode = "allowWithPermission"
             }
         } | ConvertTo-Json -Depth 5
 
