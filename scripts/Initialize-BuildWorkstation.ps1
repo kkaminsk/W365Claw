@@ -310,7 +310,9 @@ function Install-MissingPrerequisites {
         if (Confirm-Action "Install Terraform via winget?") {
             if ($hasWinget) {
                 Write-Host "Installing Terraform..." -ForegroundColor Yellow
-                winget install Hashicorp.Terraform --silent --accept-package-agreements --accept-source-agreements 2>&1 | Out-Null
+                $wingetOutput = winget install Hashicorp.Terraform --silent --accept-package-agreements --accept-source-agreements 2>&1
+                Write-Host $wingetOutput -ForegroundColor DarkGray
+                if ($LASTEXITCODE -ne 0) { Write-Host "WARNING: winget exited with code $LASTEXITCODE" -ForegroundColor Red }
             } else {
                 Write-Host "winget not available. Downloading Terraform ZIP..." -ForegroundColor Yellow
                 $tfUrl = "https://releases.hashicorp.com/terraform/1.9.5/terraform_1.9.5_windows_amd64.zip"
@@ -338,7 +340,9 @@ function Install-MissingPrerequisites {
         if (Confirm-Action "Install Azure CLI via winget?") {
             if ($hasWinget) {
                 Write-Host "Installing Azure CLI..." -ForegroundColor Yellow
-                winget install Microsoft.AzureCLI --silent --accept-package-agreements --accept-source-agreements 2>&1 | Out-Null
+                $wingetOutput = winget install Microsoft.AzureCLI --silent --accept-package-agreements --accept-source-agreements 2>&1
+                Write-Host $wingetOutput -ForegroundColor DarkGray
+                if ($LASTEXITCODE -ne 0) { Write-Host "WARNING: winget exited with code $LASTEXITCODE" -ForegroundColor Red }
             } else {
                 Write-Host "winget not available. Download Azure CLI from https://aka.ms/installazurecliwindowsx64" -ForegroundColor Red
             }
@@ -352,7 +356,9 @@ function Install-MissingPrerequisites {
         if (Confirm-Action "Install Git via winget?") {
             if ($hasWinget) {
                 Write-Host "Installing Git..." -ForegroundColor Yellow
-                winget install Git.Git --silent --accept-package-agreements --accept-source-agreements 2>&1 | Out-Null
+                $wingetOutput = winget install Git.Git --silent --accept-package-agreements --accept-source-agreements 2>&1
+                Write-Host $wingetOutput -ForegroundColor DarkGray
+                if ($LASTEXITCODE -ne 0) { Write-Host "WARNING: winget exited with code $LASTEXITCODE" -ForegroundColor Red }
             } else {
                 Write-Host "winget not available. Download Git from https://git-scm.com/download/win" -ForegroundColor Red
             }
@@ -395,9 +401,14 @@ function Install-MissingPrerequisites {
                 }
                 $selection = Read-Host "Select subscription number (or press Enter for current)"
                 if ($selection -ne "") {
-                    $selectedSub = $subs[[int]$selection]
-                    az account set --subscription $selectedSub.Id 2>&1 | Out-Null
-                    Write-Host "Set subscription: $($selectedSub.Name)" -ForegroundColor Green
+                    $index = -1
+                    if (-not [int]::TryParse($selection, [ref]$index) -or $index -lt 0 -or $index -ge $subs.Count) {
+                        Write-Host "Invalid selection '$selection'. Must be 0-$($subs.Count - 1). Using current subscription." -ForegroundColor Red
+                    } else {
+                        $selectedSub = $subs[$index]
+                        az account set --subscription $selectedSub.Id 2>&1 | Out-Null
+                        Write-Host "Set subscription: $($selectedSub.Name)" -ForegroundColor Green
+                    }
                 }
             }
             $installed = $true
