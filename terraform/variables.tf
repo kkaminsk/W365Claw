@@ -184,7 +184,41 @@ variable "claude_code_version" {
 variable "openspec_version" {
   description = "OpenSpec (@fission-ai/openspec) npm package version to install"
   type        = string
-  default     = "latest"
+  default     = "0.9.1"
+}
+
+# ─── Installer SHA256 Checksums ───────────────────────────────────────────
+# Update these when bumping software versions. Obtain from official release pages.
+# VS Code and GitHub Desktop are intentionally excluded (floating latest URLs).
+
+variable "node_sha256" {
+  description = "SHA256 checksum for the Node.js MSI installer"
+  type        = string
+  default     = ""
+}
+
+variable "python_sha256" {
+  description = "SHA256 checksum for the Python installer"
+  type        = string
+  default     = ""
+}
+
+variable "pwsh_sha256" {
+  description = "SHA256 checksum for the PowerShell 7 MSI installer"
+  type        = string
+  default     = ""
+}
+
+variable "git_sha256" {
+  description = "SHA256 checksum for the Git for Windows installer"
+  type        = string
+  default     = ""
+}
+
+variable "azure_cli_sha256" {
+  description = "SHA256 checksum for the Azure CLI MSI installer"
+  type        = string
+  default     = ""
 }
 
 variable "codex_version" {

@@ -46,6 +46,20 @@ locals {
             }
         }
 
+        function Test-InstallerHash {
+            param([string]$FilePath, [string]$ExpectedHash)
+            if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {
+                Write-Host "[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) — skipping verification"
+                return
+            }
+            $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash
+            if ($actual -ne $ExpectedHash.ToUpper()) {
+                Write-Error "[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual"
+                exit 1
+            }
+            Write-Host "[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
+        }
+
         # ═══ NODE.JS ═══
         $NodeVersion = "${var.node_version}"
         $NodeMsiUrl = "https://nodejs.org/dist/$NodeVersion/node-$NodeVersion-x64.msi"
@@ -53,6 +67,7 @@ locals {
 
         Write-Host "=== Installing Node.js $NodeVersion ==="
         Get-InstallerWithRetry -Uri $NodeMsiUrl -OutFile $NodeInstaller
+        Test-InstallerHash -FilePath $NodeInstaller -ExpectedHash "${var.node_sha256}"
 
         $proc = Start-Process -FilePath "msiexec.exe" `
             -ArgumentList "/i `"$NodeInstaller`" /qn /norestart ALLUSERS=1 ADDLOCAL=ALL" `
@@ -69,6 +84,7 @@ locals {
 
         Write-Host "=== Installing Python $PythonVersion ==="
         Get-InstallerWithRetry -Uri $PythonUrl -OutFile $PythonInstaller
+        Test-InstallerHash -FilePath $PythonInstaller -ExpectedHash "${var.python_sha256}"
 
         $proc = Start-Process -FilePath $PythonInstaller `
             -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_pip=1 Include_test=0 Include_launcher=1" `
@@ -85,6 +101,7 @@ locals {
         $PwshUrl = "https://github.com/PowerShell/PowerShell/releases/download/v$PwshVersion/PowerShell-$PwshVersion-win-x64.msi"
         $PwshInstaller = "$env:TEMP\PowerShell-7-x64.msi"
         Get-InstallerWithRetry -Uri $PwshUrl -OutFile $PwshInstaller
+        Test-InstallerHash -FilePath $PwshInstaller -ExpectedHash "${var.pwsh_sha256}"
 
         $proc = Start-Process -FilePath "msiexec.exe" `
             -ArgumentList "/i `"$PwshInstaller`" /qn /norestart ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ADD_FILE_CONTEXT_MENU_RUNPOWERSHELL=1 ENABLE_PSREMOTING=0 REGISTER_MANIFEST=1 USE_MU=0 ENABLE_MU=0 ADD_PATH=1" `
@@ -131,6 +148,20 @@ locals {
             }
         }
 
+        function Test-InstallerHash {
+            param([string]$FilePath, [string]$ExpectedHash)
+            if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {
+                Write-Host "[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) — skipping verification"
+                return
+            }
+            $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash
+            if ($actual -ne $ExpectedHash.ToUpper()) {
+                Write-Error "[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual"
+                exit 1
+            }
+            Write-Host "[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
+        }
+
         # ═══ VISUAL STUDIO CODE ═══
         Write-Host "=== Installing Visual Studio Code (System) ==="
         $VSCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64-system/stable"
@@ -150,6 +181,7 @@ locals {
         $GitUrl = "https://github.com/git-for-windows/git/releases/download/v$${GitVersion}.windows.1/Git-$${GitVersion}-64-bit.exe"
         $GitInstaller = "$env:TEMP\Git-$${GitVersion}-64-bit.exe"
         Get-InstallerWithRetry -Uri $GitUrl -OutFile $GitInstaller
+        Test-InstallerHash -FilePath $GitInstaller -ExpectedHash "${var.git_sha256}"
 
         $proc = Start-Process -FilePath $GitInstaller `
             -ArgumentList "/VERYSILENT /NORESTART /PathOption=Cmd /NoAutoCrlf /SetupType=default" `
@@ -176,6 +208,7 @@ locals {
         $AzCliUrl = "https://azcliprod.blob.core.windows.net/msi/azure-cli-$AzCliVersion-x64.msi"
         $AzCliInstaller = "$env:TEMP\azure-cli-$AzCliVersion-x64.msi"
         Get-InstallerWithRetry -Uri $AzCliUrl -OutFile $AzCliInstaller
+        Test-InstallerHash -FilePath $AzCliInstaller -ExpectedHash "${var.azure_cli_sha256}"
 
         $proc = Start-Process -FilePath "msiexec.exe" `
             -ArgumentList "/i `"$AzCliInstaller`" /qn /norestart ALLUSERS=1" `

@@ -52,6 +52,11 @@ module "image_builder" {
   git_version            = var.git_version
   pwsh_version           = var.pwsh_version
   azure_cli_version      = var.azure_cli_version
+  node_sha256            = var.node_sha256
+  python_sha256          = var.python_sha256
+  pwsh_sha256            = var.pwsh_sha256
+  git_sha256             = var.git_sha256
+  azure_cli_sha256       = var.azure_cli_sha256
   openclaw_version       = var.openclaw_version
   claude_code_version    = var.claude_code_version
   openspec_version       = var.openspec_version

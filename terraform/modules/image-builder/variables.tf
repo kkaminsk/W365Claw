@@ -93,6 +93,36 @@ variable "azure_cli_version" {
   type        = string
 }
 
+variable "node_sha256" {
+  description = "SHA256 checksum for Node.js installer (empty to skip)"
+  type        = string
+  default     = ""
+}
+
+variable "python_sha256" {
+  description = "SHA256 checksum for Python installer (empty to skip)"
+  type        = string
+  default     = ""
+}
+
+variable "pwsh_sha256" {
+  description = "SHA256 checksum for PowerShell 7 installer (empty to skip)"
+  type        = string
+  default     = ""
+}
+
+variable "git_sha256" {
+  description = "SHA256 checksum for Git installer (empty to skip)"
+  type        = string
+  default     = ""
+}
+
+variable "azure_cli_sha256" {
+  description = "SHA256 checksum for Azure CLI installer (empty to skip)"
+  type        = string
+  default     = ""
+}
+
 variable "openclaw_version" {
   description = "OpenClaw npm package version"
   type        = string
