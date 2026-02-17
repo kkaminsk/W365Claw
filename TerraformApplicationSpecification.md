@@ -724,15 +724,10 @@ locals {
         if (-not $codexCheck) { Write-Error "codex not found in PATH after installation"; exit 1 }
         Write-Host "[VERIFY] Codex CLI: $(codex --version 2>&1)"
 
-        # ═══ NPM AUDIT ═══
-        Write-Host "=== Running npm audit on global packages ==="
-        $auditResult = npm audit --global --audit-level=high 2>&1
-        Write-Host $auditResult
-        if ($LASTEXITCODE -ne 0) {
-            Write-Error "npm audit found high/critical vulnerabilities. Failing build."
-            exit 1
-        }
-        Write-Host "[SECURITY] npm audit passed — no high/critical vulnerabilities"
+        # ═══ NPM GLOBAL PACKAGE INVENTORY ═══
+        Write-Host "=== Listing global npm packages ==="
+        npm list -g --depth=0 2>&1 | Write-Host
+        Write-Host "[SECURITY] Global package inventory logged (npm audit does not support --global)"
 
         # ═══ SBOM GENERATION ═══
         Write-Host "=== Generating Software Bill of Materials (SBOM) ==="
