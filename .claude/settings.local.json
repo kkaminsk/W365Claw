@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(openspec new change:*)",
+      "Bash(openspec status:*)",
+      "Bash(openspec instructions proposal:*)",
+      "Bash(openspec complete:*)",
+      "Bash(openspec instructions design:*)",
+      "Bash(openspec instructions specs:*)",
+      "Bash(openspec instructions tasks:*)",
+      "Bash(openspec instructions apply:*)",
+      "Bash(where:*)",
+      "Bash(where.exe:*)",
+      "Bash(winget install:*)",
+      "Bash(export PATH=\"$PATH:/c/Program Files/GitHub CLI\")",
+      "Bash(gh:*)"
+    ]
+  }
+}
