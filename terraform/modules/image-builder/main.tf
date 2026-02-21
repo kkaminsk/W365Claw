@@ -393,7 +393,7 @@ locals {
         # ═══ ACTIVE SETUP: First-Login Configuration Hydration ═══
         Write-Host "=== Registering Active Setup for first-login hydration ==="
 
-        # Hydration script OVERWRITES existing config to ensure consistency
+        # Hydration script preserves existing user config and hydrates on first login
         $hydrationScript = @'
 $openclawDir = "$env:USERPROFILE\.openclaw"
 $configFile = "$openclawDir\openclaw.json"
@@ -403,7 +403,9 @@ if (Test-Path $templateFile) {
     New-Item -ItemType Directory -Path $openclawDir -Force | Out-Null
     $workspaceDir = "$env:USERPROFILE\Documents\OpenClawWorkspace"
     New-Item -ItemType Directory -Path $workspaceDir -Force | Out-Null
-    Copy-Item -Path $templateFile -Destination $configFile -Force
+    if (-not (Test-Path $configFile)) {
+        Copy-Item -Path $templateFile -Destination $configFile -Force
+    }
 }
 '@
 

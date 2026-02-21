@@ -118,13 +118,13 @@ variable "source_image_offer" {
 variable "source_image_sku" {
   description = "Marketplace image SKU"
   type        = string
-  default     = "win11-24h2-ent"
+  default     = "win11-25h2-ent"
 }
 
 variable "source_image_version" {
   description = "Marketplace image version — MUST be pinned to a specific version for build reproducibility (do not use 'latest')"
   type        = string
-  default     = "26100.2894.250113"
+  default     = "26200.7840.260206"
 
   validation {
     condition     = var.source_image_version != "latest"
