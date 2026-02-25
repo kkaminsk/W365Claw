@@ -1,0 +1,822 @@
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Packer version: 1.14.3 [go1.24.0 linux amd64]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] PACKER_CONFIG env var not set; checking the default config file path
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] PACKER_CONFIG env var set; attempting to open config file: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [WARN] Config file doesn't exist: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Setting cache directory: /root/.cache/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER e: Running in background, not using a TTY
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [TRACE] listing potential installations for <nil> that match "". plugingetter.ListInstallationsOptions{PluginDirectory:"/root/.config/packer/plugins", BinaryInstallationOptions:plugingetter.BinaryInstallationOptions{APIVersionMajor:"5", APIVersionMinor:"0", OS:"linux", ARCH:"amd64", Ext:"", Checksummers:[]plugingetter.Checksummer{plugingetter.Checksummer{Type:"sha256", Hash:(*sha256.Digest)(0xc000090e80)}}, ReleasesOnly:false}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] found external [arm chroot dtl] builders from azure plugin
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 found external [dtlartifact] provisioner from azure plugin
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 found external [keyvaultsecret] datasource from azure plugin
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 found external [-packer-default-plugin-name-] provisioner from windows-update plugin
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [TRACE] Using protobuf for communication with plugins
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Starting external plugin /root/.config/packer/plugins/github.com/hashicorp/azure/packer-plugin-azure_v2.5.1_x5.0_linux_amd64 start builder --protobuf arm
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting plugin: /root/.config/packer/plugins/github.com/hashicorp/azure/packer-plugin-azure_v2.5.1_x5.0_linux_amd64 []string{"/root/.config/packer/plugins/github.com/hashicorp/azure/packer-plugin-azure_v2.5.1_x5.0_linux_amd64", "start", "builder", "--protobuf", "arm"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting for RPC address for: /root/.config/packer/plugins/github.com/hashicorp/azure/packer-plugin-azure_v2.5.1_x5.0_linux_amd64
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Plugin address: unix /tmp/packer-plugin3413364614
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Waiting for connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Received unix RPC address for /root/.config/packer/plugins/github.com/hashicorp/azure/packer-plugin-azure_v2.5.1_x5.0_linux_amd64: addr is /tmp/packer-plugin3413364614
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Serving a plugin connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 [TRACE] starting builder arm
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Starting external plugin /aib/packerInput/packer execute --protobuf packer-provisioner-file
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting plugin: /aib/packerInput/packer []string{"/aib/packerInput/packer", "execute", "--protobuf", "packer-provisioner-file"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting for RPC address for: /aib/packerInput/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-file plugin: [INFO] Packer version: 1.14.3 [go1.24.0 linux amd64]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-file plugin: [INFO] PACKER_CONFIG env var not set; checking the default config file path
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-file plugin: [INFO] PACKER_CONFIG env var set; attempting to open config file: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-file plugin: [WARN] Config file doesn't exist: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-file plugin: [INFO] Setting cache directory: /root/.cache/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Received unix RPC address for /aib/packerInput/packer: addr is /tmp/packer-plugin3634407171
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-file plugin: Plugin address: unix /tmp/packer-plugin3634407171
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-file plugin: Waiting for connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-file plugin: Serving a plugin connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Starting external plugin /aib/packerInput/packer execute --protobuf packer-provisioner-powershell
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting plugin: /aib/packerInput/packer []string{"/aib/packerInput/packer", "execute", "--protobuf", "packer-provisioner-powershell"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting for RPC address for: /aib/packerInput/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] Packer version: 1.14.3 [go1.24.0 linux amd64]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] PACKER_CONFIG env var not set; checking the default config file path
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] PACKER_CONFIG env var set; attempting to open config file: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [WARN] Config file doesn't exist: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] Setting cache directory: /root/.cache/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Plugin address: unix /tmp/packer-plugin1628361486
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Waiting for connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Received unix RPC address for /aib/packerInput/packer: addr is /tmp/packer-plugin1628361486
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Serving a plugin connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Starting external plugin /aib/packerInput/packer execute --protobuf packer-provisioner-windows-restart
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting plugin: /aib/packerInput/packer []string{"/aib/packerInput/packer", "execute", "--protobuf", "packer-provisioner-windows-restart"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting for RPC address for: /aib/packerInput/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: [INFO] Packer version: 1.14.3 [go1.24.0 linux amd64]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: [INFO] PACKER_CONFIG env var not set; checking the default config file path
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: [INFO] PACKER_CONFIG env var set; attempting to open config file: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: [WARN] Config file doesn't exist: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: [INFO] Setting cache directory: /root/.cache/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Received unix RPC address for /aib/packerInput/packer: addr is /tmp/packer-plugin1406264491
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: Plugin address: unix /tmp/packer-plugin1406264491
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: Waiting for connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: Serving a plugin connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Starting external plugin /aib/packerInput/packer execute --protobuf packer-provisioner-powershell
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting plugin: /aib/packerInput/packer []string{"/aib/packerInput/packer", "execute", "--protobuf", "packer-provisioner-powershell"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting for RPC address for: /aib/packerInput/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] Packer version: 1.14.3 [go1.24.0 linux amd64]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] PACKER_CONFIG env var not set; checking the default config file path
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] PACKER_CONFIG env var set; attempting to open config file: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [WARN] Config file doesn't exist: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] Setting cache directory: /root/.cache/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Plugin address: unix /tmp/packer-plugin1484044132
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Waiting for connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Received unix RPC address for /aib/packerInput/packer: addr is /tmp/packer-plugin1484044132
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Serving a plugin connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Starting external plugin /aib/packerInput/packer execute --protobuf packer-provisioner-powershell
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting plugin: /aib/packerInput/packer []string{"/aib/packerInput/packer", "execute", "--protobuf", "packer-provisioner-powershell"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting for RPC address for: /aib/packerInput/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] Packer version: 1.14.3 [go1.24.0 linux amd64]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] PACKER_CONFIG env var not set; checking the default config file path
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] PACKER_CONFIG env var set; attempting to open config file: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [WARN] Config file doesn't exist: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] Setting cache directory: /root/.cache/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Plugin address: unix /tmp/packer-plugin2484320808
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Waiting for connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Received unix RPC address for /aib/packerInput/packer: addr is /tmp/packer-plugin2484320808
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Serving a plugin connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Starting external plugin /aib/packerInput/packer execute --protobuf packer-provisioner-powershell
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting plugin: /aib/packerInput/packer []string{"/aib/packerInput/packer", "execute", "--protobuf", "packer-provisioner-powershell"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting for RPC address for: /aib/packerInput/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] Packer version: 1.14.3 [go1.24.0 linux amd64]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] PACKER_CONFIG env var not set; checking the default config file path
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] PACKER_CONFIG env var set; attempting to open config file: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [WARN] Config file doesn't exist: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] Setting cache directory: /root/.cache/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Plugin address: unix /tmp/packer-plugin997106410
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Received unix RPC address for /aib/packerInput/packer: addr is /tmp/packer-plugin997106410
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Waiting for connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Serving a plugin connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Starting external plugin /root/.config/packer/plugins/github.com/rgl/windows-update/packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64 start provisioner --protobuf -packer-default-plugin-name-
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting plugin: /root/.config/packer/plugins/github.com/rgl/windows-update/packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64 []string{"/root/.config/packer/plugins/github.com/rgl/windows-update/packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64", "start", "provisioner", "--protobuf", "-packer-default-plugin-name-"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting for RPC address for: /root/.config/packer/plugins/github.com/rgl/windows-update/packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Received unix RPC address for /root/.config/packer/plugins/github.com/rgl/windows-update/packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64: addr is /tmp/packer-plugin3427517756
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Starting packer-plugin-windows-update (version 0.17.1; commit fe8eafebc57f71c0a55e2aa902c2abd3a4012300; date 2025-09-22T20:12:53Z)
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Plugin address: unix /tmp/packer-plugin3427517756
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Waiting for connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Serving a plugin connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 [TRACE] starting provisioner -packer-default-plugin-name-
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Starting external plugin /aib/packerInput/packer execute --protobuf packer-provisioner-windows-restart
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting plugin: /aib/packerInput/packer []string{"/aib/packerInput/packer", "execute", "--protobuf", "packer-provisioner-windows-restart"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting for RPC address for: /aib/packerInput/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: [INFO] Packer version: 1.14.3 [go1.24.0 linux amd64]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: [INFO] PACKER_CONFIG env var not set; checking the default config file path
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: [INFO] PACKER_CONFIG env var set; attempting to open config file: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: [WARN] Config file doesn't exist: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: [INFO] Setting cache directory: /root/.cache/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: Plugin address: unix /tmp/packer-plugin617799126
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: Waiting for connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Received unix RPC address for /aib/packerInput/packer: addr is /tmp/packer-plugin617799126
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-windows-restart plugin: Serving a plugin connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 [INFO] Starting external plugin /aib/packerInput/packer execute --protobuf packer-provisioner-powershell
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting plugin: /aib/packerInput/packer []string{"/aib/packerInput/packer", "execute", "--protobuf", "packer-provisioner-powershell"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting for RPC address for: /aib/packerInput/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] Packer version: 1.14.3 [go1.24.0 linux amd64]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] PACKER_CONFIG env var not set; checking the default config file path
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] PACKER_CONFIG env var set; attempting to open config file: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [WARN] Config file doesn't exist: /root/.packerconfig
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: [INFO] Setting cache directory: /root/.cache/packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Plugin address: unix /tmp/packer-plugin269856351
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Received unix RPC address for /aib/packerInput/packer: addr is /tmp/packer-plugin269856351
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Waiting for connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Serving a plugin connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Preparing build: azure-arm
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Error looking up environment using metadata host: retrieving metadata from endpoint "management.azure.com": performing request: Get "management.azure.com/metadata/endpoints?[REDACTED]": unsupported protocol scheme "".
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: Falling back to hardcoded mechanism...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Error looking up environment using metadata host: retrieving metadata from endpoint "management.azure.com": performing request: Get "management.azure.com/metadata/endpoints?[REDACTED]": unsupported protocol scheme "".
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: Falling back to hardcoded mechanism...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Using inline default execute command powershell -executionpolicy bypass -file {{.Path}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Using inline default elevated execute command powershell -executionpolicy bypass -file {{.Path}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Using inline default execute command powershell -executionpolicy bypass -file {{.Path}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Using inline default elevated execute command powershell -executionpolicy bypass -file {{.Path}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Using inline default execute command powershell -executionpolicy bypass -file {{.Path}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Using inline default elevated execute command powershell -executionpolicy bypass -file {{.Path}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Using inline default execute command powershell -executionpolicy bypass -file {{.Path}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Using inline default elevated execute command powershell -executionpolicy bypass -file {{.Path}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Using inline default execute command powershell -executionpolicy bypass -file {{.Path}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-provisioner-powershell plugin: Using inline default elevated execute command powershell -executionpolicy bypass -file {{.Path}}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 ui: azure-arm: output will be in this color.
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 ui: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Build debug mode: false
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Force build: false
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 On error: cleanup
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Waiting on builds to complete...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Starting build run: azure-arm
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 Running builder: azure-arm
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 ui: ==> azure-arm: Running builder ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 :: Configuration
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 CaptureNamePrefix=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 CaptureContainerName=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 SharedGalleryImageVersionEndOfLifeDate=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ImagePublisher=MicrosoftWindowsDesktop
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ImageOffer=windows-11
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ImageSku=win11-25h2-ent
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ImageVersion=26200.7840.260206
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ImageUrl=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 CustomManagedImageName=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 CustomManagedImageResourceGroupName=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Location=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 VMSize=Standard_D4s_v5
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ManagedImageResourceGroupName=IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ManagedImageName=packerImg_20260222022532
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ManagedImageStorageAccountType=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ManagedImageOSDiskSnapshotName=packerImg_20260222022532_os_disk
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ManagedImageDataDiskSnapshotPrefix=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 ResourceGroupName=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 StorageAccount=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 TempComputeName=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 TempNicName=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 TempResourceGroupName=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 BuildResourceGroupName=IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 BuildKeyVaultName=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 BuildKeyVaultSecretName=********************
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 BuildKeyVaultSKU=standard
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 DiskEncryptionSetId=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 VirtualNetworkName=aibvnetjtrku
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 VirtualNetworkSubnetName=remotesubnet
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 VirtualNetworkResourceGroupName=IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 CustomDataFile=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 CustomData=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 UserDataFile=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 UserData=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 CustomScript=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 OSType=Windows
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 TempOSDiskName=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 DiskCachingType=None
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 BootDiagSTGAccount=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 CustomResourcePrefix=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 LicenseType=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 PublicIpSKU=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 SecurityType=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 SecurityEncryptionType=
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 UserName=packer
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 Password=********************************
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 ui: ==> azure-arm: Creating Azure Resource Manager (ARM) client ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:20 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:20 [DEBUG] POST https://login.microsoftonline.com/5a01497e-1bcb-4711-b6e6-d24f4ab00393/oauth2/v2.0/token
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 ui: ==> azure-arm: ARM Client successfully created
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:21 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:21 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Compute/images/packerImg_20260222022532?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:21 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Compute/snapshots/packerImg_20260222022532_os_disk?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:21 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 ui: ==> azure-arm: Getting source image id for the deployment ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 ui: ==> azure-arm:  -> SourceImageName: '/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/providers/Microsoft.Compute/locations/eastus2/publishers/MicrosoftWindowsDesktop/ArtifactTypes/vmimage/offers/windows-11/skus/win11-25h2-ent/versions/26200.7840.260206'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:21 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 ui: ==> azure-arm: Using existing resource group ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 ui: ==> azure-arm:  -> ResourceGroupName : 'IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 ui: ==> azure-arm:  -> Location          : 'eastus2'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 ui: ==> azure-arm: Validating deployment template ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 ui: ==> azure-arm:  -> ResourceGroupName : 'IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 ui: ==> azure-arm:  -> DeploymentName    : 'kvpkrdpsyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:21 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:21 [DEBUG] POST https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/kvpkrdpsyco9w9kkz/validate?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:22 ui: ==> azure-arm: Deploying deployment template ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:22 ui: ==> azure-arm:  -> ResourceGroupName : 'IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:22 ui: ==> azure-arm:  -> DeploymentName    : 'kvpkrdpsyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:22 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:22 [DEBUG] PUT https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/kvpkrdpsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:33 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:33 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourcegroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/kvpkrdpsyco9w9kkz/operationStatuses/08584298796422469422?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:43 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:43 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourcegroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/kvpkrdpsyco9w9kkz/operationStatuses/08584298796422469422?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:54 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourcegroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/kvpkrdpsyco9w9kkz/operationStatuses/08584298796422469422?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 ui: ==> azure-arm: Getting the certificate's URL ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 ui: ==> azure-arm:  -> Key Vault Name        : 'pkrkvsyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 ui: ==> azure-arm:  -> Key Vault Secret Name : 'packerKeyVaultSecret'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:54 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.KeyVault/vaults/pkrkvsyco9w9kkz/secrets/packerKeyVaultSecret?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 ui: ==> azure-arm:  -> Certificate URL       : 'https://pkrkvsyco9w9kkz.vault.azure.net/secrets/packerKeyVaultSecret/0d52589648254cda902951612a97acc6'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 ui: ==> azure-arm: Setting the certificate's URL ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 ui: ==> azure-arm: Validating deployment template ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 ui: ==> azure-arm:  -> ResourceGroupName : 'IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 ui: ==> azure-arm:  -> DeploymentName    : 'pkrdpsyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:54 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:54 [DEBUG] POST https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/pkrdpsyco9w9kkz/validate?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:55 ui: ==> azure-arm: Deploying deployment template ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:55 ui: ==> azure-arm:  -> ResourceGroupName : 'IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:55 ui: ==> azure-arm:  -> DeploymentName    : 'pkrdpsyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:27:55 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:27:55 [DEBUG] PUT https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/pkrdpsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:05 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:05 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourcegroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/pkrdpsyco9w9kkz/operationStatuses/08584298796101179312?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:16 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:16 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourcegroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/pkrdpsyco9w9kkz/operationStatuses/08584298796101179312?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:26 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:26 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourcegroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/pkrdpsyco9w9kkz/operationStatuses/08584298796101179312?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:36 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourcegroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/pkrdpsyco9w9kkz/operationStatuses/08584298796101179312?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 ui: ==> azure-arm: Getting the VM's IP address ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 ui: ==> azure-arm:  -> ResourceGroupName   : 'IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 ui: ==> azure-arm:  -> PublicIPAddressName : 'pkripsyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 ui: ==> azure-arm:  -> NicName             : 'pkrnisyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 ui: ==> azure-arm:  -> Network Connection  : 'PrivateEndpoint'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:36 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Network/networkInterfaces/pkrnisyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 ui: ==> azure-arm:  -> IP Address          : '10.0.1.4'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:36 Waiting for WinRM, up to timeout: 30m0s
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 ui: ==> azure-arm: Waiting for WinRM to become available...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:36 [INFO] Attempting WinRM connection...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:36 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:36 [DEBUG] connecting to remote shell using WinRM
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:43 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:43 Checking that WinRM is connected with: 'powershell.exe -EncodedCommand JABQAHIAbwBnAHIAZQBzAHMAUAByAGUAZgBlAHIAZQBuAGMAZQAgAD0AIAAnAFMAaQBsAGUAbgB0AGwAeQBDAG8AbgB0AGkAbgB1AGUAJwA7AGkAZgAgACgAVABlAHMAdAAtAFAAYQB0AGgAIAB2AGEAcgBpAGEAYgBsAGUAOgBnAGwAbwBiAGEAbAA6AFAAcgBvAGcAcgBlAHMAcwBQAHIAZQBmAGUAcgBlAG4AYwBlACkAewAkAFAAcgBvAGcAcgBlAHMAcwBQAHIAZQBmAGUAcgBlAG4AYwBlAD0AJwBTAGkAbABlAG4AdABsAHkAQwBvAG4AdABpAG4AdQBlACcAfQA7ACAAZQBjAGgAbwAgACIAVwBpAG4AUgBNACAAYwBvAG4AbgBlAGMAdABlAGQALgAiAA=='
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:43 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:43 [INFO] starting remote command: powershell.exe -EncodedCommand JABQAHIAbwBnAHIAZQBzAHMAUAByAGUAZgBlAHIAZQBuAGMAZQAgAD0AIAAnAFMAaQBsAGUAbgB0AGwAeQBDAG8AbgB0AGkAbgB1AGUAJwA7AGkAZgAgACgAVABlAHMAdAAtAFAAYQB0AGgAIAB2AGEAcgBpAGEAYgBsAGUAOgBnAGwAbwBiAGEAbAA6AFAAcgBvAGcAcgBlAHMAcwBQAHIAZQBmAGUAcgBlAG4AYwBlACkAewAkAFAAcgBvAGcAcgBlAHMAcwBQAHIAZQBmAGUAcgBlAG4AYwBlAD0AJwBTAGkAbABlAG4AdABsAHkAQwBvAG4AdABpAG4AdQBlACcAfQA7ACAAZQBjAGgAbwAgACIAVwBpAG4AUgBNACAAYwBvAG4AbgBlAGMAdABlAGQALgAiAA==
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:44 ui: ==> azure-arm: WinRM connected.
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:44 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:44 [INFO] command 'powershell.exe -EncodedCommand JABQAHIAbwBnAHIAZQBzAHMAUAByAGUAZgBlAHIAZQBuAGMAZQAgAD0AIAAnAFMAaQBsAGUAbgB0AGwAeQBDAG8AbgB0AGkAbgB1AGUAJwA7AGkAZgAgACgAVABlAHMAdAAtAFAAYQB0AGgAIAB2AGEAcgBpAGEAYgBsAGUAOgBnAGwAbwBiAGEAbAA6AFAAcgBvAGcAcgBlAHMAcwBQAHIAZQBmAGUAcgBlAG4AYwBlACkAewAkAFAAcgBvAGcAcgBlAHMAcwBQAHIAZQBmAGUAcgBlAG4AYwBlAD0AJwBTAGkAbABlAG4AdABsAHkAQwBvAG4AdABpAG4AdQBlACcAfQA7ACAAZQBjAGgAbwAgACIAVwBpAG4AUgBNACAAYwBvAG4AbgBlAGMAdABlAGQALgAiAA==' exited with code: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:44 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:44 Connected to machine
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:44 ui: ==> azure-arm: Connected to WinRM!
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:44 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:44 Running the provision hook
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:45 ui: ==> azure-arm: Uploading /aib/packerInput/DeprovisioningScript.txt => c:\DeprovisioningScript.ps1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:45 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:45 Uploading file to 'c:\DeprovisioningScript.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:45 [INFO] 1288 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:45 packer-provisioner-file plugin: [INFO] 1288 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-file plugin: closing
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 closing
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:46 closing
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 ui: ==> azure-arm: Provisioning with Powershell...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Found command: $ErrorActionPreference = "Stop"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $ProgressPreference = "SilentlyContinue"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: function Update-SessionEnvironment {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     $machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     $env:Path = "$machinePath;$userPath"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     Write-Host "`[PATH] Session environment refreshed"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: function Get-InstallerWithRetry {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     param([string]$Uri, [string]$OutFile, [int]$MaxRetries = 3)
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     for ($i = 1; $i -le $MaxRetries; $i++) {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:         try {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:             Write-Host "`[DOWNLOAD] Attempt $i of $MaxRetries : $Uri"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:             Invoke-WebRequest -Uri $Uri -OutFile $OutFile -UseBasicParsing
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:             return
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:         } catch {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:             if ($i -eq $MaxRetries) { throw }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:             Write-Host "`[DOWNLOAD] Attempt $i failed, retrying in 10 seconds..."
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:             Start-Sleep -Seconds 10
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:         }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: function Test-InstallerHash {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     param([string]$FilePath, [string]$ExpectedHash)
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:         Write-Host "`[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:         return
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     if ($actual -ne $ExpectedHash.ToUpper()) {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:         Write-Error "`[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:         exit 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     Write-Host "`[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: # ═══ NODE.JS ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $NodeVersion = "v24.13.1"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $NodeMsiUrl = "https://nodejs.org/dist/$NodeVersion/node-$NodeVersion-x64.msi"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $NodeInstaller = "$env:TEMP\node-$NodeVersion-x64.msi"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Write-Host "=== Installing Node.js $NodeVersion ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Get-InstallerWithRetry -Uri $NodeMsiUrl -OutFile $NodeInstaller
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Test-InstallerHash -FilePath $NodeInstaller -ExpectedHash ""
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $proc = Start-Process -FilePath "msiexec.exe" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     -ArgumentList "/i `"$NodeInstaller`" /qn /norestart ALLUSERS=1 ADDLOCAL=ALL" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     -Wait -PassThru
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: if ($proc.ExitCode -ne 0) { Write-Error "Node.js installation failed ($($proc.ExitCode))"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] Node.js: $(node --version)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] npm: $(npm --version)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: # ═══ PYTHON ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $PythonVersion = "3.14.3"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $PythonUrl = "https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-amd64.exe"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $PythonInstaller = "$env:TEMP\python-$PythonVersion-amd64.exe"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Write-Host "=== Installing Python $PythonVersion ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Get-InstallerWithRetry -Uri $PythonUrl -OutFile $PythonInstaller
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Test-InstallerHash -FilePath $PythonInstaller -ExpectedHash ""
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $proc = Start-Process -FilePath $PythonInstaller `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_pip=1 Include_test=0 Include_launcher=1" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     -Wait -PassThru
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: if ($proc.ExitCode -ne 0) { Write-Error "Python installation failed ($($proc.ExitCode))"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] Python: $(python --version)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: python -m pip install --upgrade pip --quiet
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] pip: $(python -m pip --version)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: # ═══ POWERSHELL 7 ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Write-Host "=== Installing PowerShell 7 ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $PwshVersion = "7.4.13"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $PwshUrl = "https://github.com/PowerShell/PowerShell/releases/download/v$PwshVersion/PowerShell-$PwshVersion-win-x64.msi"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $PwshInstaller = "$env:TEMP\PowerShell-7-x64.msi"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Get-InstallerWithRetry -Uri $PwshUrl -OutFile $PwshInstaller
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Test-InstallerHash -FilePath $PwshInstaller -ExpectedHash ""
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: $proc = Start-Process -FilePath "msiexec.exe" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     -ArgumentList "/i `"$PwshInstaller`" /qn /norestart ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ADD_FILE_CONTEXT_MENU_RUNPOWERSHELL=1 ENABLE_PSREMOTING=0 REGISTER_MANIFEST=1 USE_MU=0 ENABLE_MU=0 ADD_PATH=1" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin:     -Wait -PassThru
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: if ($proc.ExitCode -ne 0) { Write-Error "PowerShell 7 installation failed ($($proc.ExitCode))"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] PowerShell 7 installed"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: # ═══ CLEANUP ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Remove-Item -Path $NodeInstaller, $PythonInstaller, $PwshInstaller -Force -ErrorAction SilentlyContinue
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Write-Host "=== Phase 1 Complete: Runtimes installed ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Writing PowerShell script to file: /tmp/powershell-provisioner2061622170
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 ui: ==> azure-arm: Provisioning with powershell script: /tmp/powershell-provisioner2061622170
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Opening /tmp/powershell-provisioner2061622170 for reading
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: Uploading env vars to c:/Windows/Temp/packer-ps-env-vars-699a6988-a9fe-0634-1eb8-6729117b3903.ps1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-provisioner-powershell plugin: [INFO] 74 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 [INFO] 74 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:46 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:46 Uploading file to 'c:/Windows/Temp/packer-ps-env-vars-699a6988-a9fe-0634-1eb8-6729117b3903.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:47 packer-provisioner-powershell plugin: Building elevated command wrapper for: powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-d8ed-a3b3-e4d2-ceb79cc11dcf.ps1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:47 packer-provisioner-powershell plugin: Command [powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-d8ed-a3b3-e4d2-ceb79cc11dcf.ps1 > %SYSTEMROOT%/Temp/packer-699a69df-88e9-c836-ddd2-f0c52cafcfe9.out 2>&1] converted to [powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-d8ed-a3b3-e4d2-ceb79cc11dcf.ps1 &gt; %SYSTEMROOT%/Temp/packer-699a69df-88e9-c836-ddd2-f0c52cafcfe9.out 2&gt;&amp;1] for use in XML string
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:47 packer-provisioner-powershell plugin: Uploading elevated shell wrapper for command [powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-d8ed-a3b3-e4d2-ceb79cc11dcf.ps1 > %SYSTEMROOT%/Temp/packer-699a69df-88e9-c836-ddd2-f0c52cafcfe9.out 2>&1] to [C:/Windows/Temp/packer-elevated-shell-699a69df-4c0e-e3f6-ac2b-ee281d4c87ab.ps1]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:47 packer-provisioner-powershell plugin: [INFO] 3223 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:47 [INFO] 3223 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:47 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:47 Uploading file to 'C:/Windows/Temp/packer-elevated-shell-699a69df-4c0e-e3f6-ac2b-ee281d4c87ab.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:48 packer-provisioner-powershell plugin: [INFO] 4659 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:48 [INFO] 4659 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:48 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:48 Uploading file to 'c:/Windows/Temp/script-699a6988-d8ed-a3b3-e4d2-ceb79cc11dcf.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:49 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:28:49 [INFO] starting remote command: powershell -executionpolicy bypass -file "C:/Windows/Temp/packer-elevated-shell-699a69df-4c0e-e3f6-ac2b-ee281d4c87ab.ps1"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:52 ui: ==> azure-arm: === Installing Node.js v24.13.1 ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:52 ui: ==> azure-arm: [DOWNLOAD] Attempt 1 of 3 : https://nodejs.org/dist/v24.13.1/node-v24.13.1-x64.msi
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:28:52 ui: ==> azure-arm: [INTEGRITY] No SHA256 provided for node-v24.13.1-x64.msi - skipping verification
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:08 ui: ==> azure-arm: [PATH] Session environment refreshed
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:09 ui: ==> azure-arm: [VERIFY] Node.js: v24.13.1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:10 ui: ==> azure-arm: [VERIFY] npm: 11.8.0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:10 ui: ==> azure-arm: === Installing Python 3.14.3 ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:10 ui: ==> azure-arm: [DOWNLOAD] Attempt 1 of 3 : https://www.python.org/ftp/python/3.14.3/python-3.14.3-amd64.exe
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:10 ui: ==> azure-arm: [INTEGRITY] No SHA256 provided for python-3.14.3-amd64.exe - skipping verification
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:37 ui: ==> azure-arm: [PATH] Session environment refreshed
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:37 ui: ==> azure-arm: [VERIFY] Python: Python 3.14.3
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:42 ui: ==> azure-arm: [VERIFY] pip: pip 26.0.1 from C:\Program Files\Python314\Lib\site-packages\pip (python 3.14)
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:42 ui: ==> azure-arm: === Installing PowerShell 7 ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:42 ui: ==> azure-arm: [DOWNLOAD] Attempt 1 of 3 : https://github.com/PowerShell/PowerShell/releases/download/v7.4.13/PowerShell-7.4.13-win-x64.msi
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:43 ui: ==> azure-arm: [INTEGRITY] No SHA256 provided for PowerShell-7-x64.msi - skipping verification
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 ui: ==> azure-arm: [PATH] Session environment refreshed
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 ui: ==> azure-arm: [VERIFY] PowerShell 7 installed
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:29:59 [INFO] command 'powershell -executionpolicy bypass -file "C:/Windows/Temp/packer-elevated-shell-699a69df-4c0e-e3f6-ac2b-ee281d4c87ab.ps1"' exited with code: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:29:59 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 [INFO] 1025 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 ui: ==> azure-arm: === Phase 1 Complete: Runtimes installed ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 packer-provisioner-powershell plugin: [INFO] 1025 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 packer-provisioner-powershell plugin: [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 packer-provisioner-powershell plugin: [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 packer-provisioner-powershell plugin: c:/Windows/Temp/script-699a6988-d8ed-a3b3-e4d2-ceb79cc11dcf.ps1 returned with exit code 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 packer-provisioner-powershell plugin: [INFO] 511 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 [INFO] 511 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:29:59 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:29:59 Uploading file to 'c:/Windows/Temp/packer-cleanup-699a6988-805d-7df0-b9e4-10504390e126.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:00 [INFO] starting remote command: powershell -executionpolicy bypass -file c:/Windows/Temp/packer-cleanup-699a6988-805d-7df0-b9e4-10504390e126.ps1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:00 [INFO] command 'powershell -executionpolicy bypass -file c:/Windows/Temp/packer-cleanup-699a6988-805d-7df0-b9e4-10504390e126.ps1' exited with code: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:00 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 [INFO] 0 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 packer-provisioner-powershell plugin: [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 packer-provisioner-powershell plugin: [INFO] 0 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 packer-provisioner-powershell plugin: [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 ui: ==> azure-arm: Restarting Machine
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:00 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:00 [INFO] starting remote command: shutdown /r /f /t 5 /c "Restart after runtime installation"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:01 [INFO] command 'shutdown /r /f /t 5 /c "Restart after runtime installation"' exited with code: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:01 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 [INFO] 0 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-provisioner-windows-restart plugin: [INFO] 0 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-provisioner-windows-restart plugin: [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-provisioner-windows-restart plugin: [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 ui: ==> azure-arm: Waiting for machine to restart...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-provisioner-windows-restart plugin: Check if machine is rebooting...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:01 [INFO] starting remote command: shutdown /r /f /t 60 /c "packer restart test"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 ui error: ==> azure-arm: A system shutdown has already been scheduled.(1190)
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:01 [INFO] command 'shutdown /r /f /t 60 /c "packer restart test"' exited with code: 1190
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:01 [INFO] RPC endpoint: Communicator ended with: 1190
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 [INFO] 0 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 [INFO] 52 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 [INFO] RPC client: Communicator ended with: 1190
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 [INFO] RPC endpoint: Communicator ended with: 1190
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-provisioner-windows-restart plugin: [INFO] 0 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-provisioner-windows-restart plugin: [INFO] 52 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-provisioner-windows-restart plugin: [INFO] RPC client: Communicator ended with: 1190
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:01 packer-provisioner-windows-restart plugin: Reboot already in progress, waiting...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:11 packer-provisioner-windows-restart plugin: Check if machine is rebooting...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:11 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:11 [INFO] starting remote command: shutdown /r /f /t 60 /c "packer restart test"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:41 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:41 [INFO] command 'shutdown /r /f /t 60 /c "packer restart test"' exited with code: 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:41 [INFO] 0 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:41 [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:41 packer-provisioner-windows-restart plugin: [INFO] 0 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:41 packer-provisioner-windows-restart plugin: [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:41 packer-provisioner-windows-restart plugin: Waiting for machine to reboot with timeout: 10m0s
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:41 packer-provisioner-windows-restart plugin: Waiting for machine to become available...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:41 packer-provisioner-windows-restart plugin: Checking that communicator is connected with: 'powershell -command "node --version; python --version"'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:46 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:46 [INFO] starting remote command: powershell -command "node --version; python --version"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 ui: ==> azure-arm: v24.13.1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 ui: ==> azure-arm: Python 3.14.3
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:47 [INFO] command 'powershell -command "node --version; python --version"' exited with code: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:47 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 [INFO] 25 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-windows-restart plugin: [INFO] 25 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-windows-restart plugin: [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-windows-restart plugin: [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-windows-restart plugin: Connected to machine
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:47 [INFO] starting remote command: powershell.exe -EncodedCommand JABQAHIAbwBnAHIAZQBzAHMAUAByAGUAZgBlAHIAZQBuAGMAZQAgAD0AIAAnAFMAaQBsAGUAbgB0AGwAeQBDAG8AbgB0AGkAbgB1AGUAJwA7AGUAYwBoAG8AIAAoACIAewAwAH0AIAByAGUAcwB0AGEAcgB0AGUAZAAuACIAIAAtAGYAIABbAFMAeQBzAHQAZQBtAC4ATgBlAHQALgBEAG4AcwBdADoAOgBHAGUAdABIAG8AcwB0AE4AYQBtAGUAKAApACkA
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 ui: ==> azure-arm: pkrvmsyco9w9kkz restarted.
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:47 [INFO] command 'powershell.exe -EncodedCommand JABQAHIAbwBnAHIAZQBzAHMAUAByAGUAZgBlAHIAZQBuAGMAZQAgAD0AIAAnAFMAaQBsAGUAbgB0AGwAeQBDAG8AbgB0AGkAbgB1AGUAJwA7AGUAYwBoAG8AIAAoACIAewAwAH0AIAByAGUAcwB0AGEAcgB0AGUAZAAuACIAIAAtAGYAIABbAFMAeQBzAHQAZQBtAC4ATgBlAHQALgBEAG4AcwBdADoAOgBHAGUAdABIAG8AcwB0AE4AYQBtAGUAKAApACkA' exited with code: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:47 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 [INFO] 28 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-windows-restart plugin: [INFO] 28 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-windows-restart plugin: [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-windows-restart plugin: [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 ui: ==> azure-arm: Machine successfully restarted, moving on
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 ui: ==> azure-arm: Provisioning with Powershell...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Found command: $ErrorActionPreference = "Stop"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $ProgressPreference = "SilentlyContinue"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: function Update-SessionEnvironment {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     $machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     $env:Path = "$machinePath;$userPath"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: function Get-InstallerWithRetry {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     param([string]$Uri, [string]$OutFile, [int]$MaxRetries = 3)
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     for ($i = 1; $i -le $MaxRetries; $i++) {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:         try { Invoke-WebRequest -Uri $Uri -OutFile $OutFile -UseBasicParsing; return }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:         catch { if ($i -eq $MaxRetries) { throw }; Start-Sleep -Seconds 10 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: function Test-InstallerHash {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     param([string]$FilePath, [string]$ExpectedHash)
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:         Write-Host "`[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:         return
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     if ($actual -ne $ExpectedHash.ToUpper()) {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:         Write-Error "`[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:         exit 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     Write-Host "`[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: # ═══ VISUAL STUDIO CODE ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Write-Host "=== Installing Visual Studio Code (System) ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $VSCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64/stable"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $VSCodeInstaller = "$env:TEMP\VSCodeSetup-x64.exe"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Get-InstallerWithRetry -Uri $VSCodeUrl -OutFile $VSCodeInstaller
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $proc = Start-Process -FilePath $VSCodeInstaller `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     -ArgumentList "/VERYSILENT /NORESTART /MERGETASKS=`"!runcode,addcontextmenufiles,addcontextmenufolders,addtopath`"" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     -Wait -PassThru
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: if ($proc.ExitCode -ne 0) { Write-Error "VS Code installation failed ($($proc.ExitCode))"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] VS Code installed to: C:\Program Files\Microsoft VS Code"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: # ═══ GIT FOR WINDOWS ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Write-Host "=== Installing Git for Windows ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $GitVersion = "2.53.0"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $GitUrl = "https://github.com/git-for-windows/git/releases/download/v${GitVersion}.windows.1/Git-${GitVersion}-64-bit.exe"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $GitInstaller = "$env:TEMP\Git-${GitVersion}-64-bit.exe"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Get-InstallerWithRetry -Uri $GitUrl -OutFile $GitInstaller
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Test-InstallerHash -FilePath $GitInstaller -ExpectedHash ""
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $proc = Start-Process -FilePath $GitInstaller `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     -ArgumentList "/VERYSILENT /NORESTART /PathOption=Cmd /NoAutoCrlf /SetupType=default" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     -Wait -PassThru
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: if ($proc.ExitCode -ne 0) { Write-Error "Git installation failed ($($proc.ExitCode))"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] Git: $(git --version)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: # ═══ GITHUB DESKTOP ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Write-Host "=== Installing GitHub Desktop (Machine-Wide Provisioner) ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $GHDesktopUrl = "https://central.github.com/deployments/desktop/desktop/latest/GitHubDesktopSetup-x64.msi"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $GHDesktopInstaller = "$env:TEMP\GitHubDesktop-x64.msi"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Get-InstallerWithRetry -Uri $GHDesktopUrl -OutFile $GHDesktopInstaller
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $proc = Start-Process -FilePath "msiexec.exe" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     -ArgumentList "/i `"$GHDesktopInstaller`" /qn /norestart ALLUSERS=1" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     -Wait -PassThru
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: if ($proc.ExitCode -ne 0) { Write-Error "GitHub Desktop installation failed ($($proc.ExitCode))"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] GitHub Desktop provisioner installed"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: # ═══ AZURE CLI ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $AzCliVersion = "2.83.0"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Write-Host "=== Installing Azure CLI $AzCliVersion ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $AzCliUrl = "https://azcliprod.blob.core.windows.net/msi/azure-cli-$AzCliVersion-x64.msi"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $AzCliInstaller = "$env:TEMP\azure-cli-$AzCliVersion-x64.msi"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Get-InstallerWithRetry -Uri $AzCliUrl -OutFile $AzCliInstaller
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Test-InstallerHash -FilePath $AzCliInstaller -ExpectedHash ""
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $proc = Start-Process -FilePath "msiexec.exe" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     -ArgumentList "/i `"$AzCliInstaller`" /qn /norestart ALLUSERS=1" `
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     -Wait -PassThru
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: if ($proc.ExitCode -ne 0) { Write-Error "Azure CLI installation failed ($($proc.ExitCode))"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] Azure CLI: $(az --version 2>&1 | Select-Object -First 1)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: # ═══ GITHUB COPILOT (VS Code Extension) ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Write-Host "=== Installing GitHub Copilot VS Code Extension ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: $codeBin = "C:\Program Files\Microsoft VS Code\bin\code.cmd"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: if (Test-Path $codeBin) {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     & $codeBin --install-extension GitHub.copilot --force 2>&1 | Write-Host
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     & $codeBin --install-extension GitHub.copilot-chat --force 2>&1 | Write-Host
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     Write-Host "`[VERIFY] GitHub Copilot extensions installed"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: } else {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     Write-Error "VS Code not found at expected path - cannot install Copilot extension"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin:     exit 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: # ═══ CLEANUP ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Remove-Item -Path $VSCodeInstaller, $GitInstaller, $GHDesktopInstaller, $AzCliInstaller -Force -ErrorAction SilentlyContinue
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Write-Host "=== Phase 2 Complete: Developer tools installed ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Writing PowerShell script to file: /tmp/powershell-provisioner2510145902
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 ui: ==> azure-arm: Provisioning with powershell script: /tmp/powershell-provisioner2510145902
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Opening /tmp/powershell-provisioner2510145902 for reading
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: Uploading env vars to c:/Windows/Temp/packer-ps-env-vars-699a6988-93e3-0ee5-a804-9ce6c7fe7048.ps1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-provisioner-powershell plugin: [INFO] 74 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 [INFO] 74 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:47 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:47 Uploading file to 'c:/Windows/Temp/packer-ps-env-vars-699a6988-93e3-0ee5-a804-9ce6c7fe7048.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:48 packer-provisioner-powershell plugin: Building elevated command wrapper for: powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-9527-ed41-c70c-69a9e9a6c026.ps1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:48 packer-provisioner-powershell plugin: Command [powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-9527-ed41-c70c-69a9e9a6c026.ps1 > %SYSTEMROOT%/Temp/packer-699a6a58-9f30-18ab-3db2-133966b5db9e.out 2>&1] converted to [powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-9527-ed41-c70c-69a9e9a6c026.ps1 &gt; %SYSTEMROOT%/Temp/packer-699a6a58-9f30-18ab-3db2-133966b5db9e.out 2&gt;&amp;1] for use in XML string
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:48 packer-provisioner-powershell plugin: Uploading elevated shell wrapper for command [powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-9527-ed41-c70c-69a9e9a6c026.ps1 > %SYSTEMROOT%/Temp/packer-699a6a58-9f30-18ab-3db2-133966b5db9e.out 2>&1] to [C:/Windows/Temp/packer-elevated-shell-699a6a58-d5e9-7bda-da7c-3d06c9a79493.ps1]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:48 packer-provisioner-powershell plugin: [INFO] 3223 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:48 [INFO] 3223 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:48 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:48 Uploading file to 'C:/Windows/Temp/packer-elevated-shell-699a6a58-d5e9-7bda-da7c-3d06c9a79493.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:49 packer-provisioner-powershell plugin: [INFO] 5348 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:49 [INFO] 5348 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:49 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:49 Uploading file to 'c:/Windows/Temp/script-699a6988-9527-ed41-c70c-69a9e9a6c026.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:50 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:30:50 [INFO] starting remote command: powershell -executionpolicy bypass -file "C:/Windows/Temp/packer-elevated-shell-699a6a58-d5e9-7bda-da7c-3d06c9a79493.ps1"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:30:51 ui: ==> azure-arm: === Installing Visual Studio Code (System) ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:31:49 ui: ==> azure-arm: [VERIFY] VS Code installed to: C:\Program Files\Microsoft VS Code
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:31:49 ui: ==> azure-arm: === Installing Git for Windows ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:31:50 ui: ==> azure-arm: [INTEGRITY] No SHA256 provided for Git-2.53.0-64-bit.exe - skipping verification
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:32:24 ui: ==> azure-arm: [VERIFY] Git: git version 2.53.0.windows.1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:32:24 ui: ==> azure-arm: === Installing GitHub Desktop (Machine-Wide Provisioner) ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:32:36 ui: ==> azure-arm: [VERIFY] GitHub Desktop provisioner installed
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:32:36 ui: ==> azure-arm: === Installing Azure CLI 2.83.0 ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:32:39 ui: ==> azure-arm: [INTEGRITY] No SHA256 provided for azure-cli-2.83.0-x64.msi - skipping verification
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:05 ui: ==> azure-arm: [VERIFY] Azure CLI: azure-cli                         2.83.0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:05 ui: ==> azure-arm: === Installing GitHub Copilot VS Code Extension ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:07 ui: ==> azure-arm: Installing extensions...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:07 ui: ==> azure-arm: Installing extension 'github.copilot'...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 ui: ==> azure-arm: Extension 'github.copilot-chat' v0.37.8 was successfully installed.
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 ui: ==> azure-arm: Installing extensions...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:10 [INFO] command 'powershell -executionpolicy bypass -file "C:/Windows/Temp/packer-elevated-shell-699a6a58-d5e9-7bda-da7c-3d06c9a79493.ps1"' exited with code: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:10 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 [INFO] 940 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 ui: ==> azure-arm: Extension 'github.copilot-chat' is already installed.
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 packer-provisioner-powershell plugin: [INFO] 940 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 packer-provisioner-powershell plugin: [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 ui: ==> azure-arm: [VERIFY] GitHub Copilot extensions installed
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 packer-provisioner-powershell plugin: [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 ui: ==> azure-arm: === Phase 2 Complete: Developer tools installed ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 packer-provisioner-powershell plugin: c:/Windows/Temp/script-699a6988-9527-ed41-c70c-69a9e9a6c026.ps1 returned with exit code 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 packer-provisioner-powershell plugin: [INFO] 511 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 [INFO] 511 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:10 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:10 Uploading file to 'c:/Windows/Temp/packer-cleanup-699a6988-b5d5-232f-b63a-e681f3b4fa3e.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:11 [INFO] starting remote command: powershell -executionpolicy bypass -file c:/Windows/Temp/packer-cleanup-699a6988-b5d5-232f-b63a-e681f3b4fa3e.ps1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:11 [INFO] command 'powershell -executionpolicy bypass -file c:/Windows/Temp/packer-cleanup-699a6988-b5d5-232f-b63a-e681f3b4fa3e.ps1' exited with code: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:11 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 [INFO] 0 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 [INFO] RPC endpoint: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: [INFO] 0 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: [INFO] RPC client: Communicator ended with: 0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 ui: ==> azure-arm: Provisioning with Powershell...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Found command: $ErrorActionPreference = "Stop"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: $ProgressPreference = "SilentlyContinue"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: function Update-SessionEnvironment {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     $machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     $env:Path = "$machinePath;$userPath"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: # Verify prerequisites
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: $nodeCheck = Get-Command node -ErrorAction SilentlyContinue
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: $npmCheck = Get-Command npm -ErrorAction SilentlyContinue
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: if (-not $nodeCheck -or -not $npmCheck) {
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     Write-Error "Node.js or npm not found in PATH. Phase 1 may have failed."
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     exit 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "`[PREREQ] Node.js: $(node --version)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "`[PREREQ] npm: $(npm --version)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: # ═══ OPENCLAW ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "=== Installing OpenClaw 2026.2.14 (global) ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: npm install -g openclaw@2026.2.14 2>&1 | Write-Host
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: if ($LASTEXITCODE -ne 0) { Write-Error "OpenClaw npm install failed ($LASTEXITCODE)"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: $openclawCheck = Get-Command openclaw -ErrorAction SilentlyContinue
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: if (-not $openclawCheck) { Write-Error "openclaw not found in PATH after installation"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] OpenClaw: $(openclaw --version 2>&1)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: # ═══ CLAUDE CODE ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "=== Installing Claude Code 2.1.42 (global) ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: npm install -g @anthropic-ai/claude-code@2.1.42 2>&1 | Write-Host
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: if ($LASTEXITCODE -ne 0) { Write-Error "Claude Code npm install failed ($LASTEXITCODE)"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: $claudeCheck = Get-Command claude -ErrorAction SilentlyContinue
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: if (-not $claudeCheck) { Write-Error "claude not found in PATH after installation"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] Claude Code: $(claude --version 2>&1)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: # ═══ OPENSPEC ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "=== Installing OpenSpec 0.9.1 (global) ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: npm install -g @fission-ai/openspec@0.9.1 2>&1 | Write-Host
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: if ($LASTEXITCODE -ne 0) { Write-Error "OpenSpec npm install failed ($LASTEXITCODE)"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: $openspecCheck = Get-Command openspec -ErrorAction SilentlyContinue
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: if (-not $openspecCheck) { Write-Error "openspec not found in PATH after installation"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] OpenSpec: $(openspec --version 2>&1)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: # ═══ OPENAI CODEX CLI ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "=== Installing OpenAI Codex CLI 0.101.0 (global) ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: npm install -g @openai/codex@0.101.0 2>&1 | Write-Host
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: if ($LASTEXITCODE -ne 0) { Write-Error "Codex CLI npm install failed ($LASTEXITCODE)"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Update-SessionEnvironment
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: $codexCheck = Get-Command codex -ErrorAction SilentlyContinue
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: if (-not $codexCheck) { Write-Error "codex not found in PATH after installation"; exit 1 }
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "`[VERIFY] Codex CLI: $(codex --version 2>&1)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: # ═══ NPM GLOBAL PACKAGE INVENTORY ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "=== Listing global npm packages ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: npm list -g --depth=0 2>&1 | Write-Host
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "`[SECURITY] Global package inventory logged (npm audit does not support --global)"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: # ═══ SBOM GENERATION ═══
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "=== Generating Software Bill of Materials (SBOM) ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: $sbomDir = "C:\ProgramData\ImageBuild"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: New-Item -ItemType Directory -Path $sbomDir -Force | Out-Null
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: $globalPackages = npm list -g --json 2>$null
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Set-Content -Path "$sbomDir\sbom-npm-global.json" -Value $globalPackages -Encoding UTF8
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "`[SBOM] npm global packages: $sbomDir\sbom-npm-global.json"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: # Record installed software versions
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: $softwareManifest = @{
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     buildDate       = (Get-Date -Format "yyyy-MM-dd'T'HH:mm:ss'Z'")
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     nodeVersion     = (node --version 2>&1).ToString()
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     npmVersion      = (npm --version 2>&1).ToString()
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     pythonVersion   = (python --version 2>&1).ToString()
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     gitVersion      = (git --version 2>&1).ToString()
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     pwshVersion     = (pwsh --version 2>&1).ToString()
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     azCliVersion    = (az --version 2>&1 | Select-Object -First 1).ToString()
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     openclawVersion = (openclaw --version 2>&1).ToString()
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     claudeVersion   = (claude --version 2>&1).ToString()
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     openspecVersion = (openspec --version 2>&1).ToString()
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin:     codexVersion   = (codex --version 2>&1).ToString()
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: } | ConvertTo-Json -Depth 3
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "`[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Write-Host "=== Phase 3 Complete: AI agents installed ==="
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Writing PowerShell script to file: /tmp/powershell-provisioner1672335911
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 ui: ==> azure-arm: Provisioning with powershell script: /tmp/powershell-provisioner1672335911
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Opening /tmp/powershell-provisioner1672335911 for reading
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: Uploading env vars to c:/Windows/Temp/packer-ps-env-vars-699a6988-176d-a081-b7cd-6f7dc112baf9.ps1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-provisioner-powershell plugin: [INFO] 74 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 [INFO] 74 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:11 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:11 Uploading file to 'c:/Windows/Temp/packer-ps-env-vars-699a6988-176d-a081-b7cd-6f7dc112baf9.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:12 packer-provisioner-powershell plugin: Building elevated command wrapper for: powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-629d-f5da-7178-efdacec82d55.ps1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:12 packer-provisioner-powershell plugin: Command [powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-629d-f5da-7178-efdacec82d55.ps1 > %SYSTEMROOT%/Temp/packer-699a6b24-e9ec-cfa1-f22f-9699e3ddff03.out 2>&1] converted to [powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-629d-f5da-7178-efdacec82d55.ps1 &gt; %SYSTEMROOT%/Temp/packer-699a6b24-e9ec-cfa1-f22f-9699e3ddff03.out 2&gt;&amp;1] for use in XML string
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:12 packer-provisioner-powershell plugin: Uploading elevated shell wrapper for command [powershell -executionpolicy bypass -file c:/Windows/Temp/script-699a6988-629d-f5da-7178-efdacec82d55.ps1 > %SYSTEMROOT%/Temp/packer-699a6b24-e9ec-cfa1-f22f-9699e3ddff03.out 2>&1] to [C:/Windows/Temp/packer-elevated-shell-699a6b24-63ca-806d-619f-31df2de57f3c.ps1]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:12 packer-provisioner-powershell plugin: [INFO] 3223 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:12 [INFO] 3223 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:12 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:12 Uploading file to 'C:/Windows/Temp/packer-elevated-shell-699a6b24-63ca-806d-619f-31df2de57f3c.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:13 packer-provisioner-powershell plugin: [INFO] 4828 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:13 [INFO] 4828 bytes written for 'uploadData'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:13 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:13 Uploading file to 'c:/Windows/Temp/script-699a6988-629d-f5da-7178-efdacec82d55.ps1'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:14 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:14 [INFO] starting remote command: powershell -executionpolicy bypass -file "C:/Windows/Temp/packer-elevated-shell-699a6b24-63ca-806d-619f-31df2de57f3c.ps1"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:16 ui: ==> azure-arm: [PREREQ] Node.js: v24.13.1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:16 ui: ==> azure-arm: [PREREQ] npm: 11.8.0
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:16 ui: ==> azure-arm: === Installing OpenClaw 2026.2.14 (global) ===
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm: C:\Windows\Temp\script-699a6988-629d-f5da-7178-efdacec82d55.ps1 : An error occurred: npm warn deprecated npmlog@6.0.2:
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm: This package is no longer supported.
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm: At C:\Windows\Temp\script-699a6988-629d-f5da-7178-efdacec82d55.ps1:106 char:2
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:51 [INFO] command 'powershell -executionpolicy bypass -file "C:/Windows/Temp/packer-elevated-shell-699a6b24-63ca-806d-619f-31df2de57f3c.ps1"' exited with code: 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm: +     Write-Error "An error occurred: $_"
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:51 [INFO] RPC endpoint: Communicator ended with: 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 [INFO] 644 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm: +     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 [INFO] RPC client: Communicator ended with: 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 [INFO] RPC endpoint: Communicator ended with: 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 packer-provisioner-powershell plugin: [INFO] 644 bytes written for 'stdout'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 packer-provisioner-powershell plugin: [INFO] 0 bytes written for 'stderr'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 packer-provisioner-powershell plugin: [INFO] RPC client: Communicator ended with: 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm:     + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm:     + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,script-699a6988-629d-f5da-7178-efdacec
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm:    82d55.ps1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm:
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 packer-provisioner-powershell plugin: c:/Windows/Temp/script-699a6988-629d-f5da-7178-efdacec82d55.ps1 returned with exit code 1
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm: Provisioning step had errors: Running the cleanup provisioner, if present...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 ui: ==> azure-arm: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER ==> azure-arm: Deleting Virtual Machine deployment and its attached resources...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:51 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Compute/virtualMachines/pkrvmsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:51 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/deployments/pkrdpsyco9w9kkz/operations?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:51 [INFO] Attempting deletion -> Microsoft.Compute/virtualMachines : pkrvmsyco9w9kkz
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:34:51 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:34:51 [DEBUG] DELETE https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Compute/virtualMachines/pkrvmsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:01 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:01 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Compute/virtualMachines/pkrvmsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:12 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:12 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Compute/virtualMachines/pkrvmsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:22 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:22 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Compute/virtualMachines/pkrvmsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:22 ui: ==> azure-arm: Deleted -> Microsoft.Compute/virtualMachines : 'pkrvmsyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:22 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:22 [INFO] Attempting deletion -> Microsoft.Network/networkInterfaces : pkrnisyco9w9kkz
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:22 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:22 [DEBUG] DELETE https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Network/networkInterfaces/pkrnisyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:32 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:32 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Network/networkInterfaces/pkrnisyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:32 ui: ==> azure-arm: Deleted -> Microsoft.Network/networkInterfaces : 'pkrnisyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:32 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:32 [DEBUG] DELETE https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Compute/disks/pkrossyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:42 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:42 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Compute/disks/pkrossyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:42 ui: ==> azure-arm: Deleted -> Microsoft.Compute/disks : '/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Compute/disks/pkrossyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:42 ui: ==> azure-arm: Removing the created Deployment object: 'pkrdpsyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:42 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:42 [DEBUG] DELETE https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/pkrdpsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:53 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:53 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/pkrdpsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:53 ui: ==> azure-arm: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER ==> azure-arm: Deleting KeyVault created during build
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:53 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:53 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/deployments/kvpkrdpsyco9w9kkz/operations?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:53 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:53 [INFO] Attempting deletion -> Microsoft.KeyVault/vaults : pkrkvsyco9w9kkz
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:53 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:53 [DEBUG] DELETE https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.KeyVault/vaults/pkrkvsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:55 ui: ==> azure-arm: Deleted -> Microsoft.KeyVault/vaults : 'pkrkvsyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:55 ui: ==> azure-arm: Removing the created Deployment object: 'kvpkrdpsyco9w9kkz'
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:35:55 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:35:55 [DEBUG] DELETE https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/kvpkrdpsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 packer-plugin-azure_v2.5.1_x5.0_linux_amd64 plugin: 2026/02/22 02:36:06 [DEBUG] GET https://management.azure.com/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_19193107-35e2-4e36-9dc1-e1f707bc42dd/providers/Microsoft.Resources/deployments/kvpkrdpsyco9w9kkz?[REDACTED]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 ui: ==> azure-arm: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER ==> azure-arm: The resource group was not created by Packer, not deleting ...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 ui error: Build 'azure-arm' errored after 8 minutes 45 seconds: Script exited with non-zero exit status: 1. Allowed exit codes are: [0]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 ui: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER ==> Wait completed after 8 minutes 45 seconds
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 machine readable: error-count []string{"1"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 ui error: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER ==> Some builds didn't complete successfully and had errors:
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 machine readable: azure-arm,error []string{"Script exited with non-zero exit status: 1. Allowed exit codes are: [0]"}
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 ui error: --> azure-arm: Script exited with non-zero exit status: 1. Allowed exit codes are: [0]
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 ui: 
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER ==> Builds finished but no artifacts were created.
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 waiting for all plugin processes to complete...
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 /root/.config/packer/plugins/github.com/rgl/windows-update/packer-plugin-windows-update_v0.17.1_x5.0_linux_amd64: plugin process exited
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 /aib/packerInput/packer: plugin process exited
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 /aib/packerInput/packer: plugin process exited
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 /aib/packerInput/packer: plugin process exited
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 /aib/packerInput/packer: plugin process exited
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 [ERR] Error decoding response stream 21: EOF
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 /aib/packerInput/packer: plugin process exited
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 /root/.config/packer/plugins/github.com/hashicorp/azure/packer-plugin-azure_v2.5.1_x5.0_linux_amd64: plugin process exited
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 /aib/packerInput/packer: plugin process exited
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 /aib/packerInput/packer: plugin process exited
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER 2026/02/22 02:36:06 /aib/packerInput/packer: plugin process exited
+[c3513310-a8cc-4e81-9e07-a5a1557ba0b3] PACKER Done exporting Packer logs to Azure Storage.

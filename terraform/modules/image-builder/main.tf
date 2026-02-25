@@ -28,19 +28,19 @@ locals {
             $machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
             $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
             $env:Path = "$machinePath;$userPath"
-            Write-Host "[PATH] Session environment refreshed"
+            Write-Host "`[PATH] Session environment refreshed"
         }
 
         function Get-InstallerWithRetry {
             param([string]$Uri, [string]$OutFile, [int]$MaxRetries = 3)
             for ($i = 1; $i -le $MaxRetries; $i++) {
                 try {
-                    Write-Host "[DOWNLOAD] Attempt $i of $MaxRetries : $Uri"
+                    Write-Host "`[DOWNLOAD] Attempt $i of $MaxRetries : $Uri"
                     Invoke-WebRequest -Uri $Uri -OutFile $OutFile -UseBasicParsing
                     return
                 } catch {
                     if ($i -eq $MaxRetries) { throw }
-                    Write-Host "[DOWNLOAD] Attempt $i failed, retrying in 10 seconds..."
+                    Write-Host "`[DOWNLOAD] Attempt $i failed, retrying in 10 seconds..."
                     Start-Sleep -Seconds 10
                 }
             }
@@ -49,15 +49,15 @@ locals {
         function Test-InstallerHash {
             param([string]$FilePath, [string]$ExpectedHash)
             if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {
-                Write-Host "[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) — skipping verification"
+                Write-Host "`[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification"
                 return
             }
             $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash
             if ($actual -ne $ExpectedHash.ToUpper()) {
-                Write-Error "[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual"
+                Write-Error "`[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual"
                 exit 1
             }
-            Write-Host "[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
+            Write-Host "`[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
         }
 
         # ═══ NODE.JS ═══
@@ -74,8 +74,8 @@ locals {
             -Wait -PassThru
         if ($proc.ExitCode -ne 0) { Write-Error "Node.js installation failed ($($proc.ExitCode))"; exit 1 }
         Update-SessionEnvironment
-        Write-Host "[VERIFY] Node.js: $(node --version)"
-        Write-Host "[VERIFY] npm: $(npm --version)"
+        Write-Host "`[VERIFY] Node.js: $(node --version)"
+        Write-Host "`[VERIFY] npm: $(npm --version)"
 
         # ═══ PYTHON ═══
         $PythonVersion = "${var.python_version}"
@@ -91,9 +91,9 @@ locals {
             -Wait -PassThru
         if ($proc.ExitCode -ne 0) { Write-Error "Python installation failed ($($proc.ExitCode))"; exit 1 }
         Update-SessionEnvironment
-        Write-Host "[VERIFY] Python: $(python --version)"
+        Write-Host "`[VERIFY] Python: $(python --version)"
         python -m pip install --upgrade pip --quiet
-        Write-Host "[VERIFY] pip: $(python -m pip --version)"
+        Write-Host "`[VERIFY] pip: $(python -m pip --version)"
 
         # ═══ POWERSHELL 7 ═══
         Write-Host "=== Installing PowerShell 7 ==="
@@ -108,7 +108,7 @@ locals {
             -Wait -PassThru
         if ($proc.ExitCode -ne 0) { Write-Error "PowerShell 7 installation failed ($($proc.ExitCode))"; exit 1 }
         Update-SessionEnvironment
-        Write-Host "[VERIFY] PowerShell 7 installed"
+        Write-Host "`[VERIFY] PowerShell 7 installed"
 
         # ═══ CLEANUP ═══
         Remove-Item -Path $NodeInstaller, $PythonInstaller, $PwshInstaller -Force -ErrorAction SilentlyContinue
@@ -151,20 +151,20 @@ locals {
         function Test-InstallerHash {
             param([string]$FilePath, [string]$ExpectedHash)
             if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {
-                Write-Host "[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) — skipping verification"
+                Write-Host "`[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification"
                 return
             }
             $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash
             if ($actual -ne $ExpectedHash.ToUpper()) {
-                Write-Error "[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual"
+                Write-Error "`[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual"
                 exit 1
             }
-            Write-Host "[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
+            Write-Host "`[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
         }
 
         # ═══ VISUAL STUDIO CODE ═══
         Write-Host "=== Installing Visual Studio Code (System) ==="
-        $VSCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64-system/stable"
+        $VSCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64/stable"
         $VSCodeInstaller = "$env:TEMP\VSCodeSetup-x64.exe"
         Get-InstallerWithRetry -Uri $VSCodeUrl -OutFile $VSCodeInstaller
 
@@ -173,7 +173,7 @@ locals {
             -Wait -PassThru
         if ($proc.ExitCode -ne 0) { Write-Error "VS Code installation failed ($($proc.ExitCode))"; exit 1 }
         Update-SessionEnvironment
-        Write-Host "[VERIFY] VS Code installed to: C:\Program Files\Microsoft VS Code"
+        Write-Host "`[VERIFY] VS Code installed to: C:\Program Files\Microsoft VS Code"
 
         # ═══ GIT FOR WINDOWS ═══
         Write-Host "=== Installing Git for Windows ==="
@@ -188,7 +188,7 @@ locals {
             -Wait -PassThru
         if ($proc.ExitCode -ne 0) { Write-Error "Git installation failed ($($proc.ExitCode))"; exit 1 }
         Update-SessionEnvironment
-        Write-Host "[VERIFY] Git: $(git --version)"
+        Write-Host "`[VERIFY] Git: $(git --version)"
 
         # ═══ GITHUB DESKTOP ═══
         Write-Host "=== Installing GitHub Desktop (Machine-Wide Provisioner) ==="
@@ -200,7 +200,7 @@ locals {
             -ArgumentList "/i `"$GHDesktopInstaller`" /qn /norestart ALLUSERS=1" `
             -Wait -PassThru
         if ($proc.ExitCode -ne 0) { Write-Error "GitHub Desktop installation failed ($($proc.ExitCode))"; exit 1 }
-        Write-Host "[VERIFY] GitHub Desktop provisioner installed"
+        Write-Host "`[VERIFY] GitHub Desktop provisioner installed"
 
         # ═══ AZURE CLI ═══
         $AzCliVersion = "${var.azure_cli_version}"
@@ -215,7 +215,7 @@ locals {
             -Wait -PassThru
         if ($proc.ExitCode -ne 0) { Write-Error "Azure CLI installation failed ($($proc.ExitCode))"; exit 1 }
         Update-SessionEnvironment
-        Write-Host "[VERIFY] Azure CLI: $(az --version 2>&1 | Select-Object -First 1)"
+        Write-Host "`[VERIFY] Azure CLI: $(az --version 2>&1 | Select-Object -First 1)"
 
         # ═══ GITHUB COPILOT (VS Code Extension) ═══
         Write-Host "=== Installing GitHub Copilot VS Code Extension ==="
@@ -223,9 +223,9 @@ locals {
         if (Test-Path $codeBin) {
             & $codeBin --install-extension GitHub.copilot --force 2>&1 | Write-Host
             & $codeBin --install-extension GitHub.copilot-chat --force 2>&1 | Write-Host
-            Write-Host "[VERIFY] GitHub Copilot extensions installed"
+            Write-Host "`[VERIFY] GitHub Copilot extensions installed"
         } else {
-            Write-Error "VS Code not found at expected path — cannot install Copilot extension"
+            Write-Error "VS Code not found at expected path - cannot install Copilot extension"
             exit 1
         }
 
@@ -261,18 +261,25 @@ locals {
             Write-Error "Node.js or npm not found in PATH. Phase 1 may have failed."
             exit 1
         }
-        Write-Host "[PREREQ] Node.js: $(node --version)"
-        Write-Host "[PREREQ] npm: $(npm --version)"
+        Write-Host "`[PREREQ] Node.js: $(node --version)"
+        Write-Host "`[PREREQ] npm: $(npm --version)"
+
+        # npm install writes deprecation warnings to stderr which PowerShell
+        # converts to ErrorRecords, triggering terminating errors under "Stop".
+        # Use "Continue" for npm commands and check $LASTEXITCODE manually.
+        $ErrorActionPreference = "Continue"
 
         # ═══ OPENCLAW ═══
+        # --ignore-scripts skips node-llama-cpp native build (requires cmake + C++ compiler).
+        # OpenClaw CLI works via remote APIs; users can rebuild native modules if needed.
         Write-Host "=== Installing OpenClaw ${var.openclaw_version} (global) ==="
-        npm install -g openclaw@${var.openclaw_version} 2>&1 | Write-Host
+        npm install -g openclaw@${var.openclaw_version} --ignore-scripts 2>&1 | Write-Host
         if ($LASTEXITCODE -ne 0) { Write-Error "OpenClaw npm install failed ($LASTEXITCODE)"; exit 1 }
         Update-SessionEnvironment
 
         $openclawCheck = Get-Command openclaw -ErrorAction SilentlyContinue
         if (-not $openclawCheck) { Write-Error "openclaw not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] OpenClaw: $(openclaw --version 2>&1)"
+        Write-Host "`[VERIFY] OpenClaw: $(openclaw --version 2>&1)"
 
         # ═══ CLAUDE CODE ═══
         Write-Host "=== Installing Claude Code ${var.claude_code_version} (global) ==="
@@ -282,7 +289,7 @@ locals {
 
         $claudeCheck = Get-Command claude -ErrorAction SilentlyContinue
         if (-not $claudeCheck) { Write-Error "claude not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] Claude Code: $(claude --version 2>&1)"
+        Write-Host "`[VERIFY] Claude Code: $(claude --version 2>&1)"
 
         # ═══ OPENSPEC ═══
         Write-Host "=== Installing OpenSpec ${var.openspec_version} (global) ==="
@@ -292,7 +299,7 @@ locals {
 
         $openspecCheck = Get-Command openspec -ErrorAction SilentlyContinue
         if (-not $openspecCheck) { Write-Error "openspec not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] OpenSpec: $(openspec --version 2>&1)"
+        Write-Host "`[VERIFY] OpenSpec: $(openspec --version 2>&1)"
 
         # ═══ OPENAI CODEX CLI ═══
         Write-Host "=== Installing OpenAI Codex CLI ${var.codex_version} (global) ==="
@@ -302,12 +309,15 @@ locals {
 
         $codexCheck = Get-Command codex -ErrorAction SilentlyContinue
         if (-not $codexCheck) { Write-Error "codex not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] Codex CLI: $(codex --version 2>&1)"
+        Write-Host "`[VERIFY] Codex CLI: $(codex --version 2>&1)"
+
+        # Restore strict error handling for remaining operations
+        $ErrorActionPreference = "Stop"
 
         # ═══ NPM GLOBAL PACKAGE INVENTORY ═══
         Write-Host "=== Listing global npm packages ==="
         npm list -g --depth=0 2>&1 | Write-Host
-        Write-Host "[SECURITY] Global package inventory logged (npm audit does not support --global)"
+        Write-Host "`[SECURITY] Global package inventory logged (npm audit does not support --global)"
 
         # ═══ SBOM GENERATION ═══
         Write-Host "=== Generating Software Bill of Materials (SBOM) ==="
@@ -316,7 +326,7 @@ locals {
 
         $globalPackages = npm list -g --json 2>$null
         Set-Content -Path "$sbomDir\sbom-npm-global.json" -Value $globalPackages -Encoding UTF8
-        Write-Host "[SBOM] npm global packages: $sbomDir\sbom-npm-global.json"
+        Write-Host "`[SBOM] npm global packages: $sbomDir\sbom-npm-global.json"
 
         # Record installed software versions
         $softwareManifest = @{
@@ -333,7 +343,7 @@ locals {
             codexVersion   = (codex --version 2>&1).ToString()
         } | ConvertTo-Json -Depth 3
         Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
-        Write-Host "[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"
+        Write-Host "`[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"
 
         Write-Host "=== Phase 3 Complete: AI agents installed ==="
         PWSH
@@ -363,7 +373,7 @@ locals {
 
         $managedSettingsPath = "$claudeConfigDir\managed-settings.json"
         Set-Content -Path $managedSettingsPath -Value $managedSettings -Encoding UTF8
-        Write-Host "[CONFIG] Claude Code managed settings: $managedSettingsPath"
+        Write-Host "`[CONFIG] Claude Code managed settings: $managedSettingsPath"
 
         # ═══ OPENCLAW: Configuration Template ═══
         Write-Host "=== Creating OpenClaw configuration template ==="
@@ -388,7 +398,7 @@ locals {
 
         $templatePath = "$openclawTemplateDir\template-config.json"
         Set-Content -Path $templatePath -Value $openclawConfig -Encoding UTF8
-        Write-Host "[CONFIG] OpenClaw template: $templatePath"
+        Write-Host "`[CONFIG] OpenClaw template: $templatePath"
 
         # ═══ ACTIVE SETUP: First-Login Configuration Hydration ═══
         Write-Host "=== Registering Active Setup for first-login hydration ==="
@@ -418,7 +428,7 @@ if (Test-Path $templateFile) {
         Set-ItemProperty -Path $activeSetupKey -Name "(Default)" -Value "OpenClaw Configuration Hydration"
         Set-ItemProperty -Path $activeSetupKey -Name "StubPath" -Value "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$hydrationScriptPath`""
         Set-ItemProperty -Path $activeSetupKey -Name "Version" -Value "1,0,0,0"
-        Write-Host "[CONFIG] Active Setup registered: OpenClaw-ConfigHydration"
+        Write-Host "`[CONFIG] Active Setup registered: OpenClaw-ConfigHydration"
 
         # ═══ TEAMS OPTIMISATION PREREQUISITES ═══
         Write-Host "=== Setting Teams optimisation prerequisites ==="
@@ -427,7 +437,7 @@ if (Test-Path $templateFile) {
             New-Item -Path $teamsRegPath -Force | Out-Null
         }
         Set-ItemProperty -Path $teamsRegPath -Name "IsWVDEnvironment" -Value 1 -Type DWord -Force
-        Write-Host "[CONFIG] Teams IsWVDEnvironment = 1"
+        Write-Host "`[CONFIG] Teams IsWVDEnvironment = 1"
 
         # ═══ IMAGE CLEANUP & OPTIMISATION ═══
         Write-Host "=== Cleaning up image ==="
@@ -435,9 +445,10 @@ if (Test-Path $templateFile) {
         Stop-Service -Name wuauserv -Force -ErrorAction SilentlyContinue
         Remove-Item -Path "C:\Windows\SoftwareDistribution\Download\*" -Recurse -Force -ErrorAction SilentlyContinue
         Start-Service -Name wuauserv -ErrorAction SilentlyContinue
-        npm cache clean --force 2>&1 | Out-Null
+        # npm cache clean --force writes warnings to stderr; suppress via cmd /c
+        cmd /c "npm cache clean --force 2>&1" | Out-Null
 
-        Write-Host "[CLEANUP] Running DISM component store cleanup..."
+        Write-Host "`[CLEANUP] Running DISM component store cleanup..."
         Start-Process -FilePath "dism.exe" `
             -ArgumentList "/Online /Cleanup-Image /StartComponentCleanup /ResetBase" `
             -Wait -NoNewWindow
@@ -469,15 +480,18 @@ if (Test-Path $templateFile) {
       type               = "SharedImage"
       galleryImageId     = var.image_definition_id
       runOutputName      = "w365-dev-ai-${var.image_version}"
-      excludeFromLatest  = var.exclude_from_latest
-      replicationRegions = [var.location]
-      storageAccountType = "Standard_LRS"
+      excludeFromLatest = var.exclude_from_latest
+      targetRegions = [
+        {
+          name               = var.location
+          replicaCount       = var.replica_count
+          storageAccountType = "Standard_LRS"
+        }
+      ]
       versioning = {
         scheme = "Latest"
         major  = tonumber(split(".", var.image_version)[0])
       }
-      endOfLifeDate = local.end_of_life_date
-      replicaCount  = var.replica_count
     }
   ]
 

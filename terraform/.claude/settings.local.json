@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:registry.terraform.io)",
+      "WebFetch(domain:github.com)",
+      "Bash(cd /c/temp/W365Claw/terraform && terraform validate 2>&1)",
+      "Bash(cd /c/temp/W365Claw/terraform && terraform apply -auto-approve 2>&1)",
+      "Bash(az role:*)",
+      "Bash(az storage:*)",
+      "Bash(az image:*)",
+      "Bash(az account:*)",
+      "Bash(cd /c/temp/W365Claw/terraform && terraform state rm module.image_builder.azapi_resource.image_template 2>&1)",
+      "Bash(cd /c/temp/W365Claw/terraform && terraform state rm module.image_builder.azapi_resource.image_template 2>&1 && terraform state rm module.image_builder.azapi_resource_action.run_build 2>&1)",
+      "WebFetch(domain:update.code.visualstudio.com)",
+      "WebFetch(domain:code.visualstudio.com)",
+      "WebFetch(domain:go.microsoft.com)",
+      "Bash(cd /c/temp/W365Claw/terraform && terraform state rm module.image_builder.azapi_resource.image_template && terraform state rm module.image_builder.azapi_resource_action.run_build 2>&1)",
+      "Bash(az login:*)",
+      "Bash(terraform state:*)",
+      "Bash(echo:*)",
+      "Bash(export ARM_TENANT_ID=5a01497e-1bcb-4711-b6e6-d24f4ab00393 && cd /c/temp/W365Claw/terraform && terraform apply -auto-approve 2>&1)",
+      "Bash(az logout 2>&1 && az login --tenant \"5a01497e-1bcb-4711-b6e6-d24f4ab00393\" --scope \"https://management.core.windows.net//.default\" 2>&1)",
+      "Bash(az account set --subscription 7a713a84-2144-4ea1-8e85-9c63111bd995 && export ARM_TENANT_ID=5a01497e-1bcb-4711-b6e6-d24f4ab00393 && cd /c/temp/W365Claw/terraform && terraform apply -auto-approve 2>&1)"
+    ]
+  }
+}

@@ -39,10 +39,10 @@ resource "azurerm_role_assignment" "aib_identity_operator" {
   skip_service_principal_aad_check = true
 }
 
-# 4. Compute Gallery Image Contributor — allows AIB to write image versions to the gallery
+# 4. Compute Gallery Artifacts Publisher — allows AIB to write image versions to the gallery
 resource "azurerm_role_assignment" "aib_gallery_contributor" {
   scope                            = var.gallery_id
-  role_definition_name             = "Compute Gallery Image Contributor"
+  role_definition_name             = "Compute Gallery Artifacts Publisher"
   principal_id                     = azurerm_user_assigned_identity.aib.principal_id
   skip_service_principal_aad_check = true
 }
