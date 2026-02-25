@@ -1,0 +1,1024 @@
+{
+  "version": 4,
+  "terraform_version": "1.14.0",
+  "serial": 56,
+  "lineage": "f628340a-beb0-582a-0538-078bc0711de4",
+  "outputs": {
+    "build_log_info": {
+      "value": "Azure Portal \u003e Image Templates \u003e aib-w365-dev-ai-1-0-0 \u003e Logs (or run: Get-AzImageBuilderTemplate -Name 'aib-w365-dev-ai-1-0-0' -ResourceGroupName 'rg-w365-images' | Select-Object -ExpandProperty LastRunStatus)",
+      "type": "string"
+    },
+    "gallery_id": {
+      "value": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.Compute/galleries/acgW365Dev",
+      "type": "string"
+    },
+    "image_definition_id": {
+      "value": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.Compute/galleries/acgW365Dev/images/W365-W11-25H2-ENU",
+      "type": "string"
+    },
+    "image_template_name": {
+      "value": "aib-w365-dev-ai-1-0-0",
+      "type": "string"
+    },
+    "managed_identity_id": {
+      "value": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-aib-w365-dev",
+      "type": "string"
+    },
+    "managed_identity_principal_id": {
+      "value": "8e8bff56-b7ab-4d1d-a6fb-4d82ed2983fa",
+      "type": "string"
+    },
+    "next_steps": {
+      "value": "\r\n══════════════════════════════════════════════════════════════════\r\nIMAGE BUILD COMPLETE — NEXT STEPS\r\n══════════════════════════════════════════════════════════════════\r\n\r\n1. VERIFY IMAGE VERSION\r\n   Get-AzGalleryImageVersion `\r\n     -ResourceGroupName \"rg-w365-images\" `\r\n     -GalleryName \"acgW365Dev\" `\r\n     -GalleryImageDefinitionName \"W365-W11-25H2-ENU\" |\r\n     Format-Table Name, ProvisioningState, PublishingProfile\r\n\r\n2. TEAR DOWN BUILD INFRASTRUCTURE (cost optimization)\r\n   Remove the AIB template and build resources (gallery is protected):\r\n   .\\scripts\\Teardown-BuildResources.ps1\r\n\r\n   NOTE: Do NOT run 'terraform destroy' — the gallery and image\r\n   definition have prevent_destroy = true and destroy will fail.\r\n\r\n3. IMPORT INTO WINDOWS 365 (Portal)\r\n   Intune \u003e Devices \u003e Windows 365 \u003e Custom images \u003e Add\r\n   \u003e Azure Compute Gallery\r\n   \u003e Select: acgW365Dev / W365-W11-25H2-ENU / 1.0.0\r\n\r\n4. CREATE/UPDATE PROVISIONING POLICY\r\n   Assign the imported image to a provisioning policy\r\n   targeting your developer security group.\r\n\r\n5. USER CONFIGURATION (post-login)\r\n   Each user manages their own ANTHROPIC_API_KEY:\r\n   - Set as user environment variable, or\r\n   - Configure via OpenClaw settings\r\n\r\n6. PROMOTE (when validated)\r\n   Set exclude_from_latest = false and re-apply:\r\n   terraform apply -var='exclude_from_latest=false'\r\n\r\n══════════════════════════════════════════════════════════════════\r\n",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "azurerm_resource_group",
+      "name": "images",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images",
+            "location": "eastus2",
+            "managed_by": "",
+            "name": "rg-w365-images",
+            "tags": {
+              "iac": "Terraform",
+              "managed_by": "PlatformEngineering",
+              "purpose": "DeveloperImages",
+              "workload": "Windows365"
+            },
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "name": "rg-w365-images",
+            "subscription_id": "7a713a84-2144-4ea1-8e85-9c63111bd995"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo1NDAwMDAwMDAwMDAwLCJkZWxldGUiOjU0MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMCwidXBkYXRlIjo1NDAwMDAwMDAwMDAwfX0="
+        }
+      ]
+    },
+    {
+      "module": "module.gallery",
+      "mode": "managed",
+      "type": "azurerm_shared_image",
+      "name": "this",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "accelerated_network_support_enabled": true,
+            "architecture": "x64",
+            "confidential_vm_enabled": false,
+            "confidential_vm_supported": false,
+            "description": "",
+            "disk_controller_type_nvme_enabled": true,
+            "disk_types_not_allowed": null,
+            "end_of_life_date": null,
+            "eula": "",
+            "gallery_name": "acgW365Dev",
+            "hibernation_enabled": true,
+            "hyper_v_generation": "V2",
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.Compute/galleries/acgW365Dev/images/W365-W11-25H2-ENU",
+            "identifier": [
+              {
+                "offer": "W365-W11-25H2-ENU",
+                "publisher": "BigHatGroupInc",
+                "sku": "W11-25H2-ENT-Dev"
+              }
+            ],
+            "location": "eastus2",
+            "max_recommended_memory_in_gb": 0,
+            "max_recommended_vcpu_count": 0,
+            "min_recommended_memory_in_gb": 0,
+            "min_recommended_vcpu_count": 0,
+            "name": "W365-W11-25H2-ENU",
+            "os_type": "Windows",
+            "privacy_statement_uri": "",
+            "purchase_plan": [],
+            "release_note_uri": "",
+            "resource_group_name": "rg-w365-images",
+            "specialized": false,
+            "tags": {
+              "iac": "Terraform",
+              "managed_by": "PlatformEngineering",
+              "purpose": "DeveloperImages",
+              "workload": "Windows365"
+            },
+            "timeouts": null,
+            "trusted_launch_enabled": true,
+            "trusted_launch_supported": false
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "gallery_name": "acgW365Dev",
+            "name": "W365-W11-25H2-ENU",
+            "resource_group_name": "rg-w365-images",
+            "subscription_id": "7a713a84-2144-4ea1-8e85-9c63111bd995"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMCwidXBkYXRlIjoxODAwMDAwMDAwMDAwfX0=",
+          "dependencies": [
+            "azurerm_resource_group.images",
+            "module.gallery.azurerm_shared_image_gallery.this"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.gallery",
+      "mode": "managed",
+      "type": "azurerm_shared_image_gallery",
+      "name": "this",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "description": "",
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.Compute/galleries/acgW365Dev",
+            "location": "eastus2",
+            "name": "acgW365Dev",
+            "resource_group_name": "rg-w365-images",
+            "sharing": [],
+            "tags": {
+              "iac": "Terraform",
+              "managed_by": "PlatformEngineering",
+              "purpose": "DeveloperImages",
+              "workload": "Windows365"
+            },
+            "timeouts": null,
+            "unique_name": "7a713a84-2144-4ea1-8e85-9c63111bd995-ACGW365DEV"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "name": "acgW365Dev",
+            "resource_group_name": "rg-w365-images",
+            "subscription_id": "7a713a84-2144-4ea1-8e85-9c63111bd995"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMCwidXBkYXRlIjoxODAwMDAwMDAwMDAwfX0=",
+          "dependencies": [
+            "azurerm_resource_group.images"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.identity",
+      "mode": "managed",
+      "type": "azurerm_role_assignment",
+      "name": "aib_gallery_contributor",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "condition": "",
+            "condition_version": "",
+            "delegated_managed_identity_resource_id": "",
+            "description": "",
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.Compute/galleries/acgW365Dev/providers/Microsoft.Authorization/roleAssignments/ed2cc240-5932-5c64-db21-5534f75a068d",
+            "name": "ed2cc240-5932-5c64-db21-5534f75a068d",
+            "principal_id": "8e8bff56-b7ab-4d1d-a6fb-4d82ed2983fa",
+            "principal_type": "ServicePrincipal",
+            "role_definition_id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/providers/Microsoft.Authorization/roleDefinitions/85a2d0d9-2eba-4c9c-b355-11c2cc0788ab",
+            "role_definition_name": "Compute Gallery Artifacts Publisher",
+            "scope": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.Compute/galleries/acgW365Dev",
+            "skip_service_principal_aad_check": true,
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "azurerm_resource_group.images",
+            "module.gallery.azurerm_shared_image_gallery.this",
+            "module.identity.azurerm_user_assigned_identity.aib"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.identity",
+      "mode": "managed",
+      "type": "azurerm_role_assignment",
+      "name": "aib_identity_operator",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "condition": "",
+            "condition_version": "",
+            "delegated_managed_identity_resource_id": "",
+            "description": "",
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.Authorization/roleAssignments/db154f76-96f9-bc9f-f512-dfddddf7a161",
+            "name": "db154f76-96f9-bc9f-f512-dfddddf7a161",
+            "principal_id": "8e8bff56-b7ab-4d1d-a6fb-4d82ed2983fa",
+            "principal_type": "ServicePrincipal",
+            "role_definition_id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/providers/Microsoft.Authorization/roleDefinitions/f1a07417-d97a-45cb-824c-7a7467783830",
+            "role_definition_name": "Managed Identity Operator",
+            "scope": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images",
+            "skip_service_principal_aad_check": true,
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "azurerm_resource_group.images",
+            "module.identity.azurerm_user_assigned_identity.aib"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.identity",
+      "mode": "managed",
+      "type": "azurerm_role_assignment",
+      "name": "aib_network_contributor",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "condition": "",
+            "condition_version": "",
+            "delegated_managed_identity_resource_id": "",
+            "description": "",
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.Authorization/roleAssignments/dda7dae9-8c13-4307-0e18-c07dc64ebad9",
+            "name": "dda7dae9-8c13-4307-0e18-c07dc64ebad9",
+            "principal_id": "8e8bff56-b7ab-4d1d-a6fb-4d82ed2983fa",
+            "principal_type": "ServicePrincipal",
+            "role_definition_id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7",
+            "role_definition_name": "Network Contributor",
+            "scope": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images",
+            "skip_service_principal_aad_check": true,
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "azurerm_resource_group.images",
+            "module.identity.azurerm_user_assigned_identity.aib"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.identity",
+      "mode": "managed",
+      "type": "azurerm_role_assignment",
+      "name": "aib_vm_contributor",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "condition": "",
+            "condition_version": "",
+            "delegated_managed_identity_resource_id": "",
+            "description": "",
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.Authorization/roleAssignments/995031af-14db-b3ed-e6f5-4f384a6a63da",
+            "name": "995031af-14db-b3ed-e6f5-4f384a6a63da",
+            "principal_id": "8e8bff56-b7ab-4d1d-a6fb-4d82ed2983fa",
+            "principal_type": "ServicePrincipal",
+            "role_definition_id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/providers/Microsoft.Authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
+            "role_definition_name": "Virtual Machine Contributor",
+            "scope": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images",
+            "skip_service_principal_aad_check": true,
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "azurerm_resource_group.images",
+            "module.identity.azurerm_user_assigned_identity.aib"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.identity",
+      "mode": "managed",
+      "type": "azurerm_user_assigned_identity",
+      "name": "aib",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "client_id": "9e46c2d2-a830-41f3-940d-fbaf1efec158",
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-aib-w365-dev",
+            "isolation_scope": "",
+            "location": "eastus2",
+            "name": "id-aib-w365-dev",
+            "principal_id": "8e8bff56-b7ab-4d1d-a6fb-4d82ed2983fa",
+            "resource_group_name": "rg-w365-images",
+            "tags": {
+              "iac": "Terraform",
+              "managed_by": "PlatformEngineering",
+              "purpose": "DeveloperImages",
+              "workload": "Windows365"
+            },
+            "tenant_id": "5a01497e-1bcb-4711-b6e6-d24f4ab00393",
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMCwidXBkYXRlIjoxODAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "azurerm_resource_group.images"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.image_builder",
+      "mode": "managed",
+      "type": "azapi_resource",
+      "name": "image_template",
+      "provider": "provider[\"registry.terraform.io/azure/azapi\"]",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "body": {
+              "value": {
+                "properties": {
+                  "buildTimeoutInMinutes": 120,
+                  "customize": [
+                    {
+                      "inline": [
+                        "$ErrorActionPreference = \"Stop\"\r\n$ProgressPreference = \"SilentlyContinue\"\r\n\r\nfunction Update-SessionEnvironment {\r\n    $machinePath = [Environment]::GetEnvironmentVariable(\"Path\", \"Machine\")\r\n    $userPath = [Environment]::GetEnvironmentVariable(\"Path\", \"User\")\r\n    $env:Path = \"$machinePath;$userPath\"\r\n    Write-Host \"`[PATH] Session environment refreshed\"\r\n}\r\n\r\nfunction Get-InstallerWithRetry {\r\n    param([string]$Uri, [string]$OutFile, [int]$MaxRetries = 3)\r\n    for ($i = 1; $i -le $MaxRetries; $i++) {\r\n        try {\r\n            Write-Host \"`[DOWNLOAD] Attempt $i of $MaxRetries : $Uri\"\r\n            Invoke-WebRequest -Uri $Uri -OutFile $OutFile -UseBasicParsing\r\n            return\r\n        } catch {\r\n            if ($i -eq $MaxRetries) { throw }\r\n            Write-Host \"`[DOWNLOAD] Attempt $i failed, retrying in 10 seconds...\"\r\n            Start-Sleep -Seconds 10\r\n        }\r\n    }\r\n}\r\n\r\nfunction Test-InstallerHash {\r\n    param([string]$FilePath, [string]$ExpectedHash)\r\n    if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {\r\n        Write-Host \"`[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification\"\r\n        return\r\n    }\r\n    $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash\r\n    if ($actual -ne $ExpectedHash.ToUpper()) {\r\n        Write-Error \"`[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual\"\r\n        exit 1\r\n    }\r\n    Write-Host \"`[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)\"\r\n}\r\n\r\n# ═══ NODE.JS ═══\r\n$NodeVersion = \"v24.13.1\"\r\n$NodeMsiUrl = \"https://nodejs.org/dist/$NodeVersion/node-$NodeVersion-x64.msi\"\r\n$NodeInstaller = \"$env:TEMP\\node-$NodeVersion-x64.msi\"\r\n\r\nWrite-Host \"=== Installing Node.js $NodeVersion ===\"\r\nGet-InstallerWithRetry -Uri $NodeMsiUrl -OutFile $NodeInstaller\r\nTest-InstallerHash -FilePath $NodeInstaller -ExpectedHash \"\"\r\n\r\n$proc = Start-Process -FilePath \"msiexec.exe\" `\r\n    -ArgumentList \"/i `\"$NodeInstaller`\" /qn /norestart ALLUSERS=1 ADDLOCAL=ALL\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"Node.js installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] Node.js: $(node --version)\"\r\nWrite-Host \"`[VERIFY] npm: $(npm --version)\"\r\n\r\n# ═══ PYTHON ═══\r\n$PythonVersion = \"3.14.3\"\r\n$PythonUrl = \"https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-amd64.exe\"\r\n$PythonInstaller = \"$env:TEMP\\python-$PythonVersion-amd64.exe\"\r\n\r\nWrite-Host \"=== Installing Python $PythonVersion ===\"\r\nGet-InstallerWithRetry -Uri $PythonUrl -OutFile $PythonInstaller\r\nTest-InstallerHash -FilePath $PythonInstaller -ExpectedHash \"\"\r\n\r\n$proc = Start-Process -FilePath $PythonInstaller `\r\n    -ArgumentList \"/quiet InstallAllUsers=1 PrependPath=1 Include_pip=1 Include_test=0 Include_launcher=1\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"Python installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] Python: $(python --version)\"\r\npython -m pip install --upgrade pip --quiet\r\nWrite-Host \"`[VERIFY] pip: $(python -m pip --version)\"\r\n\r\n# ═══ POWERSHELL 7 ═══\r\nWrite-Host \"=== Installing PowerShell 7 ===\"\r\n$PwshVersion = \"7.4.13\"\r\n$PwshUrl = \"https://github.com/PowerShell/PowerShell/releases/download/v$PwshVersion/PowerShell-$PwshVersion-win-x64.msi\"\r\n$PwshInstaller = \"$env:TEMP\\PowerShell-7-x64.msi\"\r\nGet-InstallerWithRetry -Uri $PwshUrl -OutFile $PwshInstaller\r\nTest-InstallerHash -FilePath $PwshInstaller -ExpectedHash \"\"\r\n\r\n$proc = Start-Process -FilePath \"msiexec.exe\" `\r\n    -ArgumentList \"/i `\"$PwshInstaller`\" /qn /norestart ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ADD_FILE_CONTEXT_MENU_RUNPOWERSHELL=1 ENABLE_PSREMOTING=0 REGISTER_MANIFEST=1 USE_MU=0 ENABLE_MU=0 ADD_PATH=1\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"PowerShell 7 installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] PowerShell 7 installed\"\r\n\r\n# ═══ CLEANUP ═══\r\nRemove-Item -Path $NodeInstaller, $PythonInstaller, $PwshInstaller -Force -ErrorAction SilentlyContinue\r\nWrite-Host \"=== Phase 1 Complete: Runtimes installed ===\"\r\n"
+                      ],
+                      "name": "InstallCoreRuntimes",
+                      "runAsSystem": true,
+                      "runElevated": true,
+                      "type": "PowerShell"
+                    },
+                    {
+                      "restartCheckCommand": null,
+                      "restartCommand": null,
+                      "restartTimeout": null,
+                      "type": "PowerShell"
+                    },
+                    {
+                      "inline": [
+                        "        $ErrorActionPreference = \"Stop\"\r\n\r\n        # ═══ CLAUDE CODE: Enterprise Managed Settings ═══\r\n        Write-Host \"=== Configuring Claude Code enterprise policy ===\"\r\n        $claudeConfigDir = \"C:\\ProgramData\\ClaudeCode\"\r\n        New-Item -ItemType Directory -Path $claudeConfigDir -Force | Out-Null\r\n\r\n        $managedSettings = @{\r\n            autoUpdatesChannel = \"stable\"\r\n            permissions = @{\r\n                defaultMode = \"allowWithPermission\"\r\n            }\r\n        } | ConvertTo-Json -Depth 5\r\n\r\n        $managedSettingsPath = \"$claudeConfigDir\\managed-settings.json\"\r\n        Set-Content -Path $managedSettingsPath -Value $managedSettings -Encoding UTF8\r\n        Write-Host \"`[CONFIG] Claude Code managed settings: $managedSettingsPath\"\r\n\r\n        # ═══ OPENCLAW: Configuration Template ═══\r\n        Write-Host \"=== Creating OpenClaw configuration template ===\"\r\n        $openclawTemplateDir = \"C:\\ProgramData\\OpenClaw\"\r\n        New-Item -ItemType Directory -Path $openclawTemplateDir -Force | Out-Null\r\n\r\n        $openclawConfig = @{\r\n            agent = @{\r\n                model = \"anthropic/claude-opus-4-6\"\r\n                defaults = @{\r\n                    workspace = \"~/Documents/OpenClawWorkspace\"\r\n                }\r\n            }\r\n            gateway = @{\r\n                mode = \"local\"\r\n                port = 18789\r\n            }\r\n            channels = @{\r\n                web = @{ enabled = $true }\r\n            }\r\n        } | ConvertTo-Json -Depth 5\r\n\r\n        $templatePath = \"$openclawTemplateDir\\template-config.json\"\r\n        Set-Content -Path $templatePath -Value $openclawConfig -Encoding UTF8\r\n        Write-Host \"`[CONFIG] OpenClaw template: $templatePath\"\r\n\r\n        # ═══ ACTIVE SETUP: First-Login Configuration Hydration ═══\r\n        Write-Host \"=== Registering Active Setup for first-login hydration ===\"\r\n\r\n        # Hydration script preserves existing user config and hydrates on first login\r\n        $hydrationScript = @'\r\n$openclawDir = \"$env:USERPROFILE\\.openclaw\"\r\n$configFile = \"$openclawDir\\openclaw.json\"\r\n$templateFile = \"C:\\ProgramData\\OpenClaw\\template-config.json\"\r\n\r\nif (Test-Path $templateFile) {\r\n    New-Item -ItemType Directory -Path $openclawDir -Force | Out-Null\r\n    $workspaceDir = \"$env:USERPROFILE\\Documents\\OpenClawWorkspace\"\r\n    New-Item -ItemType Directory -Path $workspaceDir -Force | Out-Null\r\n    if (-not (Test-Path $configFile)) {\r\n        Copy-Item -Path $templateFile -Destination $configFile -Force\r\n    }\r\n}\r\n'@\r\n\r\n        $hydrationScriptPath = \"$openclawTemplateDir\\hydrate-config.ps1\"\r\n        Set-Content -Path $hydrationScriptPath -Value $hydrationScript -Encoding UTF8\r\n\r\n        # Register via Active Setup\r\n        $activeSetupKey = \"HKLM:\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\OpenClaw-ConfigHydration\"\r\n        New-Item -Path $activeSetupKey -Force | Out-Null\r\n        Set-ItemProperty -Path $activeSetupKey -Name \"(Default)\" -Value \"OpenClaw Configuration Hydration\"\r\n        Set-ItemProperty -Path $activeSetupKey -Name \"StubPath\" -Value \"powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File `\"$hydrationScriptPath`\"\"\r\n        Set-ItemProperty -Path $activeSetupKey -Name \"Version\" -Value \"1,0,0,0\"\r\n        Write-Host \"`[CONFIG] Active Setup registered: OpenClaw-ConfigHydration\"\r\n\r\n        # ═══ TEAMS OPTIMISATION PREREQUISITES ═══\r\n        Write-Host \"=== Setting Teams optimisation prerequisites ===\"\r\n        $teamsRegPath = \"HKLM:\\SOFTWARE\\Microsoft\\Teams\"\r\n        if (-not (Test-Path $teamsRegPath)) {\r\n            New-Item -Path $teamsRegPath -Force | Out-Null\r\n        }\r\n        Set-ItemProperty -Path $teamsRegPath -Name \"IsWVDEnvironment\" -Value 1 -Type DWord -Force\r\n        Write-Host \"`[CONFIG] Teams IsWVDEnvironment = 1\"\r\n\r\n        # ═══ IMAGE CLEANUP \u0026 OPTIMISATION ═══\r\n        Write-Host \"=== Cleaning up image ===\"\r\n        Remove-Item -Path \"$env:TEMP\\*\" -Recurse -Force -ErrorAction SilentlyContinue\r\n        Stop-Service -Name wuauserv -Force -ErrorAction SilentlyContinue\r\n        Remove-Item -Path \"C:\\Windows\\SoftwareDistribution\\Download\\*\" -Recurse -Force -ErrorAction SilentlyContinue\r\n        Start-Service -Name wuauserv -ErrorAction SilentlyContinue\r\n        # npm cache clean --force writes warnings to stderr; suppress via cmd /c\r\n        cmd /c \"npm cache clean --force 2\u003e\u00261\" | Out-Null\r\n\r\n        Write-Host \"`[CLEANUP] Running DISM component store cleanup...\"\r\n        Start-Process -FilePath \"dism.exe\" `\r\n            -ArgumentList \"/Online /Cleanup-Image /StartComponentCleanup /ResetBase\" `\r\n            -Wait -NoNewWindow\r\n\r\n        Write-Host \"=== Phase 4 Complete: Configuration and cleanup done ===\"\r\n"
+                      ],
+                      "name": "ConfigureAgents",
+                      "runAsSystem": true,
+                      "runElevated": true,
+                      "type": "PowerShell"
+                    },
+                    {
+                      "inline": null,
+                      "name": "",
+                      "runAsSystem": null,
+                      "runElevated": null,
+                      "type": "WindowsRestart"
+                    },
+                    {
+                      "inline": [
+                        "$ErrorActionPreference = \"Stop\"\r\n$ProgressPreference = \"SilentlyContinue\"\r\n\r\nfunction Update-SessionEnvironment {\r\n    $machinePath = [Environment]::GetEnvironmentVariable(\"Path\", \"Machine\")\r\n    $userPath = [Environment]::GetEnvironmentVariable(\"Path\", \"User\")\r\n    $env:Path = \"$machinePath;$userPath\"\r\n}\r\n\r\nfunction Get-InstallerWithRetry {\r\n    param([string]$Uri, [string]$OutFile, [int]$MaxRetries = 3)\r\n    for ($i = 1; $i -le $MaxRetries; $i++) {\r\n        try { Invoke-WebRequest -Uri $Uri -OutFile $OutFile -UseBasicParsing; return }\r\n        catch { if ($i -eq $MaxRetries) { throw }; Start-Sleep -Seconds 10 }\r\n    }\r\n}\r\n\r\nfunction Test-InstallerHash {\r\n    param([string]$FilePath, [string]$ExpectedHash)\r\n    if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {\r\n        Write-Host \"`[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification\"\r\n        return\r\n    }\r\n    $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash\r\n    if ($actual -ne $ExpectedHash.ToUpper()) {\r\n        Write-Error \"`[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual\"\r\n        exit 1\r\n    }\r\n    Write-Host \"`[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)\"\r\n}\r\n\r\n# ═══ VISUAL STUDIO CODE ═══\r\nWrite-Host \"=== Installing Visual Studio Code (System) ===\"\r\n$VSCodeUrl = \"https://update.code.visualstudio.com/latest/win32-x64/stable\"\r\n$VSCodeInstaller = \"$env:TEMP\\VSCodeSetup-x64.exe\"\r\nGet-InstallerWithRetry -Uri $VSCodeUrl -OutFile $VSCodeInstaller\r\n\r\n$proc = Start-Process -FilePath $VSCodeInstaller `\r\n    -ArgumentList \"/VERYSILENT /NORESTART /MERGETASKS=`\"!runcode,addcontextmenufiles,addcontextmenufolders,addtopath`\"\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"VS Code installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] VS Code installed to: C:\\Program Files\\Microsoft VS Code\"\r\n\r\n# ═══ GIT FOR WINDOWS ═══\r\nWrite-Host \"=== Installing Git for Windows ===\"\r\n$GitVersion = \"2.53.0\"\r\n$GitUrl = \"https://github.com/git-for-windows/git/releases/download/v${GitVersion}.windows.1/Git-${GitVersion}-64-bit.exe\"\r\n$GitInstaller = \"$env:TEMP\\Git-${GitVersion}-64-bit.exe\"\r\nGet-InstallerWithRetry -Uri $GitUrl -OutFile $GitInstaller\r\nTest-InstallerHash -FilePath $GitInstaller -ExpectedHash \"\"\r\n\r\n$proc = Start-Process -FilePath $GitInstaller `\r\n    -ArgumentList \"/VERYSILENT /NORESTART /PathOption=Cmd /NoAutoCrlf /SetupType=default\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"Git installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] Git: $(git --version)\"\r\n\r\n# ═══ GITHUB DESKTOP ═══\r\nWrite-Host \"=== Installing GitHub Desktop (Machine-Wide Provisioner) ===\"\r\n$GHDesktopUrl = \"https://central.github.com/deployments/desktop/desktop/latest/GitHubDesktopSetup-x64.msi\"\r\n$GHDesktopInstaller = \"$env:TEMP\\GitHubDesktop-x64.msi\"\r\nGet-InstallerWithRetry -Uri $GHDesktopUrl -OutFile $GHDesktopInstaller\r\n\r\n$proc = Start-Process -FilePath \"msiexec.exe\" `\r\n    -ArgumentList \"/i `\"$GHDesktopInstaller`\" /qn /norestart ALLUSERS=1\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"GitHub Desktop installation failed ($($proc.ExitCode))\"; exit 1 }\r\nWrite-Host \"`[VERIFY] GitHub Desktop provisioner installed\"\r\n\r\n# ═══ AZURE CLI ═══\r\n$AzCliVersion = \"2.83.0\"\r\nWrite-Host \"=== Installing Azure CLI $AzCliVersion ===\"\r\n$AzCliUrl = \"https://azcliprod.blob.core.windows.net/msi/azure-cli-$AzCliVersion-x64.msi\"\r\n$AzCliInstaller = \"$env:TEMP\\azure-cli-$AzCliVersion-x64.msi\"\r\nGet-InstallerWithRetry -Uri $AzCliUrl -OutFile $AzCliInstaller\r\nTest-InstallerHash -FilePath $AzCliInstaller -ExpectedHash \"\"\r\n\r\n$proc = Start-Process -FilePath \"msiexec.exe\" `\r\n    -ArgumentList \"/i `\"$AzCliInstaller`\" /qn /norestart ALLUSERS=1\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"Azure CLI installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] Azure CLI: $(az --version 2\u003e\u00261 | Select-Object -First 1)\"\r\n\r\n# ═══ GITHUB COPILOT (VS Code Extension) ═══\r\nWrite-Host \"=== Installing GitHub Copilot VS Code Extension ===\"\r\n$codeBin = \"C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd\"\r\nif (Test-Path $codeBin) {\r\n    \u0026 $codeBin --install-extension GitHub.copilot --force 2\u003e\u00261 | Write-Host\r\n    \u0026 $codeBin --install-extension GitHub.copilot-chat --force 2\u003e\u00261 | Write-Host\r\n    Write-Host \"`[VERIFY] GitHub Copilot extensions installed\"\r\n} else {\r\n    Write-Error \"VS Code not found at expected path - cannot install Copilot extension\"\r\n    exit 1\r\n}\r\n\r\n# ═══ CLEANUP ═══\r\nRemove-Item -Path $VSCodeInstaller, $GitInstaller, $GHDesktopInstaller, $AzCliInstaller -Force -ErrorAction SilentlyContinue\r\nWrite-Host \"=== Phase 2 Complete: Developer tools installed ===\"\r\n"
+                      ],
+                      "name": "InstallDevTools",
+                      "runAsSystem": true,
+                      "runElevated": true,
+                      "type": "PowerShell"
+                    },
+                    {
+                      "filters": [
+                        "exclude:$_.Title -like '*Preview*'",
+                        "include:$true"
+                      ],
+                      "searchCriteria": "IsInstalled=0",
+                      "type": "WindowsUpdate",
+                      "updateLimit": 40
+                    },
+                    {
+                      "restartTimeout": "10m",
+                      "type": "WindowsRestart"
+                    }
+                  ],
+                  "distribute": [
+                    {
+                      "excludeFromLatest": true,
+                      "galleryImageId": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.Compute/galleries/acgW365Dev/images/W365-W11-25H2-ENU",
+                      "runOutputName": "w365-dev-ai-1.0.0",
+                      "targetRegions": [
+                        {
+                          "name": "eastus2",
+                          "replicaCount": 1,
+                          "storageAccountType": "Standard_LRS"
+                        }
+                      ],
+                      "type": "SharedImage",
+                      "versioning": {
+                        "major": 1,
+                        "scheme": "Latest"
+                      }
+                    }
+                  ],
+                  "source": {
+                    "offer": "windows-11",
+                    "publisher": "MicrosoftWindowsDesktop",
+                    "sku": "win11-25h2-ent",
+                    "type": "PlatformImage",
+                    "version": "26200.7840.260206"
+                  },
+                  "vmProfile": {
+                    "osDiskSizeGB": 128,
+                    "vmSize": "Standard_D4s_v5"
+                  }
+                }
+              },
+              "type": [
+                "object",
+                {
+                  "properties": [
+                    "object",
+                    {
+                      "buildTimeoutInMinutes": "number",
+                      "customize": [
+                        "tuple",
+                        [
+                          [
+                            "object",
+                            {
+                              "inline": [
+                                "tuple",
+                                [
+                                  "string"
+                                ]
+                              ],
+                              "name": "string",
+                              "runAsSystem": "bool",
+                              "runElevated": "bool",
+                              "type": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "restartCheckCommand": "string",
+                              "restartCommand": "string",
+                              "restartTimeout": "string",
+                              "type": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "inline": [
+                                "tuple",
+                                [
+                                  "string"
+                                ]
+                              ],
+                              "name": "string",
+                              "runAsSystem": "bool",
+                              "runElevated": "bool",
+                              "type": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "inline": [
+                                "tuple",
+                                [
+                                  "string"
+                                ]
+                              ],
+                              "name": "string",
+                              "runAsSystem": "bool",
+                              "runElevated": "bool",
+                              "type": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "inline": [
+                                "tuple",
+                                [
+                                  "string"
+                                ]
+                              ],
+                              "name": "string",
+                              "runAsSystem": "bool",
+                              "runElevated": "bool",
+                              "type": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "filters": [
+                                "tuple",
+                                [
+                                  "string",
+                                  "string"
+                                ]
+                              ],
+                              "searchCriteria": "string",
+                              "type": "string",
+                              "updateLimit": "number"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "restartTimeout": "string",
+                              "type": "string"
+                            }
+                          ]
+                        ]
+                      ],
+                      "distribute": [
+                        "tuple",
+                        [
+                          [
+                            "object",
+                            {
+                              "excludeFromLatest": "bool",
+                              "galleryImageId": "string",
+                              "runOutputName": "string",
+                              "targetRegions": [
+                                "tuple",
+                                [
+                                  [
+                                    "object",
+                                    {
+                                      "name": "string",
+                                      "replicaCount": "number",
+                                      "storageAccountType": "string"
+                                    }
+                                  ]
+                                ]
+                              ],
+                              "type": "string",
+                              "versioning": [
+                                "object",
+                                {
+                                  "major": "number",
+                                  "scheme": "string"
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      ],
+                      "source": [
+                        "object",
+                        {
+                          "offer": "string",
+                          "publisher": "string",
+                          "sku": "string",
+                          "type": "string",
+                          "version": "string"
+                        }
+                      ],
+                      "vmProfile": [
+                        "object",
+                        {
+                          "osDiskSizeGB": "number",
+                          "vmSize": "string"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "create_headers": null,
+            "create_query_parameters": null,
+            "delete_headers": null,
+            "delete_query_parameters": null,
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.VirtualMachineImages/imageTemplates/aib-w365-dev-ai-1-0-0",
+            "identity": [
+              {
+                "identity_ids": [
+                  "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-aib-w365-dev"
+                ],
+                "principal_id": "",
+                "tenant_id": "",
+                "type": "UserAssigned"
+              }
+            ],
+            "ignore_casing": false,
+            "ignore_missing_property": true,
+            "ignore_null_property": false,
+            "location": "eastus2",
+            "locks": null,
+            "name": "aib-w365-dev-ai-1-0-0",
+            "output": {
+              "value": {
+                "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourcegroups/rg-w365-images/providers/Microsoft.VirtualMachineImages/imageTemplates/aib-w365-dev-ai-1-0-0",
+                "identity": {
+                  "userAssignedIdentities": {
+                    "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-aib-w365-dev": {
+                      "clientId": "9e46c2d2-a830-41f3-940d-fbaf1efec158",
+                      "principalId": "8e8bff56-b7ab-4d1d-a6fb-4d82ed2983fa"
+                    }
+                  }
+                },
+                "properties": {
+                  "customize": [
+                    {
+                      "inline": [
+                        "$ErrorActionPreference = \"Stop\"\r\n$ProgressPreference = \"SilentlyContinue\"\r\n\r\nfunction Update-SessionEnvironment {\r\n    $machinePath = [Environment]::GetEnvironmentVariable(\"Path\", \"Machine\")\r\n    $userPath = [Environment]::GetEnvironmentVariable(\"Path\", \"User\")\r\n    $env:Path = \"$machinePath;$userPath\"\r\n    Write-Host \"`[PATH] Session environment refreshed\"\r\n}\r\n\r\nfunction Get-InstallerWithRetry {\r\n    param([string]$Uri, [string]$OutFile, [int]$MaxRetries = 3)\r\n    for ($i = 1; $i -le $MaxRetries; $i++) {\r\n        try {\r\n            Write-Host \"`[DOWNLOAD] Attempt $i of $MaxRetries : $Uri\"\r\n            Invoke-WebRequest -Uri $Uri -OutFile $OutFile -UseBasicParsing\r\n            return\r\n        } catch {\r\n            if ($i -eq $MaxRetries) { throw }\r\n            Write-Host \"`[DOWNLOAD] Attempt $i failed, retrying in 10 seconds...\"\r\n            Start-Sleep -Seconds 10\r\n        }\r\n    }\r\n}\r\n\r\nfunction Test-InstallerHash {\r\n    param([string]$FilePath, [string]$ExpectedHash)\r\n    if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {\r\n        Write-Host \"`[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification\"\r\n        return\r\n    }\r\n    $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash\r\n    if ($actual -ne $ExpectedHash.ToUpper()) {\r\n        Write-Error \"`[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual\"\r\n        exit 1\r\n    }\r\n    Write-Host \"`[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)\"\r\n}\r\n\r\n# ═══ NODE.JS ═══\r\n$NodeVersion = \"v24.13.1\"\r\n$NodeMsiUrl = \"https://nodejs.org/dist/$NodeVersion/node-$NodeVersion-x64.msi\"\r\n$NodeInstaller = \"$env:TEMP\\node-$NodeVersion-x64.msi\"\r\n\r\nWrite-Host \"=== Installing Node.js $NodeVersion ===\"\r\nGet-InstallerWithRetry -Uri $NodeMsiUrl -OutFile $NodeInstaller\r\nTest-InstallerHash -FilePath $NodeInstaller -ExpectedHash \"\"\r\n\r\n$proc = Start-Process -FilePath \"msiexec.exe\" `\r\n    -ArgumentList \"/i `\"$NodeInstaller`\" /qn /norestart ALLUSERS=1 ADDLOCAL=ALL\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"Node.js installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] Node.js: $(node --version)\"\r\nWrite-Host \"`[VERIFY] npm: $(npm --version)\"\r\n\r\n# ═══ PYTHON ═══\r\n$PythonVersion = \"3.14.3\"\r\n$PythonUrl = \"https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-amd64.exe\"\r\n$PythonInstaller = \"$env:TEMP\\python-$PythonVersion-amd64.exe\"\r\n\r\nWrite-Host \"=== Installing Python $PythonVersion ===\"\r\nGet-InstallerWithRetry -Uri $PythonUrl -OutFile $PythonInstaller\r\nTest-InstallerHash -FilePath $PythonInstaller -ExpectedHash \"\"\r\n\r\n$proc = Start-Process -FilePath $PythonInstaller `\r\n    -ArgumentList \"/quiet InstallAllUsers=1 PrependPath=1 Include_pip=1 Include_test=0 Include_launcher=1\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"Python installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] Python: $(python --version)\"\r\npython -m pip install --upgrade pip --quiet\r\nWrite-Host \"`[VERIFY] pip: $(python -m pip --version)\"\r\n\r\n# ═══ POWERSHELL 7 ═══\r\nWrite-Host \"=== Installing PowerShell 7 ===\"\r\n$PwshVersion = \"7.4.13\"\r\n$PwshUrl = \"https://github.com/PowerShell/PowerShell/releases/download/v$PwshVersion/PowerShell-$PwshVersion-win-x64.msi\"\r\n$PwshInstaller = \"$env:TEMP\\PowerShell-7-x64.msi\"\r\nGet-InstallerWithRetry -Uri $PwshUrl -OutFile $PwshInstaller\r\nTest-InstallerHash -FilePath $PwshInstaller -ExpectedHash \"\"\r\n\r\n$proc = Start-Process -FilePath \"msiexec.exe\" `\r\n    -ArgumentList \"/i `\"$PwshInstaller`\" /qn /norestart ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ADD_FILE_CONTEXT_MENU_RUNPOWERSHELL=1 ENABLE_PSREMOTING=0 REGISTER_MANIFEST=1 USE_MU=0 ENABLE_MU=0 ADD_PATH=1\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"PowerShell 7 installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] PowerShell 7 installed\"\r\n\r\n# ═══ CLEANUP ═══\r\nRemove-Item -Path $NodeInstaller, $PythonInstaller, $PwshInstaller -Force -ErrorAction SilentlyContinue\r\nWrite-Host \"=== Phase 1 Complete: Runtimes installed ===\"\r\n"
+                      ],
+                      "name": "InstallCoreRuntimes"
+                    },
+                    {
+                      "name": ""
+                    },
+                    {
+                      "inline": [
+                        "$ErrorActionPreference = \"Stop\"\r\n$ProgressPreference = \"SilentlyContinue\"\r\n\r\nfunction Update-SessionEnvironment {\r\n    $machinePath = [Environment]::GetEnvironmentVariable(\"Path\", \"Machine\")\r\n    $userPath = [Environment]::GetEnvironmentVariable(\"Path\", \"User\")\r\n    $env:Path = \"$machinePath;$userPath\"\r\n}\r\n\r\nfunction Get-InstallerWithRetry {\r\n    param([string]$Uri, [string]$OutFile, [int]$MaxRetries = 3)\r\n    for ($i = 1; $i -le $MaxRetries; $i++) {\r\n        try { Invoke-WebRequest -Uri $Uri -OutFile $OutFile -UseBasicParsing; return }\r\n        catch { if ($i -eq $MaxRetries) { throw }; Start-Sleep -Seconds 10 }\r\n    }\r\n}\r\n\r\nfunction Test-InstallerHash {\r\n    param([string]$FilePath, [string]$ExpectedHash)\r\n    if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {\r\n        Write-Host \"`[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification\"\r\n        return\r\n    }\r\n    $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash\r\n    if ($actual -ne $ExpectedHash.ToUpper()) {\r\n        Write-Error \"`[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual\"\r\n        exit 1\r\n    }\r\n    Write-Host \"`[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)\"\r\n}\r\n\r\n# ═══ VISUAL STUDIO CODE ═══\r\nWrite-Host \"=== Installing Visual Studio Code (System) ===\"\r\n$VSCodeUrl = \"https://update.code.visualstudio.com/latest/win32-x64/stable\"\r\n$VSCodeInstaller = \"$env:TEMP\\VSCodeSetup-x64.exe\"\r\nGet-InstallerWithRetry -Uri $VSCodeUrl -OutFile $VSCodeInstaller\r\n\r\n$proc = Start-Process -FilePath $VSCodeInstaller `\r\n    -ArgumentList \"/VERYSILENT /NORESTART /MERGETASKS=`\"!runcode,addcontextmenufiles,addcontextmenufolders,addtopath`\"\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"VS Code installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] VS Code installed to: C:\\Program Files\\Microsoft VS Code\"\r\n\r\n# ═══ GIT FOR WINDOWS ═══\r\nWrite-Host \"=== Installing Git for Windows ===\"\r\n$GitVersion = \"2.53.0\"\r\n$GitUrl = \"https://github.com/git-for-windows/git/releases/download/v${GitVersion}.windows.1/Git-${GitVersion}-64-bit.exe\"\r\n$GitInstaller = \"$env:TEMP\\Git-${GitVersion}-64-bit.exe\"\r\nGet-InstallerWithRetry -Uri $GitUrl -OutFile $GitInstaller\r\nTest-InstallerHash -FilePath $GitInstaller -ExpectedHash \"\"\r\n\r\n$proc = Start-Process -FilePath $GitInstaller `\r\n    -ArgumentList \"/VERYSILENT /NORESTART /PathOption=Cmd /NoAutoCrlf /SetupType=default\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"Git installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] Git: $(git --version)\"\r\n\r\n# ═══ GITHUB DESKTOP ═══\r\nWrite-Host \"=== Installing GitHub Desktop (Machine-Wide Provisioner) ===\"\r\n$GHDesktopUrl = \"https://central.github.com/deployments/desktop/desktop/latest/GitHubDesktopSetup-x64.msi\"\r\n$GHDesktopInstaller = \"$env:TEMP\\GitHubDesktop-x64.msi\"\r\nGet-InstallerWithRetry -Uri $GHDesktopUrl -OutFile $GHDesktopInstaller\r\n\r\n$proc = Start-Process -FilePath \"msiexec.exe\" `\r\n    -ArgumentList \"/i `\"$GHDesktopInstaller`\" /qn /norestart ALLUSERS=1\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"GitHub Desktop installation failed ($($proc.ExitCode))\"; exit 1 }\r\nWrite-Host \"`[VERIFY] GitHub Desktop provisioner installed\"\r\n\r\n# ═══ AZURE CLI ═══\r\n$AzCliVersion = \"2.83.0\"\r\nWrite-Host \"=== Installing Azure CLI $AzCliVersion ===\"\r\n$AzCliUrl = \"https://azcliprod.blob.core.windows.net/msi/azure-cli-$AzCliVersion-x64.msi\"\r\n$AzCliInstaller = \"$env:TEMP\\azure-cli-$AzCliVersion-x64.msi\"\r\nGet-InstallerWithRetry -Uri $AzCliUrl -OutFile $AzCliInstaller\r\nTest-InstallerHash -FilePath $AzCliInstaller -ExpectedHash \"\"\r\n\r\n$proc = Start-Process -FilePath \"msiexec.exe\" `\r\n    -ArgumentList \"/i `\"$AzCliInstaller`\" /qn /norestart ALLUSERS=1\" `\r\n    -Wait -PassThru\r\nif ($proc.ExitCode -ne 0) { Write-Error \"Azure CLI installation failed ($($proc.ExitCode))\"; exit 1 }\r\nUpdate-SessionEnvironment\r\nWrite-Host \"`[VERIFY] Azure CLI: $(az --version 2\u003e\u00261 | Select-Object -First 1)\"\r\n\r\n# ═══ GITHUB COPILOT (VS Code Extension) ═══\r\nWrite-Host \"=== Installing GitHub Copilot VS Code Extension ===\"\r\n$codeBin = \"C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd\"\r\nif (Test-Path $codeBin) {\r\n    \u0026 $codeBin --install-extension GitHub.copilot --force 2\u003e\u00261 | Write-Host\r\n    \u0026 $codeBin --install-extension GitHub.copilot-chat --force 2\u003e\u00261 | Write-Host\r\n    Write-Host \"`[VERIFY] GitHub Copilot extensions installed\"\r\n} else {\r\n    Write-Error \"VS Code not found at expected path - cannot install Copilot extension\"\r\n    exit 1\r\n}\r\n\r\n# ═══ CLEANUP ═══\r\nRemove-Item -Path $VSCodeInstaller, $GitInstaller, $GHDesktopInstaller, $AzCliInstaller -Force -ErrorAction SilentlyContinue\r\nWrite-Host \"=== Phase 2 Complete: Developer tools installed ===\"\r\n"
+                      ],
+                      "name": "InstallDevTools"
+                    },
+                    {
+                      "inline": [
+                        "$ErrorActionPreference = \"Stop\"\r\n$ProgressPreference = \"SilentlyContinue\"\r\n\r\nfunction Update-SessionEnvironment {\r\n    $machinePath = [Environment]::GetEnvironmentVariable(\"Path\", \"Machine\")\r\n    $userPath = [Environment]::GetEnvironmentVariable(\"Path\", \"User\")\r\n    $env:Path = \"$machinePath;$userPath\"\r\n}\r\n\r\nUpdate-SessionEnvironment\r\n\r\n# Verify prerequisites\r\n$nodeCheck = Get-Command node -ErrorAction SilentlyContinue\r\n$npmCheck = Get-Command npm -ErrorAction SilentlyContinue\r\nif (-not $nodeCheck -or -not $npmCheck) {\r\n    Write-Error \"Node.js or npm not found in PATH. Phase 1 may have failed.\"\r\n    exit 1\r\n}\r\nWrite-Host \"`[PREREQ] Node.js: $(node --version)\"\r\nWrite-Host \"`[PREREQ] npm: $(npm --version)\"\r\n\r\n# npm install writes deprecation warnings to stderr which PowerShell\r\n# converts to ErrorRecords, triggering terminating errors under \"Stop\".\r\n# Use \"Continue\" for npm commands and check $LASTEXITCODE manually.\r\n$ErrorActionPreference = \"Continue\"\r\n\r\n# ═══ OPENCLAW ═══\r\n# --ignore-scripts skips node-llama-cpp native build (requires cmake + C++ compiler).\r\n# OpenClaw CLI works via remote APIs; users can rebuild native modules if needed.\r\nWrite-Host \"=== Installing OpenClaw 2026.2.14 (global) ===\"\r\nnpm install -g openclaw@2026.2.14 --ignore-scripts 2\u003e\u00261 | Write-Host\r\nif ($LASTEXITCODE -ne 0) { Write-Error \"OpenClaw npm install failed ($LASTEXITCODE)\"; exit 1 }\r\nUpdate-SessionEnvironment\r\n\r\n$openclawCheck = Get-Command openclaw -ErrorAction SilentlyContinue\r\nif (-not $openclawCheck) { Write-Error \"openclaw not found in PATH after installation\"; exit 1 }\r\nWrite-Host \"`[VERIFY] OpenClaw: $(openclaw --version 2\u003e\u00261)\"\r\n\r\n# ═══ CLAUDE CODE ═══\r\nWrite-Host \"=== Installing Claude Code 2.1.42 (global) ===\"\r\nnpm install -g @anthropic-ai/claude-code@2.1.42 2\u003e\u00261 | Write-Host\r\nif ($LASTEXITCODE -ne 0) { Write-Error \"Claude Code npm install failed ($LASTEXITCODE)\"; exit 1 }\r\nUpdate-SessionEnvironment\r\n\r\n$claudeCheck = Get-Command claude -ErrorAction SilentlyContinue\r\nif (-not $claudeCheck) { Write-Error \"claude not found in PATH after installation\"; exit 1 }\r\nWrite-Host \"`[VERIFY] Claude Code: $(claude --version 2\u003e\u00261)\"\r\n\r\n# ═══ OPENSPEC ═══\r\nWrite-Host \"=== Installing OpenSpec 0.9.1 (global) ===\"\r\nnpm install -g @fission-ai/openspec@0.9.1 2\u003e\u00261 | Write-Host\r\nif ($LASTEXITCODE -ne 0) { Write-Error \"OpenSpec npm install failed ($LASTEXITCODE)\"; exit 1 }\r\nUpdate-SessionEnvironment\r\n\r\n$openspecCheck = Get-Command openspec -ErrorAction SilentlyContinue\r\nif (-not $openspecCheck) { Write-Error \"openspec not found in PATH after installation\"; exit 1 }\r\nWrite-Host \"`[VERIFY] OpenSpec: $(openspec --version 2\u003e\u00261)\"\r\n\r\n# ═══ OPENAI CODEX CLI ═══\r\nWrite-Host \"=== Installing OpenAI Codex CLI 0.101.0 (global) ===\"\r\nnpm install -g @openai/codex@0.101.0 2\u003e\u00261 | Write-Host\r\nif ($LASTEXITCODE -ne 0) { Write-Error \"Codex CLI npm install failed ($LASTEXITCODE)\"; exit 1 }\r\nUpdate-SessionEnvironment\r\n\r\n$codexCheck = Get-Command codex -ErrorAction SilentlyContinue\r\nif (-not $codexCheck) { Write-Error \"codex not found in PATH after installation\"; exit 1 }\r\nWrite-Host \"`[VERIFY] Codex CLI: $(codex --version 2\u003e\u00261)\"\r\n\r\n# Restore strict error handling for remaining operations\r\n$ErrorActionPreference = \"Stop\"\r\n\r\n# ═══ NPM GLOBAL PACKAGE INVENTORY ═══\r\nWrite-Host \"=== Listing global npm packages ===\"\r\nnpm list -g --depth=0 2\u003e\u00261 | Write-Host\r\nWrite-Host \"`[SECURITY] Global package inventory logged (npm audit does not support --global)\"\r\n\r\n# ═══ SBOM GENERATION ═══\r\nWrite-Host \"=== Generating Software Bill of Materials (SBOM) ===\"\r\n$sbomDir = \"C:\\ProgramData\\ImageBuild\"\r\nNew-Item -ItemType Directory -Path $sbomDir -Force | Out-Null\r\n\r\n$globalPackages = npm list -g --json 2\u003e$null\r\nSet-Content -Path \"$sbomDir\\sbom-npm-global.json\" -Value $globalPackages -Encoding UTF8\r\nWrite-Host \"`[SBOM] npm global packages: $sbomDir\\sbom-npm-global.json\"\r\n\r\n# Record installed software versions\r\n$softwareManifest = @{\r\n    buildDate       = (Get-Date -Format \"yyyy-MM-dd'T'HH:mm:ss'Z'\")\r\n    nodeVersion     = (node --version 2\u003e\u00261).ToString()\r\n    npmVersion      = (npm --version 2\u003e\u00261).ToString()\r\n    pythonVersion   = (python --version 2\u003e\u00261).ToString()\r\n    gitVersion      = (git --version 2\u003e\u00261).ToString()\r\n    pwshVersion     = (pwsh --version 2\u003e\u00261).ToString()\r\n    azCliVersion    = (az --version 2\u003e\u00261 | Select-Object -First 1).ToString()\r\n    openclawVersion = (openclaw --version 2\u003e\u00261).ToString()\r\n    claudeVersion   = (claude --version 2\u003e\u00261).ToString()\r\n    openspecVersion = (openspec --version 2\u003e\u00261).ToString()\r\n    codexVersion   = (codex --version 2\u003e\u00261).ToString()\r\n} | ConvertTo-Json -Depth 3\r\nSet-Content -Path \"$sbomDir\\sbom-software-manifest.json\" -Value $softwareManifest -Encoding UTF8\r\nWrite-Host \"`[SBOM] Software manifest: $sbomDir\\sbom-software-manifest.json\"\r\n\r\nWrite-Host \"=== Phase 3 Complete: AI agents installed ===\"\r\n"
+                      ],
+                      "name": "InstallAIAgents"
+                    },
+                    {
+                      "inline": [
+                        "        $ErrorActionPreference = \"Stop\"\r\n\r\n        # ═══ CLAUDE CODE: Enterprise Managed Settings ═══\r\n        Write-Host \"=== Configuring Claude Code enterprise policy ===\"\r\n        $claudeConfigDir = \"C:\\ProgramData\\ClaudeCode\"\r\n        New-Item -ItemType Directory -Path $claudeConfigDir -Force | Out-Null\r\n\r\n        $managedSettings = @{\r\n            autoUpdatesChannel = \"stable\"\r\n            permissions = @{\r\n                defaultMode = \"allowWithPermission\"\r\n            }\r\n        } | ConvertTo-Json -Depth 5\r\n\r\n        $managedSettingsPath = \"$claudeConfigDir\\managed-settings.json\"\r\n        Set-Content -Path $managedSettingsPath -Value $managedSettings -Encoding UTF8\r\n        Write-Host \"`[CONFIG] Claude Code managed settings: $managedSettingsPath\"\r\n\r\n        # ═══ OPENCLAW: Configuration Template ═══\r\n        Write-Host \"=== Creating OpenClaw configuration template ===\"\r\n        $openclawTemplateDir = \"C:\\ProgramData\\OpenClaw\"\r\n        New-Item -ItemType Directory -Path $openclawTemplateDir -Force | Out-Null\r\n\r\n        $openclawConfig = @{\r\n            agent = @{\r\n                model = \"anthropic/claude-opus-4-6\"\r\n                defaults = @{\r\n                    workspace = \"~/Documents/OpenClawWorkspace\"\r\n                }\r\n            }\r\n            gateway = @{\r\n                mode = \"local\"\r\n                port = 18789\r\n            }\r\n            channels = @{\r\n                web = @{ enabled = $true }\r\n            }\r\n        } | ConvertTo-Json -Depth 5\r\n\r\n        $templatePath = \"$openclawTemplateDir\\template-config.json\"\r\n        Set-Content -Path $templatePath -Value $openclawConfig -Encoding UTF8\r\n        Write-Host \"`[CONFIG] OpenClaw template: $templatePath\"\r\n\r\n        # ═══ ACTIVE SETUP: First-Login Configuration Hydration ═══\r\n        Write-Host \"=== Registering Active Setup for first-login hydration ===\"\r\n\r\n        # Hydration script preserves existing user config and hydrates on first login\r\n        $hydrationScript = @'\r\n$openclawDir = \"$env:USERPROFILE\\.openclaw\"\r\n$configFile = \"$openclawDir\\openclaw.json\"\r\n$templateFile = \"C:\\ProgramData\\OpenClaw\\template-config.json\"\r\n\r\nif (Test-Path $templateFile) {\r\n    New-Item -ItemType Directory -Path $openclawDir -Force | Out-Null\r\n    $workspaceDir = \"$env:USERPROFILE\\Documents\\OpenClawWorkspace\"\r\n    New-Item -ItemType Directory -Path $workspaceDir -Force | Out-Null\r\n    if (-not (Test-Path $configFile)) {\r\n        Copy-Item -Path $templateFile -Destination $configFile -Force\r\n    }\r\n}\r\n'@\r\n\r\n        $hydrationScriptPath = \"$openclawTemplateDir\\hydrate-config.ps1\"\r\n        Set-Content -Path $hydrationScriptPath -Value $hydrationScript -Encoding UTF8\r\n\r\n        # Register via Active Setup\r\n        $activeSetupKey = \"HKLM:\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\OpenClaw-ConfigHydration\"\r\n        New-Item -Path $activeSetupKey -Force | Out-Null\r\n        Set-ItemProperty -Path $activeSetupKey -Name \"(Default)\" -Value \"OpenClaw Configuration Hydration\"\r\n        Set-ItemProperty -Path $activeSetupKey -Name \"StubPath\" -Value \"powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File `\"$hydrationScriptPath`\"\"\r\n        Set-ItemProperty -Path $activeSetupKey -Name \"Version\" -Value \"1,0,0,0\"\r\n        Write-Host \"`[CONFIG] Active Setup registered: OpenClaw-ConfigHydration\"\r\n\r\n        # ═══ TEAMS OPTIMISATION PREREQUISITES ═══\r\n        Write-Host \"=== Setting Teams optimisation prerequisites ===\"\r\n        $teamsRegPath = \"HKLM:\\SOFTWARE\\Microsoft\\Teams\"\r\n        if (-not (Test-Path $teamsRegPath)) {\r\n            New-Item -Path $teamsRegPath -Force | Out-Null\r\n        }\r\n        Set-ItemProperty -Path $teamsRegPath -Name \"IsWVDEnvironment\" -Value 1 -Type DWord -Force\r\n        Write-Host \"`[CONFIG] Teams IsWVDEnvironment = 1\"\r\n\r\n        # ═══ IMAGE CLEANUP \u0026 OPTIMISATION ═══\r\n        Write-Host \"=== Cleaning up image ===\"\r\n        Remove-Item -Path \"$env:TEMP\\*\" -Recurse -Force -ErrorAction SilentlyContinue\r\n        Stop-Service -Name wuauserv -Force -ErrorAction SilentlyContinue\r\n        Remove-Item -Path \"C:\\Windows\\SoftwareDistribution\\Download\\*\" -Recurse -Force -ErrorAction SilentlyContinue\r\n        Start-Service -Name wuauserv -ErrorAction SilentlyContinue\r\n        # npm cache clean --force writes warnings to stderr; suppress via cmd /c\r\n        cmd /c \"npm cache clean --force 2\u003e\u00261\" | Out-Null\r\n\r\n        Write-Host \"`[CLEANUP] Running DISM component store cleanup...\"\r\n        Start-Process -FilePath \"dism.exe\" `\r\n            -ArgumentList \"/Online /Cleanup-Image /StartComponentCleanup /ResetBase\" `\r\n            -Wait -NoNewWindow\r\n\r\n        Write-Host \"=== Phase 4 Complete: Configuration and cleanup done ===\"\r\n"
+                      ],
+                      "name": "ConfigureAgents"
+                    },
+                    {
+                      "filters": [
+                        "exclude:$_.Title -like '*Preview*'",
+                        "include:$true"
+                      ],
+                      "name": ""
+                    },
+                    {
+                      "name": ""
+                    }
+                  ],
+                  "distribute": [
+                    {
+                      "artifactTags": {},
+                      "runOutputName": "w365-dev-ai-1.0.0",
+                      "targetRegions": [
+                        {}
+                      ]
+                    }
+                  ],
+                  "exactStagingResourceGroup": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/IT_rg-w365-images_aib-w365-dev-ai-1-0-0_1dce2385-4c9d-400d-8531-b54fe45d7de5",
+                  "provisioningState": "Succeeded",
+                  "source": {
+                    "exactVersion": "26200.7840.260206"
+                  }
+                },
+                "tags": {
+                  "iac": "Terraform",
+                  "managed_by": "PlatformEngineering",
+                  "purpose": "DeveloperImages",
+                  "workload": "Windows365"
+                },
+                "type": "Microsoft.VirtualMachineImages/imageTemplates"
+              },
+              "type": [
+                "object",
+                {
+                  "id": "string",
+                  "identity": [
+                    "object",
+                    {
+                      "userAssignedIdentities": [
+                        "object",
+                        {
+                          "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-aib-w365-dev": [
+                            "object",
+                            {
+                              "clientId": "string",
+                              "principalId": "string"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "properties": [
+                    "object",
+                    {
+                      "customize": [
+                        "tuple",
+                        [
+                          [
+                            "object",
+                            {
+                              "inline": [
+                                "tuple",
+                                [
+                                  "string"
+                                ]
+                              ],
+                              "name": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "name": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "inline": [
+                                "tuple",
+                                [
+                                  "string"
+                                ]
+                              ],
+                              "name": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "inline": [
+                                "tuple",
+                                [
+                                  "string"
+                                ]
+                              ],
+                              "name": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "inline": [
+                                "tuple",
+                                [
+                                  "string"
+                                ]
+                              ],
+                              "name": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "filters": [
+                                "tuple",
+                                [
+                                  "string",
+                                  "string"
+                                ]
+                              ],
+                              "name": "string"
+                            }
+                          ],
+                          [
+                            "object",
+                            {
+                              "name": "string"
+                            }
+                          ]
+                        ]
+                      ],
+                      "distribute": [
+                        "tuple",
+                        [
+                          [
+                            "object",
+                            {
+                              "artifactTags": [
+                                "object",
+                                {}
+                              ],
+                              "runOutputName": "string",
+                              "targetRegions": [
+                                "tuple",
+                                [
+                                  [
+                                    "object",
+                                    {}
+                                  ]
+                                ]
+                              ]
+                            }
+                          ]
+                        ]
+                      ],
+                      "exactStagingResourceGroup": "string",
+                      "provisioningState": "string",
+                      "source": [
+                        "object",
+                        {
+                          "exactVersion": "string"
+                        }
+                      ]
+                    }
+                  ],
+                  "tags": [
+                    "object",
+                    {
+                      "iac": "string",
+                      "managed_by": "string",
+                      "purpose": "string",
+                      "workload": "string"
+                    }
+                  ],
+                  "type": "string"
+                }
+              ]
+            },
+            "parent_id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images",
+            "read_headers": null,
+            "read_query_parameters": null,
+            "replace_triggers_external_values": null,
+            "replace_triggers_refs": null,
+            "response_export_values": null,
+            "retry": null,
+            "schema_validation_enabled": true,
+            "sensitive_body": null,
+            "sensitive_body_version": null,
+            "tags": {
+              "iac": "Terraform",
+              "managed_by": "PlatformEngineering",
+              "purpose": "DeveloperImages",
+              "workload": "Windows365"
+            },
+            "timeouts": null,
+            "type": "Microsoft.VirtualMachineImages/imageTemplates@2024-02-01",
+            "update_headers": null,
+            "update_query_parameters": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.VirtualMachineImages/imageTemplates/aib-w365-dev-ai-1-0-0",
+            "type": null
+          },
+          "private": "eyJzZW5zaXRpdmVfYm9keSI6ImV5Sm9ZWE5vSWpvaVpFTk9UMjFMTDI1VFdTc3hNblpJZW1GelRGaHBjM2Q2YkVkVU5WVklRVGRxUVVkWmEzWnRRM1ZSY3owaWZRPT0ifQ==",
+          "dependencies": [
+            "azurerm_resource_group.images",
+            "module.gallery.azurerm_shared_image.this",
+            "module.gallery.azurerm_shared_image_gallery.this",
+            "module.identity.azurerm_user_assigned_identity.aib"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.image_builder",
+      "mode": "managed",
+      "type": "azapi_resource_action",
+      "name": "run_build",
+      "provider": "provider[\"registry.terraform.io/azure/azapi\"]",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "action": "run",
+            "body": null,
+            "headers": null,
+            "id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.VirtualMachineImages/imageTemplates/aib-w365-dev-ai-1-0-0/run",
+            "locks": null,
+            "method": "POST",
+            "output": {
+              "value": {},
+              "type": [
+                "object",
+                {}
+              ]
+            },
+            "query_parameters": null,
+            "resource_id": "/subscriptions/7a713a84-2144-4ea1-8e85-9c63111bd995/resourceGroups/rg-w365-images/providers/Microsoft.VirtualMachineImages/imageTemplates/aib-w365-dev-ai-1-0-0",
+            "response_export_values": null,
+            "retry": null,
+            "sensitive_output": {
+              "value": {},
+              "type": [
+                "object",
+                {}
+              ]
+            },
+            "sensitive_response_export_values": null,
+            "timeouts": {
+              "create": "150m",
+              "delete": null,
+              "read": null,
+              "update": null
+            },
+            "type": "Microsoft.VirtualMachineImages/imageTemplates@2024-02-01",
+            "when": "apply"
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "sensitive_output"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "dependencies": [
+            "azurerm_resource_group.images",
+            "module.gallery.azurerm_shared_image.this",
+            "module.gallery.azurerm_shared_image_gallery.this",
+            "module.identity.azurerm_user_assigned_identity.aib",
+            "module.image_builder.azapi_resource.image_template"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.image_builder",
+      "mode": "managed",
+      "type": "time_static",
+      "name": "build_time",
+      "provider": "provider[\"registry.terraform.io/hashicorp/time\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "day": 21,
+            "hour": 22,
+            "id": "2026-02-21T22:02:30Z",
+            "minute": 2,
+            "month": 2,
+            "rfc3339": "2026-02-21T22:02:30Z",
+            "second": 30,
+            "triggers": null,
+            "unix": 1771711350,
+            "year": 2026
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    }
+  ],
+  "check_results": [
+    {
+      "object_kind": "var",
+      "config_addr": "var.source_image_version",
+      "status": "pass",
+      "objects": [
+        {
+          "object_addr": "var.source_image_version",
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "object_kind": "var",
+      "config_addr": "var.node_version",
+      "status": "pass",
+      "objects": [
+        {
+          "object_addr": "var.node_version",
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "object_kind": "var",
+      "config_addr": "var.gallery_name",
+      "status": "pass",
+      "objects": [
+        {
+          "object_addr": "var.gallery_name",
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "object_kind": "var",
+      "config_addr": "var.image_version",
+      "status": "pass",
+      "objects": [
+        {
+          "object_addr": "var.image_version",
+          "status": "pass"
+        }
+      ]
+    }
+  ]
+}

@@ -25,9 +25,11 @@ resource "azurerm_shared_image" "this" {
   }
 
   # ── Windows 365 ACG Import Requirements ──
-  # These feature flags are mandatory for Windows 365 ingestion.
+  # W365 requires SecurityType = "TrustedLaunch" (not "TrustedLaunchSupported").
+  # "TrustedLaunchSupported" means the image *can* use TL; "TrustedLaunch" means
+  # it *requires* TL. W365 only accepts the latter.
   # azurerm v4 replaced features {} blocks with top-level arguments.
-  trusted_launch_supported             = true
+  trusted_launch_enabled               = true
   hibernation_enabled                  = true
   disk_controller_type_nvme_enabled    = true
   accelerated_network_support_enabled  = true
