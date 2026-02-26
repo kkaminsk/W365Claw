@@ -118,9 +118,9 @@ locals {
     },
     # ── Restart after runtime installation ──
     {
-      type              = "WindowsRestart"
-      restartCommand    = "shutdown /r /f /t 5 /c \"Restart after runtime installation\""
-      restartTimeout    = "10m"
+      type                = "WindowsRestart"
+      restartCommand      = "shutdown /r /f /t 5 /c \"Restart after runtime installation\""
+      restartTimeout      = "10m"
       restartCheckCommand = "powershell -command \"node --version; python --version\""
     },
     # ── Phase 2: Developer Tools (VS Code, Git, GitHub Desktop) ──
@@ -235,7 +235,7 @@ locals {
         PWSH
       ]
     },
-    # ── Phase 3: AI Agents (OpenClaw + Claude Code) ──
+    # ── Phase 3: AI Tooling (OpenSpec + MCP) ──
     {
       type        = "PowerShell"
       name        = "InstallAIAgents"
@@ -264,26 +264,6 @@ locals {
         Write-Host "[PREREQ] Node.js: $(node --version)"
         Write-Host "[PREREQ] npm: $(npm --version)"
 
-        # ═══ OPENCLAW ═══
-        Write-Host "=== Installing OpenClaw ${var.openclaw_version} (global) ==="
-        npm install -g openclaw@${var.openclaw_version} 2>&1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "OpenClaw npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $openclawCheck = Get-Command openclaw -ErrorAction SilentlyContinue
-        if (-not $openclawCheck) { Write-Error "openclaw not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] OpenClaw: $(openclaw --version 2>&1)"
-
-        # ═══ CLAUDE CODE ═══
-        Write-Host "=== Installing Claude Code ${var.claude_code_version} (global) ==="
-        npm install -g @anthropic-ai/claude-code@${var.claude_code_version} 2>&1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "Claude Code npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $claudeCheck = Get-Command claude -ErrorAction SilentlyContinue
-        if (-not $claudeCheck) { Write-Error "claude not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] Claude Code: $(claude --version 2>&1)"
-
         # ═══ OPENSPEC ═══
         Write-Host "=== Installing OpenSpec ${var.openspec_version} (global) ==="
         npm install -g @fission-ai/openspec@${var.openspec_version} 2>&1 | Write-Host
@@ -294,15 +274,21 @@ locals {
         if (-not $openspecCheck) { Write-Error "openspec not found in PATH after installation"; exit 1 }
         Write-Host "[VERIFY] OpenSpec: $(openspec --version 2>&1)"
 
-        # ═══ OPENAI CODEX CLI ═══
-        Write-Host "=== Installing OpenAI Codex CLI ${var.codex_version} (global) ==="
-        npm install -g @openai/codex@${var.codex_version} 2>&1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "Codex CLI npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $codexCheck = Get-Command codex -ErrorAction SilentlyContinue
-        if (-not $codexCheck) { Write-Error "codex not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] Codex CLI: $(codex --version 2>&1)"
+        # ═══ MCP SERVER PACKAGES ═══
+        $mcpPackages = @(${join(",", [for pkg in var.mcp_packages : format("\"%s\"", pkg)])})
+        if ($mcpPackages.Count -gt 0) {
+            Write-Host "=== Installing MCP server packages ==="
+            foreach ($pkg in $mcpPackages) {
+                Write-Host "  Installing: $pkg"
+                npm install -g $pkg 2>&1 | Write-Host
+                if ($LASTEXITCODE -ne 0) {
+                    Write-Warning "MCP package install failed for $pkg (non-fatal)"
+                }
+            }
+            Write-Host "[VERIFY] MCP server packages installed: $($mcpPackages.Count)"
+        } else {
+            Write-Host "[SKIP] No MCP server packages configured"
+        }
 
         # ═══ NPM GLOBAL PACKAGE INVENTORY ═══
         Write-Host "=== Listing global npm packages ==="
@@ -327,15 +313,12 @@ locals {
             gitVersion      = (git --version 2>&1).ToString()
             pwshVersion     = (pwsh --version 2>&1).ToString()
             azCliVersion    = (az --version 2>&1 | Select-Object -First 1).ToString()
-            openclawVersion = (openclaw --version 2>&1).ToString()
-            claudeVersion   = (claude --version 2>&1).ToString()
             openspecVersion = (openspec --version 2>&1).ToString()
-            codexVersion   = (codex --version 2>&1).ToString()
         } | ConvertTo-Json -Depth 3
         Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
         Write-Host "[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"
 
-        Write-Host "=== Phase 3 Complete: AI agents installed ==="
+        Write-Host "=== Phase 3 Complete: AI tooling installed ==="
         PWSH
       ]
     },
@@ -390,6 +373,49 @@ locals {
         Set-Content -Path $templatePath -Value $openclawConfig -Encoding UTF8
         Write-Host "[CONFIG] OpenClaw template: $templatePath"
 
+        # ═══ CURATED AGENT SKILLS ═══
+        $skillsRepoUrl = "${var.skills_repo_url}"
+        $skillsDir = "C:\ProgramData\OpenClaw\skills"
+        if ($skillsRepoUrl -ne "") {
+            Write-Host "=== Cloning curated agent skills ==="
+            New-Item -ItemType Directory -Path $skillsDir -Force | Out-Null
+            git clone --depth 1 $skillsRepoUrl "$skillsDir\approved" 2>&1 | Write-Host
+            if ($LASTEXITCODE -ne 0) {
+                Write-Warning "Skills clone failed — skills will need to be installed post-provisioning"
+            } else {
+                $skillCount = (Get-ChildItem -Path "$skillsDir\approved" -Filter "SKILL.md" -Recurse).Count
+                Write-Host "[CONFIG] Curated skills cloned: $skillCount skills found"
+            }
+        } else {
+            Write-Host "[SKIP] No skills repository configured"
+        }
+
+        # ═══ MCP SERVER CONFIGURATION TEMPLATE ═══
+        Write-Host "=== Creating MCP server configuration template ==="
+        $mcpConfigDir = "C:\ProgramData\OpenClaw\mcp"
+        New-Item -ItemType Directory -Path $mcpConfigDir -Force | Out-Null
+
+        # Template with placeholder API keys — real keys delivered via Intune env vars
+        $mcpConfig = @{
+            servers = @{
+                "microsoft-docs" = @{
+                    transport = "http"
+                    url       = "https://learn.microsoft.com/api/mcp"
+                }
+                "perplexity" = @{
+                    transport = "stdio"
+                    command   = "npx"
+                    args      = @("-y", "@perplexity-ai/mcp-server")
+                    env       = @{
+                        PERPLEXITY_API_KEY = "__PERPLEXITY_API_KEY__"
+                    }
+                }
+            }
+        } | ConvertTo-Json -Depth 5
+
+        Set-Content -Path "$mcpConfigDir\mcporter.json" -Value $mcpConfig -Encoding UTF8
+        Write-Host "[CONFIG] MCP server config template: $mcpConfigDir\mcporter.json"
+
         # ═══ ACTIVE SETUP: First-Login Configuration Hydration ═══
         Write-Host "=== Registering Active Setup for first-login hydration ==="
 
@@ -404,6 +430,22 @@ if (Test-Path $templateFile) {
     $workspaceDir = "$env:USERPROFILE\Documents\OpenClawWorkspace"
     New-Item -ItemType Directory -Path $workspaceDir -Force | Out-Null
     Copy-Item -Path $templateFile -Destination $configFile -Force
+}
+
+# Hydrate curated agent skills
+$skillsSource = "C:\ProgramData\OpenClaw\skills"
+$skillsDest = "$env:USERPROFILE\.agents\skills"
+if (Test-Path $skillsSource) {
+    New-Item -ItemType Directory -Path $skillsDest -Force | Out-Null
+    Copy-Item -Path "$skillsSource\*" -Destination $skillsDest -Recurse -Force
+}
+
+# Hydrate MCP server configuration
+$mcpSource = "C:\ProgramData\OpenClaw\mcp\mcporter.json"
+$mcpDest = "$openclawDir\workspace\config"
+if (Test-Path $mcpSource) {
+    New-Item -ItemType Directory -Path $mcpDest -Force | Out-Null
+    Copy-Item -Path $mcpSource -Destination "$mcpDest\mcporter.json" -Force
 }
 '@
 
@@ -446,7 +488,7 @@ if (Test-Path $templateFile) {
     },
     # ── Windows Update ──
     {
-      type = "WindowsUpdate"
+      type           = "WindowsUpdate"
       searchCriteria = "IsInstalled=0"
       filters = [
         "exclude:$_.Title -like '*Preview*'",

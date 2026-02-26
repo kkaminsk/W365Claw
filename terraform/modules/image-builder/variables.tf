@@ -123,23 +123,8 @@ variable "azure_cli_sha256" {
   default     = ""
 }
 
-variable "openclaw_version" {
-  description = "OpenClaw npm package version"
-  type        = string
-}
-
-variable "claude_code_version" {
-  description = "Claude Code npm package version"
-  type        = string
-}
-
 variable "openspec_version" {
   description = "OpenSpec npm package version"
-  type        = string
-}
-
-variable "codex_version" {
-  description = "OpenAI Codex CLI npm package version"
   type        = string
 }
 
@@ -151,6 +136,18 @@ variable "openclaw_default_model" {
 variable "openclaw_gateway_port" {
   description = "Port for the OpenClaw gateway"
   type        = number
+}
+
+variable "skills_repo_url" {
+  description = "Git URL for the curated agent skills repository (empty to skip)"
+  type        = string
+  default     = ""
+}
+
+variable "mcp_packages" {
+  description = "List of MCP server npm packages to install globally"
+  type        = list(string)
+  default     = []
 }
 
 variable "tags" {
