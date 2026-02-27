@@ -506,18 +506,21 @@ if (Test-Path $mcpSource) {
   # Distributor: publish to Azure Compute Gallery
   distribute = [
     {
-      type               = "SharedImage"
-      galleryImageId     = var.image_definition_id
-      runOutputName      = "w365-dev-ai-${var.image_version}"
-      excludeFromLatest  = var.exclude_from_latest
-      replicationRegions = [var.location]
-      storageAccountType = "Standard_LRS"
+      type              = "SharedImage"
+      galleryImageId    = var.image_definition_id
+      runOutputName     = "w365-dev-ai-${var.image_version}"
+      excludeFromLatest = var.exclude_from_latest
+      targetRegions = [
+        {
+          name               = var.location
+          replicaCount       = var.replica_count
+          storageAccountType = "Standard_LRS"
+        }
+      ]
       versioning = {
         scheme = "Latest"
         major  = tonumber(split(".", var.image_version)[0])
       }
-      endOfLifeDate = local.end_of_life_date
-      replicaCount  = var.replica_count
     }
   ]
 
