@@ -1,50 +1,33 @@
-#requires -Version 5.1
 <#
 .SYNOPSIS
-    Detects current software/image versions and writes terraform/terraform.tfvars.
+    Interactively populates terraform/terraform.tfvars for the W365Claw project.
 
 .DESCRIPTION
-    This script auto-detects the latest supported versions and installer checksums
-    required by W365Claw, then writes terraform.tfvars after operator confirmation.
+    Auto-detects latest software versions, SHA256 checksums, Azure subscription,
+    and source image versions. Prompts for all values with sensible defaults.
+    Parses existing terraform.tfvars for idempotent re-runs.
 
-    Detected values:
-      - Azure subscription ID (az account show)
-      - Node.js latest LTS version + MSI SHA256
-      - Python latest stable version + Windows installer SHA256
-      - PowerShell 7 LTS latest (7.4.x) + MSI SHA256
-      - Git for Windows latest version + installer SHA256
-      - Azure CLI latest version + MSI SHA256
-      - Latest npm package versions:
-          openclaw
-          @anthropic-ai/claude-code
-          @fission-ai/openspec
-          @openai/codex
-      - Latest Windows 11 24H2 Enterprise marketplace image version
+    Works in both Windows PowerShell 5.1 and PowerShell 7+.
+
+.PARAMETER Force
+    Skip confirmation prompts; use detected/existing defaults for all values.
 
 .PARAMETER TerraformDir
     Path to the terraform/ directory. Defaults to ..\terraform relative to this script.
 
-.PARAMETER TfvarsPath
-    Optional explicit path for terraform.tfvars. Defaults to <TerraformDir>/terraform.tfvars.
-
-.PARAMETER Force
-    Skip confirmation prompt before writing terraform.tfvars.
-
 .EXAMPLE
     .\Initialize-TerraformVars.ps1
-
-.EXAMPLE
-    .\Initialize-TerraformVars.ps1 -WhatIf
+    # Interactive mode
 
 .EXAMPLE
     .\Initialize-TerraformVars.ps1 -Force
+    # Non-interactive — auto-detect everything and write immediately
 #>
 
-[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = "Medium")]
+[CmdletBinding()]
 param(
-    [string]$TerraformDir = (Join-Path $PSScriptRoot "..\terraform"),
-    [string]$TfvarsPath,
-    [switch]$Force
+    [switch]$Force,
+    [string]$TerraformDir = (Join-Path $PSScriptRoot "..\terraform")
 )
 
 $ErrorActionPreference = "Stop"
@@ -54,430 +37,727 @@ $ProgressPreference = "SilentlyContinue"
 # HELPER FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════
 
+function Write-Step {
+    param([string]$Message)
+    Write-Host ""
+    Write-Host "─── $Message ───" -ForegroundColor Cyan
+}
+
+function Write-Info {
+    param([string]$Message)
+    Write-Host "  $Message" -ForegroundColor DarkGray
+}
+
+function Write-Success {
+    param([string]$Message)
+    Write-Host "  ✅ $Message" -ForegroundColor Green
+}
+
+function Write-Warn {
+    param([string]$Message)
+    Write-Host "  ⚠️  $Message" -ForegroundColor Yellow
+}
+
+function Write-Err {
+    param([string]$Message)
+    Write-Host "  ❌ $Message" -ForegroundColor Red
+}
+
 function Test-CommandExists {
-    param([Parameter(Mandatory = $true)][string]$Command)
-    return $null -ne (Get-Command $Command -ErrorAction SilentlyContinue)
+    param([string]$Command)
+    $null -ne (Get-Command $Command -ErrorAction SilentlyContinue)
 }
 
-function Confirm-Action {
-    param([Parameter(Mandatory = $true)][string]$Message)
-
-    if ($Force -or $WhatIfPreference) { return $true }
-
-    $response = Read-Host "$Message [Y/n]"
-    return ($response -eq "" -or $response -eq "Y" -or $response -eq "y")
-}
-
-function Invoke-ApiGet {
-    param([Parameter(Mandatory = $true)][string]$Uri)
-
-    $headers = @{
-        "User-Agent" = "W365Claw-Initialize-TerraformVars"
-    }
-
-    if ($Uri -like "https://api.github.com/*") {
-        $headers["Accept"] = "application/vnd.github+json"
-        $headers["X-GitHub-Api-Version"] = "2022-11-28"
-    }
-
-    return Invoke-RestMethod -Uri $Uri -Method Get -Headers $headers
-}
-
-function ConvertTo-Version {
-    param([Parameter(Mandatory = $true)][string]$Value)
-    return [version]($Value -replace '[^0-9\.].*$', '')
-}
-
-function Get-VersionSortKey {
-    param([Parameter(Mandatory = $true)][string]$Value)
-
-    $parts = $Value -split '\.'
-    $normalized = foreach ($part in $parts) {
-        $num = 0
-        [void][int]::TryParse($part, [ref]$num)
-        $num.ToString("D10")
-    }
-    return ($normalized -join ".")
-}
-
-function Get-GitHubReleases {
-    param([Parameter(Mandatory = $true)][string]$Repo)
-    return Invoke-ApiGet "https://api.github.com/repos/$Repo/releases?per_page=100"
-}
-
-function Get-ShaFromDigest {
-    param([AllowNull()][string]$Digest)
-    if ($null -eq $Digest) { return $null }
-    if ($Digest -match '^sha256:([a-fA-F0-9]{64})$') {
-        return $Matches[1].ToLowerInvariant()
-    }
-    return $null
-}
-
-function Get-ShaFromText {
+function Read-ValueWithDefault {
+    <#
+    .SYNOPSIS
+        Prompts user for a value, showing current default. Returns default if empty input or -Force.
+    #>
     param(
-        [Parameter(Mandatory = $true)][string]$Text,
-        [Parameter(Mandatory = $true)][string]$AssetName
+        [string]$Prompt,
+        [string]$Default,
+        [string]$ValidationRegex,
+        [string]$ValidationMessage
     )
 
-    if ($Text -match '(?im)^\s*([a-fA-F0-9]{64})\s*$') {
-        return $Matches[1].ToLowerInvariant()
-    }
+    if ($Force) { return $Default }
 
-    foreach ($line in ($Text -split "`r?`n")) {
-        if ($line -match '^\s*([a-fA-F0-9]{64})\s+[\*\s]?(.+?)\s*$') {
-            if ($Matches[2].Trim() -eq $AssetName) {
-                return $Matches[1].ToLowerInvariant()
+    while ($true) {
+        $display = if ($Default) { "[$Default]" } else { "[empty]" }
+        $input_val = Read-Host "  $Prompt $display"
+        if ([string]::IsNullOrWhiteSpace($input_val)) { $input_val = $Default }
+
+        if ($ValidationRegex -and $input_val) {
+            if ($input_val -notmatch $ValidationRegex) {
+                Write-Err $ValidationMessage
+                continue
             }
         }
-        if ($line -match '^\s*SHA256\s*\((.+?)\)\s*=\s*([a-fA-F0-9]{64})\s*$') {
-            if ($Matches[1].Trim() -eq $AssetName) {
-                return $Matches[2].ToLowerInvariant()
-            }
-        }
+        return $input_val
     }
-
-    return $null
 }
 
-function Get-GitHubAssetSha256 {
-    param(
-        [Parameter(Mandatory = $true)]$Release,
-        [Parameter(Mandatory = $true)]$Asset
-    )
+function Read-BoolWithDefault {
+    param([string]$Prompt, [string]$Default)
 
-    $digestSha = Get-ShaFromDigest -Digest $Asset.digest
-    if ($digestSha) { return $digestSha }
+    if ($Force) { return $Default }
 
-    $exactChecksumAssets = @(
-        "$($Asset.name).sha256",
-        "$($Asset.name).sha256sum",
-        "$($Asset.name).sha256.txt"
-    )
+    while ($true) {
+        $input_val = Read-Host "  $Prompt [$Default]"
+        if ([string]::IsNullOrWhiteSpace($input_val)) { return $Default }
+        if ($input_val -eq "true" -or $input_val -eq "false") { return $input_val }
+        Write-Err "Must be 'true' or 'false'"
+    }
+}
 
-    $candidateAssets = @()
-    $candidateAssets += $Release.assets | Where-Object { $exactChecksumAssets -contains $_.name }
-    $candidateAssets += $Release.assets | Where-Object { $_.name -match 'sha256|checksums?|hashes?' }
+function Read-IntWithDefault {
+    param([string]$Prompt, [string]$Default)
 
-    foreach ($checksumAsset in ($candidateAssets | Sort-Object name -Unique)) {
-        try {
-            $text = [string](Invoke-ApiGet -Uri $checksumAsset.browser_download_url)
-            $sha = Get-ShaFromText -Text $text -AssetName $Asset.name
-            if ($sha) { return $sha }
+    if ($Force) { return $Default }
 
-            if ($text -match '(?im)\b([a-fA-F0-9]{64})\b') {
-                return $Matches[1].ToLowerInvariant()
-            }
-        } catch {
+    while ($true) {
+        $input_val = Read-Host "  $Prompt [$Default]"
+        if ([string]::IsNullOrWhiteSpace($input_val)) { return $Default }
+        $parsed = 0
+        if ([int]::TryParse($input_val, [ref]$parsed)) { return $input_val }
+        Write-Err "Must be an integer"
+    }
+}
+
+function Invoke-WebRequestSafe {
+    <#
+    .SYNOPSIS
+        Wrapper for Invoke-WebRequest that returns $null on failure instead of throwing.
+    #>
+    param([string]$Uri)
+    try {
+        $response = Invoke-WebRequest -Uri $Uri -UseBasicParsing -TimeoutSec 15
+        return $response
+    } catch {
+        Write-Info "Could not fetch $Uri — $($_.Exception.Message)"
+        return $null
+    }
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PARSE EXISTING TFVARS
+# ═══════════════════════════════════════════════════════════════════════════
+
+function Read-TfVars {
+    <#
+    .SYNOPSIS
+        Parses an existing terraform.tfvars file into a hashtable.
+        Handles quoted strings, booleans, integers, and the tags = { ... } map block.
+    #>
+    param([string]$Path)
+
+    $vars = @{}
+    if (-not (Test-Path $Path)) { return $vars }
+
+    $content = Get-Content $Path -Raw
+    $lines = $content -split "`n"
+
+    $inMap = $false
+    $mapName = ""
+    $mapValues = @{}
+
+    foreach ($line in $lines) {
+        $trimmed = $line.Trim()
+
+        # Skip comments and empty lines
+        if ($trimmed -eq "" -or $trimmed.StartsWith("#")) { continue }
+
+        # Detect map block start: key = {
+        if (-not $inMap -and $trimmed -match '^(\w+)\s*=\s*\{') {
+            $inMap = $true
+            $mapName = $Matches[1]
+            $mapValues = @{}
             continue
         }
+
+        # Inside map block
+        if ($inMap) {
+            if ($trimmed -eq "}") {
+                $vars[$mapName] = $mapValues
+                $inMap = $false
+                $mapName = ""
+                continue
+            }
+            # Parse map entries: key = "value"
+            if ($trimmed -match '^(\w+)\s*=\s*"([^"]*)"') {
+                $mapValues[$Matches[1]] = $Matches[2]
+            }
+            continue
+        }
+
+        # Simple key = value
+        if ($trimmed -match '^(\w+)\s*=\s*(.+)$') {
+            $key = $Matches[1]
+            $val = $Matches[2].Trim()
+
+            # Strip inline comments
+            # Handle quoted strings first
+            if ($val.StartsWith('"')) {
+                if ($val -match '^"([^"]*)"') {
+                    $val = $Matches[1]
+                }
+            } else {
+                # Unquoted — could be bool, int, or unquoted string
+                # Strip inline comment
+                $commentIdx = $val.IndexOf("#")
+                if ($commentIdx -ge 0) { $val = $val.Substring(0, $commentIdx).Trim() }
+
+                # Don't transform — keep as string
+            }
+            $vars[$key] = $val
+        }
     }
 
-    throw "Unable to resolve SHA256 for asset '$($Asset.name)' from release '$($Release.tag_name)'."
+    return $vars
 }
 
-function Get-NodeReleaseInfo {
-    $index = Invoke-ApiGet "https://nodejs.org/dist/index.json"
-    $ltsRelease = $index |
-        Where-Object { $_.lts -and $_.version -match '^v\d+\.\d+\.\d+$' } |
-        Sort-Object { ConvertTo-Version $_.version.TrimStart("v") } -Descending |
-        Select-Object -First 1
+# ═══════════════════════════════════════════════════════════════════════════
+# VERSION DETECTION
+# ═══════════════════════════════════════════════════════════════════════════
 
-    if (-not $ltsRelease) {
-        throw "Unable to find latest Node.js LTS release from Node.js index API."
+function Get-LatestNodeVersion {
+    Write-Info "Checking latest Node.js LTS v24.x..."
+    try {
+        $resp = Invoke-WebRequestSafe "https://nodejs.org/dist/index.json"
+        if (-not $resp) { return $null }
+        $releases = $resp.Content | ConvertFrom-Json
+        foreach ($r in $releases) {
+            if ($r.version -match '^v24\.' -and $r.lts) {
+                Write-Info "Found: $($r.version)"
+                return $r.version
+            }
+        }
+        # If no LTS v24, return latest v24
+        foreach ($r in $releases) {
+            if ($r.version -match '^v24\.') {
+                Write-Info "Found (non-LTS): $($r.version)"
+                return $r.version
+            }
+        }
+    } catch {
+        Write-Info "Node.js version detection failed: $_"
     }
-
-    $version = $ltsRelease.version
-    $assetName = "node-$version-x64.msi"
-    $shasums = [string](Invoke-ApiGet "https://nodejs.org/dist/$version/SHASUMS256.txt")
-    $sha = Get-ShaFromText -Text $shasums -AssetName $assetName
-
-    if (-not $sha) {
-        throw "Unable to parse Node.js SHA256 for $assetName from SHASUMS256.txt."
-    }
-
-    return [ordered]@{
-        version = $version
-        sha256  = $sha
-        asset   = $assetName
-    }
+    return $null
 }
 
-function Get-PythonReleaseInfo {
-    $release = Get-GitHubReleases "python/cpython" |
-        Where-Object { -not $_.draft -and -not $_.prerelease -and $_.tag_name -match '^v\d+\.\d+\.\d+$' } |
-        Sort-Object { ConvertTo-Version $_.tag_name.TrimStart("v") } -Descending |
-        Select-Object -First 1
-
-    if (-not $release) {
-        throw "Unable to find latest Python stable release."
+function Get-LatestPythonVersion {
+    Write-Info "Checking latest Python 3.x..."
+    try {
+        $resp = Invoke-WebRequestSafe "https://endoflife.date/api/python.json"
+        if (-not $resp) { return $null }
+        $releases = $resp.Content | ConvertFrom-Json
+        foreach ($r in $releases) {
+            if ($r.cycle -match '^3\.' -and $r.latest) {
+                Write-Info "Found: $($r.latest)"
+                return $r.latest
+            }
+        }
+    } catch {
+        Write-Info "Python version detection failed: $_"
     }
-
-    $asset = $release.assets |
-        Where-Object { $_.name -match '^python-\d+\.\d+\.\d+-amd64\.exe$' } |
-        Select-Object -First 1
-
-    if (-not $asset) {
-        throw "Unable to find Python amd64 Windows installer in release '$($release.tag_name)'."
-    }
-
-    $sha = Get-GitHubAssetSha256 -Release $release -Asset $asset
-
-    return [ordered]@{
-        version = ($release.tag_name.TrimStart("v"))
-        sha256  = $sha
-        asset   = $asset.name
-    }
+    return $null
 }
 
-function Get-PowerShellReleaseInfo {
-    $release = Get-GitHubReleases "PowerShell/PowerShell" |
-        Where-Object { -not $_.draft -and -not $_.prerelease -and $_.tag_name -match '^v7\.4\.\d+$' } |
-        Sort-Object { ConvertTo-Version $_.tag_name.TrimStart("v") } -Descending |
-        Select-Object -First 1
-
-    if (-not $release) {
-        throw "Unable to find latest PowerShell 7.4 LTS release."
-    }
-
-    $asset = $release.assets |
-        Where-Object { $_.name -match '^PowerShell-\d+\.\d+\.\d+-win-x64\.msi$' } |
-        Select-Object -First 1
-
-    if (-not $asset) {
-        throw "Unable to find PowerShell x64 MSI in release '$($release.tag_name)'."
-    }
-
-    $sha = Get-GitHubAssetSha256 -Release $release -Asset $asset
-
-    return [ordered]@{
-        version = ($release.tag_name.TrimStart("v"))
-        sha256  = $sha
-        asset   = $asset.name
-    }
-}
-
-function Get-GitWindowsReleaseInfo {
-    $release = Get-GitHubReleases "git-for-windows/git" |
-        Where-Object { -not $_.draft -and -not $_.prerelease -and $_.tag_name -match '^v\d+\.\d+\.\d+(\.windows\.\d+)?$' } |
-        Sort-Object { ConvertTo-Version (($_.tag_name.TrimStart("v")) -replace '\.windows\.\d+$', '') } -Descending |
-        Select-Object -First 1
-
-    if (-not $release) {
-        throw "Unable to find latest Git for Windows release."
-    }
-
-    $asset = $release.assets |
-        Where-Object { $_.name -match '^Git-\d+\.\d+\.\d+(\.\d+)?-64-bit\.exe$' } |
-        Sort-Object name |
-        Select-Object -Last 1
-
-    if (-not $asset) {
-        throw "Unable to find Git for Windows 64-bit installer in release '$($release.tag_name)'."
-    }
-
-    $version = $release.tag_name.TrimStart("v") -replace '\.windows\.\d+$', ''
-    $sha = Get-GitHubAssetSha256 -Release $release -Asset $asset
-
-    return [ordered]@{
-        version = $version
-        sha256  = $sha
-        asset   = $asset.name
+function Get-LatestGitHubRelease {
+    param([string]$Repo, [string]$Label)
+    Write-Info "Checking latest $Label..."
+    try {
+        $resp = Invoke-WebRequestSafe "https://api.github.com/repos/$Repo/releases/latest"
+        if (-not $resp) { return $null }
+        $release = $resp.Content | ConvertFrom-Json
+        $tag = $release.tag_name
+        # Strip leading 'v' or other prefixes
+        $ver = $tag -replace '^[vV]', '' -replace '^azure-cli-', ''
+        Write-Info "Found: $ver"
+        return @{ Version = $ver; Assets = $release.assets; Body = $release.body }
+    } catch {
+        Write-Info "$Label version detection failed: $_"
+        return $null
     }
 }
 
-function Get-AzureCliReleaseInfo {
-    $release = Get-GitHubReleases "Azure/azure-cli" |
-        Where-Object { -not $_.draft -and -not $_.prerelease -and $_.tag_name -match '^azure-cli-\d+\.\d+\.\d+$' } |
-        Sort-Object { ConvertTo-Version (($_.tag_name) -replace '^azure-cli-', '') } -Descending |
-        Select-Object -First 1
-
-    if (-not $release) {
-        throw "Unable to find latest Azure CLI stable release."
+function Get-LatestNpmVersion {
+    param([string]$Package)
+    Write-Info "Checking npm: $Package..."
+    if (-not (Test-CommandExists "npm")) {
+        Write-Info "npm not available"
+        return $null
     }
-
-    $asset = $release.assets |
-        Where-Object { $_.name -match '^azure-cli-\d+\.\d+\.\d+-x64\.msi$' } |
-        Select-Object -First 1
-
-    if (-not $asset) {
-        throw "Unable to find Azure CLI x64 MSI installer in release '$($release.tag_name)'."
-    }
-
-    $version = ($release.tag_name -replace '^azure-cli-', '')
-    $sha = Get-GitHubAssetSha256 -Release $release -Asset $asset
-
-    return [ordered]@{
-        version = $version
-        sha256  = $sha
-        asset   = $asset.name
-    }
+    try {
+        $ver = npm view $Package version 2>&1
+        if ($LASTEXITCODE -eq 0 -and $ver -match '^\d+') {
+            Write-Info "Found: $ver"
+            return $ver.Trim()
+        }
+    } catch { }
+    return $null
 }
 
-function Get-NpmLatestVersion {
-    param([Parameter(Mandatory = $true)][string]$PackageName)
-    $encodedPackageName = [Uri]::EscapeDataString($PackageName)
-    $result = Invoke-ApiGet "https://registry.npmjs.org/$encodedPackageName/latest"
-    return [string]$result.version
+# ═══════════════════════════════════════════════════════════════════════════
+# SHA256 DETECTION
+# ═══════════════════════════════════════════════════════════════════════════
+
+function Get-NodeSha256 {
+    param([string]$Version)
+    Write-Info "Fetching Node.js SHA256..."
+    try {
+        $resp = Invoke-WebRequestSafe "https://nodejs.org/dist/$Version/SHASUMS256.txt"
+        if (-not $resp) { return "" }
+        $lines = $resp.Content -split "`n"
+        $target = "node-$Version-x64.msi"
+        foreach ($line in $lines) {
+            if ($line -match "^([a-f0-9]{64})\s+$([regex]::Escape($target))") {
+                Write-Info "Found SHA256 for $target"
+                return $Matches[1]
+            }
+        }
+    } catch { }
+    return ""
 }
 
-function Invoke-AzJson {
-    param([Parameter(Mandatory = $true)][string[]]$Arguments)
-
-    if (-not (Test-CommandExists "az")) {
-        throw "Azure CLI (az) is not installed or not in PATH."
-    }
-
-    $output = & az @Arguments --output json 2>$null
-    if ($LASTEXITCODE -ne 0) {
-        throw "Azure CLI command failed: az $($Arguments -join ' ')"
-    }
-
-    if (-not $output) {
-        throw "Azure CLI command returned no output: az $($Arguments -join ' ')"
-    }
-
-    return ($output | ConvertFrom-Json)
+function Get-PythonSha256 {
+    param([string]$Version)
+    Write-Info "Fetching Python SHA256..."
+    # Try the .sha256 sidecar file
+    $url = "https://www.python.org/ftp/python/$Version/python-$Version-amd64.exe.sha256"
+    try {
+        $resp = Invoke-WebRequestSafe $url
+        if ($resp -and $resp.Content -match '([a-f0-9]{64})') {
+            Write-Info "Found Python SHA256"
+            return $Matches[1]
+        }
+    } catch { }
+    return ""
 }
 
-function Get-AzureSubscriptionId {
-    $account = Invoke-AzJson -Arguments @("account", "show")
-    if (-not $account.id) {
-        throw "Azure CLI is authenticated but account ID was not returned."
+function Get-GitHubReleaseSha256 {
+    param($ReleaseInfo, [string]$InstallerPattern, [string]$Label)
+    if (-not $ReleaseInfo) { return "" }
+    Write-Info "Checking $Label release for SHA256..."
+
+    # Check for a checksums asset
+    foreach ($asset in $ReleaseInfo.Assets) {
+        $name = $asset.name
+        if ($name -match '(sha256|checksum|SHASUMS)' -and $name -match '\.(txt|sha256)$') {
+            try {
+                $resp = Invoke-WebRequestSafe $asset.browser_download_url
+                if ($resp -and $resp.Content -match "([a-f0-9]{64})\s+.*$([regex]::Escape($InstallerPattern))") {
+                    Write-Info "Found SHA256 from checksums file"
+                    return $Matches[1]
+                }
+                # Also try pattern: hash on its own line followed by filename
+                $cLines = $resp.Content -split "`n"
+                foreach ($cl in $cLines) {
+                    if ($cl -match $InstallerPattern -and $cl -match '([a-f0-9]{64})') {
+                        Write-Info "Found SHA256 from checksums file"
+                        return $Matches[1]
+                    }
+                }
+            } catch { }
+        }
     }
-    return [string]$account.id
+
+    # Check release body for hashes
+    if ($ReleaseInfo.Body -match "([a-f0-9]{64})\s+.*$([regex]::Escape($InstallerPattern))") {
+        Write-Info "Found SHA256 in release notes"
+        return $Matches[1]
+    }
+
+    return ""
 }
 
-function Get-LatestWindowsImageVersion {
-    $images = Invoke-AzJson -Arguments @(
-        "vm", "image", "list",
-        "--publisher", "MicrosoftWindowsDesktop",
-        "--offer", "windows-11",
-        "--sku", "win11-24h2-ent",
-        "--all"
-    )
+# ═══════════════════════════════════════════════════════════════════════════
+# SOURCE IMAGE DETECTION
+# ═══════════════════════════════════════════════════════════════════════════
 
-    if (-not $images -or $images.Count -eq 0) {
-        throw "No marketplace images found for MicrosoftWindowsDesktop/windows-11/win11-24h2-ent."
+function Get-LatestSourceImageVersion {
+    param([string]$Location, [string]$Sku)
+    Write-Info "Querying Azure for latest source image version..."
+    if (-not (Test-CommandExists "az")) { return $null }
+    try {
+        $json = az vm image list --location $Location --publisher MicrosoftWindowsDesktop --offer windows-11 --sku $Sku --all --output json 2>&1
+        if ($LASTEXITCODE -ne 0) { return $null }
+        $images = $json | ConvertFrom-Json
+        if ($images.Count -eq 0) { return $null }
+        $sorted = $images | Sort-Object { $_.version } -Descending
+        $latest = $sorted[0].version
+        Write-Info "Found: $latest"
+        return $latest
+    } catch {
+        Write-Info "Source image detection failed: $_"
+        return $null
     }
-
-    $latest = $images |
-        Where-Object { $_.version -match '^\d+(\.\d+)+$' } |
-        Sort-Object { Get-VersionSortKey $_.version } -Descending |
-        Select-Object -First 1
-
-    if (-not $latest) {
-        throw "Unable to determine latest Windows 11 24H2 Enterprise image version."
-    }
-
-    return [string]$latest.version
-}
-
-function ConvertTo-TfvarsLine {
-    param(
-        [Parameter(Mandatory = $true)][string]$Name,
-        [Parameter(Mandatory = $true)]$Value
-    )
-
-    if ($Value -is [bool]) {
-        return "$Name = $($Value.ToString().ToLowerInvariant())"
-    }
-    if ($Value -is [int] -or $Value -is [long] -or $Value -is [double] -or $Value -is [decimal]) {
-        return "$Name = $Value"
-    }
-
-    $escaped = [string]$Value -replace '\\', '\\' -replace '"', '\"'
-    return "$Name = `"$escaped`""
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
 # MAIN
 # ═══════════════════════════════════════════════════════════════════════════
 
-$TerraformDir = (Resolve-Path $TerraformDir -ErrorAction Stop).Path
-if (-not $TfvarsPath) {
-    $TfvarsPath = Join-Path $TerraformDir "terraform.tfvars"
+try {
+    Write-Host ""
+    Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
+    Write-Host "  W365Claw — Terraform Variables Initializer" -ForegroundColor Cyan
+    Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
+    Write-Host ""
+
+    # Resolve paths
+    if (Test-Path $TerraformDir) {
+        $TerraformDir = (Resolve-Path $TerraformDir).Path
+    }
+    $tfvarsPath = Join-Path $TerraformDir "terraform.tfvars"
+
+    # ── Parse existing tfvars ──
+    Write-Step "Parsing existing terraform.tfvars"
+    $existing = Read-TfVars $tfvarsPath
+    if ($existing.Count -gt 0) {
+        Write-Success "Loaded $($existing.Count) values from existing file"
+    } else {
+        Write-Info "No existing terraform.tfvars found — using defaults"
+    }
+
+    # ── Azure CLI Check ──
+    Write-Step "Azure CLI Check"
+    $subscriptionId = if ($existing["subscription_id"]) { $existing["subscription_id"] } else { "00000000-0000-0000-0000-000000000000" }
+
+    if (Test-CommandExists "az") {
+        try {
+            $acctJson = az account show 2>&1
+            if ($LASTEXITCODE -eq 0) {
+                $acct = $acctJson | ConvertFrom-Json
+                $subscriptionId = $acct.id
+                Write-Success "Logged in: $($acct.name) ($subscriptionId)"
+            } else {
+                Write-Warn "Not logged in to Azure CLI"
+                if (-not $Force) {
+                    $doLogin = Read-Host "  Run 'az login'? [Y/n]"
+                    if ($doLogin -eq "" -or $doLogin -eq "Y" -or $doLogin -eq "y") {
+                        az login 2>&1 | Out-Null
+                        $acctJson = az account show 2>&1
+                        if ($LASTEXITCODE -eq 0) {
+                            $acct = $acctJson | ConvertFrom-Json
+                            $subscriptionId = $acct.id
+                            Write-Success "Logged in: $($acct.name) ($subscriptionId)"
+                        }
+                    }
+                }
+            }
+        } catch {
+            Write-Warn "Azure CLI check failed: $_"
+        }
+    } else {
+        Write-Warn "Azure CLI not installed — subscription_id will need manual entry"
+    }
+
+    # ── Auto-detect versions ──
+    Write-Step "Auto-detecting latest software versions"
+
+    $detectedNode = Get-LatestNodeVersion
+    $detectedPython = Get-LatestPythonVersion
+    $gitRelease = Get-LatestGitHubRelease "git-for-windows/git" "Git for Windows"
+    $pwshRelease = Get-LatestGitHubRelease "PowerShell/PowerShell" "PowerShell"
+    $azCliRelease = Get-LatestGitHubRelease "Azure/azure-cli" "Azure CLI"
+    # Helper: pick detected or existing or hardcoded default
+    function Pick-Default {
+        param([string]$Detected, [string]$ExistingKey, [string]$Fallback)
+        if ($Detected) { return $Detected }
+        if ($existing[$ExistingKey]) { return $existing[$ExistingKey] }
+        return $Fallback
+    }
+
+    $defaults = @{}
+    $defaults["subscription_id"]       = $subscriptionId
+    $defaults["location"]              = if ($existing["location"]) { $existing["location"] } else { "eastus2" }
+    $defaults["resource_group_name"]   = if ($existing["resource_group_name"]) { $existing["resource_group_name"] } else { "rg-w365-images" }
+    $defaults["gallery_name"]          = if ($existing["gallery_name"]) { $existing["gallery_name"] } else { "acgW365Dev" }
+    $defaults["image_definition_name"] = if ($existing["image_definition_name"]) { $existing["image_definition_name"] } else { "W365-W11-25H2-ENU" }
+    $defaults["image_publisher"]       = if ($existing["image_publisher"]) { $existing["image_publisher"] } else { "BigHatGroupInc" }
+    $defaults["image_offer"]           = if ($existing["image_offer"]) { $existing["image_offer"] } else { "W365-W11-25H2-ENU" }
+    $defaults["image_sku"]             = if ($existing["image_sku"]) { $existing["image_sku"] } else { "W11-25H2-ENT-Dev" }
+    $defaults["image_version"]         = if ($existing["image_version"]) { $existing["image_version"] } else { "1.0.0" }
+    $defaults["exclude_from_latest"]   = if ($existing["exclude_from_latest"]) { $existing["exclude_from_latest"] } else { "true" }
+    $defaults["replica_count"]         = if ($existing["replica_count"]) { $existing["replica_count"] } else { "1" }
+    $defaults["build_vm_size"]         = if ($existing["build_vm_size"]) { $existing["build_vm_size"] } else { "Standard_D4s_v5" }
+    $defaults["build_timeout_minutes"] = if ($existing["build_timeout_minutes"]) { $existing["build_timeout_minutes"] } else { "120" }
+    $defaults["os_disk_size_gb"]       = if ($existing["os_disk_size_gb"]) { $existing["os_disk_size_gb"] } else { "128" }
+    $defaults["source_image_publisher"]= if ($existing["source_image_publisher"]) { $existing["source_image_publisher"] } else { "MicrosoftWindowsDesktop" }
+    $defaults["source_image_offer"]    = if ($existing["source_image_offer"]) { $existing["source_image_offer"] } else { "windows-11" }
+    $defaults["source_image_sku"]      = if ($existing["source_image_sku"]) { $existing["source_image_sku"] } else { "win11-25h2-ent" }
+
+    $defaults["node_version"]          = Pick-Default $detectedNode "node_version" "v24.13.1"
+    $defaults["python_version"]        = Pick-Default $detectedPython "python_version" "3.14.3"
+    $defaults["git_version"]           = Pick-Default $(if ($gitRelease) { $gitRelease.Version } else { $null }) "git_version" "2.53.0"
+    $defaults["pwsh_version"]          = Pick-Default $(if ($pwshRelease) { $pwshRelease.Version } else { $null }) "pwsh_version" "7.4.13"
+    $defaults["azure_cli_version"]     = Pick-Default $(if ($azCliRelease) { $azCliRelease.Version } else { $null }) "azure_cli_version" "2.83.0"
+    $defaults["openclaw_default_model"]= if ($existing["openclaw_default_model"]) { $existing["openclaw_default_model"] } else { "anthropic/claude-opus-4-6" }
+    $defaults["openclaw_gateway_port"] = if ($existing["openclaw_gateway_port"]) { $existing["openclaw_gateway_port"] } else { "18789" }
+
+    $defaults["skills_repo_url"]       = if ($existing["skills_repo_url"]) { $existing["skills_repo_url"] } else { "" }
+
+    # ── Auto-detect source image version ──
+    Write-Step "Auto-detecting source image version"
+    $detectedSourceImage = Get-LatestSourceImageVersion $defaults["location"] $defaults["source_image_sku"]
+    $defaults["source_image_version"] = Pick-Default $detectedSourceImage "source_image_version" "26200.7840.260206"
+
+    # ── Auto-detect SHA256 checksums ──
+    Write-Step "Auto-detecting SHA256 checksums"
+
+    $defaults["node_sha256"]      = if ($existing["node_sha256"]) { $existing["node_sha256"] } else { "" }
+    $defaults["python_sha256"]    = if ($existing["python_sha256"]) { $existing["python_sha256"] } else { "" }
+    $defaults["pwsh_sha256"]      = if ($existing["pwsh_sha256"]) { $existing["pwsh_sha256"] } else { "" }
+    $defaults["git_sha256"]       = if ($existing["git_sha256"]) { $existing["git_sha256"] } else { "" }
+    $defaults["azure_cli_sha256"] = if ($existing["azure_cli_sha256"]) { $existing["azure_cli_sha256"] } else { "" }
+
+    # Only fetch checksums if version changed or empty
+    $nodeSha = Get-NodeSha256 $defaults["node_version"]
+    if ($nodeSha) { $defaults["node_sha256"] = $nodeSha }
+
+    $pythonSha = Get-PythonSha256 $defaults["python_version"]
+    if ($pythonSha) { $defaults["python_sha256"] = $pythonSha }
+
+    $pwshSha = Get-GitHubReleaseSha256 $pwshRelease "PowerShell-$($defaults['pwsh_version'])-win-x64.msi" "PowerShell"
+    if ($pwshSha) { $defaults["pwsh_sha256"] = $pwshSha }
+
+    $gitSha = Get-GitHubReleaseSha256 $gitRelease "Git-$($defaults['git_version'])-64-bit.exe" "Git"
+    if ($gitSha) { $defaults["git_sha256"] = $gitSha }
+
+    $azCliSha = Get-GitHubReleaseSha256 $azCliRelease "azure-cli-$($defaults['azure_cli_version'])-x64.msi" "Azure CLI"
+    if ($azCliSha) { $defaults["azure_cli_sha256"] = $azCliSha }
+
+    # ── Tags ──
+    $defaultTags = @{}
+    if ($existing["tags"] -is [hashtable]) {
+        foreach ($k in $existing["tags"].Keys) {
+            $defaultTags[$k] = $existing["tags"][$k]
+        }
+    }
+    if ($defaultTags.Count -eq 0) {
+        $defaultTags = @{
+            workload    = "Windows365"
+            purpose     = "DeveloperImages"
+            managed_by  = "PlatformEngineering"
+            iac         = "Terraform"
+            cost_center = "Engineering"
+        }
+    }
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # PROMPT FOR ALL VALUES
+    # ═══════════════════════════════════════════════════════════════════════
+
+    Write-Step "Environment & Subscription"
+    $vals = @{}
+    $vals["subscription_id"]       = Read-ValueWithDefault "Subscription ID" $defaults["subscription_id"]
+    $vals["location"]              = Read-ValueWithDefault "Location" $defaults["location"]
+    $vals["resource_group_name"]   = Read-ValueWithDefault "Resource Group" $defaults["resource_group_name"]
+
+    Write-Step "Gallery"
+    $vals["gallery_name"]          = Read-ValueWithDefault "Gallery Name" $defaults["gallery_name"] '^[a-zA-Z0-9]+$' "Gallery name must be alphanumeric only"
+    $vals["image_definition_name"] = Read-ValueWithDefault "Image Definition Name" $defaults["image_definition_name"]
+    $vals["image_publisher"]       = Read-ValueWithDefault "Image Publisher" $defaults["image_publisher"]
+    $vals["image_offer"]           = Read-ValueWithDefault "Image Offer" $defaults["image_offer"]
+    $vals["image_sku"]             = Read-ValueWithDefault "Image SKU" $defaults["image_sku"]
+
+    Write-Step "Image Version"
+    $vals["image_version"]         = Read-ValueWithDefault "Image Version" $defaults["image_version"] '^\d+\.\d+\.\d+$' "Must be Major.Minor.Patch format"
+    $vals["exclude_from_latest"]   = Read-BoolWithDefault "Exclude from Latest" $defaults["exclude_from_latest"]
+    $vals["replica_count"]         = Read-IntWithDefault "Replica Count" $defaults["replica_count"]
+
+    Write-Step "Build VM"
+    $vals["build_vm_size"]         = Read-ValueWithDefault "Build VM Size" $defaults["build_vm_size"]
+    $vals["build_timeout_minutes"] = Read-IntWithDefault "Build Timeout (minutes)" $defaults["build_timeout_minutes"]
+    $vals["os_disk_size_gb"]       = Read-IntWithDefault "OS Disk Size (GB)" $defaults["os_disk_size_gb"]
+
+    Write-Step "Source Image"
+    $vals["source_image_publisher"]= Read-ValueWithDefault "Source Image Publisher" $defaults["source_image_publisher"]
+    $vals["source_image_offer"]    = Read-ValueWithDefault "Source Image Offer" $defaults["source_image_offer"]
+    $vals["source_image_sku"]      = Read-ValueWithDefault "Source Image SKU" $defaults["source_image_sku"]
+    $vals["source_image_version"]  = Read-ValueWithDefault "Source Image Version" $defaults["source_image_version"]
+
+    Write-Step "Software Versions"
+    $vals["node_version"]          = Read-ValueWithDefault "Node.js Version" $defaults["node_version"]
+    $vals["python_version"]        = Read-ValueWithDefault "Python Version" $defaults["python_version"]
+    $vals["git_version"]           = Read-ValueWithDefault "Git Version" $defaults["git_version"]
+    $vals["pwsh_version"]          = Read-ValueWithDefault "PowerShell Version" $defaults["pwsh_version"]
+    $vals["azure_cli_version"]     = Read-ValueWithDefault "Azure CLI Version" $defaults["azure_cli_version"]
+    Write-Step "SHA256 Checksums (leave empty to skip verification)"
+    $vals["node_sha256"]           = Read-ValueWithDefault "Node SHA256" $defaults["node_sha256"]
+    $vals["python_sha256"]         = Read-ValueWithDefault "Python SHA256" $defaults["python_sha256"]
+    $vals["pwsh_sha256"]           = Read-ValueWithDefault "PowerShell SHA256" $defaults["pwsh_sha256"]
+    $vals["git_sha256"]            = Read-ValueWithDefault "Git SHA256" $defaults["git_sha256"]
+    $vals["azure_cli_sha256"]      = Read-ValueWithDefault "Azure CLI SHA256" $defaults["azure_cli_sha256"]
+
+    Write-Step "OpenClaw Configuration"
+    $vals["openclaw_default_model"]= Read-ValueWithDefault "OpenClaw Default Model" $defaults["openclaw_default_model"]
+    $vals["openclaw_gateway_port"] = Read-IntWithDefault "OpenClaw Gateway Port" $defaults["openclaw_gateway_port"]
+
+    Write-Step "Agent Skills & MCP Servers"
+    $vals["skills_repo_url"]       = Read-ValueWithDefault "Skills Repository URL (empty to skip)" $defaults["skills_repo_url"]
+
+    Write-Step "Tags"
+    $finalTags = [ordered]@{}
+    foreach ($tagKey in ($defaultTags.Keys | Sort-Object)) {
+        $tagVal = Read-ValueWithDefault "Tag '$tagKey'" $defaultTags[$tagKey]
+        if ($tagVal) { $finalTags[$tagKey] = $tagVal }
+    }
+
+    if (-not $Force) {
+        $addMore = Read-Host "  Add more tags? [y/N]"
+        while ($addMore -eq "y" -or $addMore -eq "Y") {
+            $newKey = Read-Host "  Tag key"
+            if (-not $newKey) { break }
+            $newVal = Read-Host "  Tag value"
+            $finalTags[$newKey] = $newVal
+            $addMore = Read-Host "  Add another? [y/N]"
+        }
+    }
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # SUMMARY
+    # ═══════════════════════════════════════════════════════════════════════
+
+    Write-Host ""
+    Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Green
+    Write-Host "  Summary — terraform.tfvars" -ForegroundColor Green
+    Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Green
+    Write-Host ""
+
+    # Ordered list of keys for display
+    $displayOrder = @(
+        "subscription_id", "location", "resource_group_name",
+        "gallery_name", "image_definition_name", "image_publisher", "image_offer", "image_sku",
+        "image_version", "exclude_from_latest", "replica_count",
+        "build_vm_size", "build_timeout_minutes", "os_disk_size_gb",
+        "source_image_publisher", "source_image_offer", "source_image_sku", "source_image_version",
+        "node_version", "python_version", "git_version", "pwsh_version", "azure_cli_version",
+        "node_sha256", "python_sha256", "pwsh_sha256", "git_sha256", "azure_cli_sha256",
+        "openclaw_default_model", "openclaw_gateway_port",
+        "skills_repo_url"
+    )
+
+    $maxKeyLen = ($displayOrder | ForEach-Object { $_.Length } | Measure-Object -Maximum).Maximum + 2
+    foreach ($key in $displayOrder) {
+        $display = if ($vals[$key]) { $vals[$key] } else { "(empty)" }
+        $paddedKey = $key.PadRight($maxKeyLen)
+        Write-Host "  $paddedKey = $display"
+    }
+
+    Write-Host ""
+    Write-Host "  Tags:" -ForegroundColor Cyan
+    foreach ($k in $finalTags.Keys) {
+        Write-Host "    $k = $($finalTags[$k])"
+    }
+    Write-Host ""
+
+    # ── Confirmation ──
+    if (-not $Force) {
+        $confirm = Read-Host "Write terraform.tfvars? [Y/n]"
+        if ($confirm -ne "" -and $confirm -ne "Y" -and $confirm -ne "y") {
+            Write-Warn "Aborted. No changes made."
+            exit 0
+        }
+    }
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # WRITE TERRAFORM.TFVARS
+    # ═══════════════════════════════════════════════════════════════════════
+
+    # Determine which keys are bools and ints (unquoted)
+    $boolKeys = @("exclude_from_latest")
+    $intKeys = @("replica_count", "build_timeout_minutes", "os_disk_size_gb", "openclaw_gateway_port")
+
+    function Format-TfValue {
+        param([string]$Key, [string]$Value)
+        if ($boolKeys -contains $Key) { return $Value }
+        if ($intKeys -contains $Key) { return $Value }
+        return "`"$Value`""
+    }
+
+    # Build aligned output
+    $tagBlock = @()
+    foreach ($k in $finalTags.Keys) {
+        $tagBlock += "  $($k.PadRight(12))= `"$($finalTags[$k])`""
+    }
+
+    $output = @"
+# ── Environment-Specific Values ──
+# Copy this file and adjust for your environment.
+# Do NOT commit secrets to source control.
+
+subscription_id       = $(Format-TfValue "subscription_id" $vals["subscription_id"])
+location              = $(Format-TfValue "location" $vals["location"])
+resource_group_name   = $(Format-TfValue "resource_group_name" $vals["resource_group_name"])
+
+# Gallery
+gallery_name          = $(Format-TfValue "gallery_name" $vals["gallery_name"])
+image_definition_name = $(Format-TfValue "image_definition_name" $vals["image_definition_name"])
+image_publisher       = $(Format-TfValue "image_publisher" $vals["image_publisher"])
+image_offer           = $(Format-TfValue "image_offer" $vals["image_offer"])
+image_sku             = $(Format-TfValue "image_sku" $vals["image_sku"])
+
+# Image Version
+image_version         = $(Format-TfValue "image_version" $vals["image_version"])
+exclude_from_latest   = $(Format-TfValue "exclude_from_latest" $vals["exclude_from_latest"])     # Set to false after pilot validation
+replica_count         = $(Format-TfValue "replica_count" $vals["replica_count"])
+
+# Build VM
+build_vm_size         = $(Format-TfValue "build_vm_size" $vals["build_vm_size"])
+build_timeout_minutes = $(Format-TfValue "build_timeout_minutes" $vals["build_timeout_minutes"])
+os_disk_size_gb       = $(Format-TfValue "os_disk_size_gb" $vals["os_disk_size_gb"])
+
+# Source Image (pinned for reproducibility)
+source_image_publisher = $(Format-TfValue "source_image_publisher" $vals["source_image_publisher"])
+source_image_offer     = $(Format-TfValue "source_image_offer" $vals["source_image_offer"])
+source_image_sku       = $(Format-TfValue "source_image_sku" $vals["source_image_sku"])
+source_image_version   = $(Format-TfValue "source_image_version" $vals["source_image_version"])
+
+# Software Versions (pinned)
+node_version          = $(Format-TfValue "node_version" $vals["node_version"])
+python_version        = $(Format-TfValue "python_version" $vals["python_version"])
+git_version           = $(Format-TfValue "git_version" $vals["git_version"])
+pwsh_version          = $(Format-TfValue "pwsh_version" $vals["pwsh_version"])
+azure_cli_version     = $(Format-TfValue "azure_cli_version" $vals["azure_cli_version"])
+# Installer SHA256 Checksums (update when bumping versions)
+# Obtain from official release pages. Leave empty to skip verification.
+node_sha256           = $(Format-TfValue "node_sha256" $vals["node_sha256"])
+python_sha256         = $(Format-TfValue "python_sha256" $vals["python_sha256"])
+pwsh_sha256           = $(Format-TfValue "pwsh_sha256" $vals["pwsh_sha256"])
+git_sha256            = $(Format-TfValue "git_sha256" $vals["git_sha256"])
+azure_cli_sha256      = $(Format-TfValue "azure_cli_sha256" $vals["azure_cli_sha256"])
+
+# OpenClaw
+openclaw_default_model = $(Format-TfValue "openclaw_default_model" $vals["openclaw_default_model"])
+openclaw_gateway_port  = $(Format-TfValue "openclaw_gateway_port" $vals["openclaw_gateway_port"])
+
+# Agent Skills & MCP Servers
+skills_repo_url        = $(Format-TfValue "skills_repo_url" $vals["skills_repo_url"])
+
+# Tags
+tags = {
+$($tagBlock -join "`n")
 }
+"@
 
-Write-Host ""
-Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host "  W365Claw — Initialize Terraform Variables" -ForegroundColor Cyan
-Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "Detecting latest versions and checksums..." -ForegroundColor Yellow
+    # Ensure terraform directory exists
+    if (-not (Test-Path $TerraformDir)) {
+        New-Item -ItemType Directory -Path $TerraformDir -Force | Out-Null
+    }
 
-$subscriptionId = Get-AzureSubscriptionId
-$node = Get-NodeReleaseInfo
-$python = Get-PythonReleaseInfo
-$pwsh = Get-PowerShellReleaseInfo
-$git = Get-GitWindowsReleaseInfo
-$azCli = Get-AzureCliReleaseInfo
-$openclawVersion = Get-NpmLatestVersion "openclaw"
-$claudeCodeVersion = Get-NpmLatestVersion "@anthropic-ai/claude-code"
-$openspecVersion = Get-NpmLatestVersion "@fission-ai/openspec"
-$codexVersion = Get-NpmLatestVersion "@openai/codex"
-$sourceImageVersion = Get-LatestWindowsImageVersion
+    $output | Set-Content -Path $tfvarsPath -Encoding UTF8 -Force
+    Write-Host ""
+    Write-Success "Written to $tfvarsPath"
+    Write-Host ""
 
-$tfvarsValues = [ordered]@{
-    subscription_id      = $subscriptionId
-    source_image_version = $sourceImageVersion
-    node_version         = $node.version
-    node_sha256          = $node.sha256
-    python_version       = $python.version
-    python_sha256        = $python.sha256
-    pwsh_version         = $pwsh.version
-    pwsh_sha256          = $pwsh.sha256
-    git_version          = $git.version
-    git_sha256           = $git.sha256
-    azure_cli_version    = $azCli.version
-    azure_cli_sha256     = $azCli.sha256
-    openclaw_version     = $openclawVersion
-    claude_code_version  = $claudeCodeVersion
-    openspec_version     = $openspecVersion
-    codex_version        = $codexVersion
-}
-
-Write-Host ""
-Write-Host "Detected values:" -ForegroundColor Cyan
-$summary = @(
-    [pscustomobject]@{ Name = "subscription_id"; Value = $subscriptionId }
-    [pscustomobject]@{ Name = "source_image_version"; Value = $sourceImageVersion }
-    [pscustomobject]@{ Name = "node_version"; Value = "$($node.version) ($($node.asset))" }
-    [pscustomobject]@{ Name = "node_sha256"; Value = $node.sha256 }
-    [pscustomobject]@{ Name = "python_version"; Value = "$($python.version) ($($python.asset))" }
-    [pscustomobject]@{ Name = "python_sha256"; Value = $python.sha256 }
-    [pscustomobject]@{ Name = "pwsh_version"; Value = "$($pwsh.version) ($($pwsh.asset))" }
-    [pscustomobject]@{ Name = "pwsh_sha256"; Value = $pwsh.sha256 }
-    [pscustomobject]@{ Name = "git_version"; Value = "$($git.version) ($($git.asset))" }
-    [pscustomobject]@{ Name = "git_sha256"; Value = $git.sha256 }
-    [pscustomobject]@{ Name = "azure_cli_version"; Value = "$($azCli.version) ($($azCli.asset))" }
-    [pscustomobject]@{ Name = "azure_cli_sha256"; Value = $azCli.sha256 }
-    [pscustomobject]@{ Name = "openclaw_version"; Value = $openclawVersion }
-    [pscustomobject]@{ Name = "claude_code_version"; Value = $claudeCodeVersion }
-    [pscustomobject]@{ Name = "openspec_version"; Value = $openspecVersion }
-    [pscustomobject]@{ Name = "codex_version"; Value = $codexVersion }
-)
-$summary | Format-Table -AutoSize
-
-if (-not (Confirm-Action "Write terraform.tfvars with these values?")) {
-    Write-Host "Aborted." -ForegroundColor Yellow
     exit 0
-}
 
-$fileLines = @()
-$fileLines += "# Generated by scripts/Initialize-TerraformVars.ps1"
-$fileLines += "# Generated at $(Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz")"
-$fileLines += ""
-foreach ($key in $tfvarsValues.Keys) {
-    $fileLines += ConvertTo-TfvarsLine -Name $key -Value $tfvarsValues[$key]
-}
-$content = ($fileLines -join [Environment]::NewLine) + [Environment]::NewLine
-
-if ($PSCmdlet.ShouldProcess($TfvarsPath, "Write terraform.tfvars values")) {
-    Set-Content -Path $TfvarsPath -Value $content -Encoding UTF8
+} catch {
     Write-Host ""
-    Write-Host "✅ Wrote terraform variables to: $TfvarsPath" -ForegroundColor Green
-} else {
-    Write-Host ""
-    Write-Host "WhatIf: terraform.tfvars was not written." -ForegroundColor Yellow
+    Write-Err "Fatal error: $($_.Exception.Message)"
+    Write-Err "At: $($_.ScriptStackTrace)"
+    exit 1
 }
+"@

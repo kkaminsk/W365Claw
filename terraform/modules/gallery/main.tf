@@ -25,12 +25,11 @@ resource "azurerm_shared_image" "this" {
   }
 
   # ── Windows 365 ACG Import Requirements ──
-  # These feature flags are mandatory for Windows 365 ingestion.
-  # azurerm v4 replaced features {} blocks with top-level arguments.
-  trusted_launch_supported             = true
-  hibernation_enabled                  = true
-  disk_controller_type_nvme_enabled    = true
-  accelerated_network_support_enabled  = true
+  # These features are mandatory for Windows 365 ingestion.
+  trusted_launch_enabled              = true
+  hibernation_enabled                 = true
+  disk_controller_type_nvme_enabled   = true
+  accelerated_network_support_enabled = true
 
   tags = var.tags
 
