@@ -113,6 +113,7 @@ locals {
         # === CLEANUP ===
         Remove-Item -Path $NodeInstaller, $PythonInstaller, $PwshInstaller -Force -ErrorAction SilentlyContinue
         Write-Host "=== Phase 1 Complete: Runtimes installed ==="
+        exit 0
         PWSH
       ]
     },
@@ -231,67 +232,12 @@ locals {
 
         # === CLEANUP ===
         Remove-Item -Path $VSCodeInstaller, $GitInstaller, $GHDesktopInstaller, $AzCliInstaller -Force -ErrorAction SilentlyContinue
-        Write-Host "=== Phase 2 Complete: Developer tools installed ==="
-        PWSH
-      ]
-    },
-    # ── Phase 3: AI Tooling (OpenSpec + MCP) ──
-    {
-      type        = "PowerShell"
-      name        = "InstallAIAgents"
-      runElevated = true
-      runAsSystem = true
-      inline = [
-        <<-PWSH
-        $ErrorActionPreference = "Stop"
-        $ProgressPreference = "SilentlyContinue"
-
-        function Update-SessionEnvironment {
-            $machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
-            $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
-            $env:Path = "$machinePath;$userPath"
-        }
-
-        Update-SessionEnvironment
-
-        # Verify prerequisites
-        $nodeCheck = Get-Command node -ErrorAction SilentlyContinue
-        $npmCheck = Get-Command npm -ErrorAction SilentlyContinue
-        if (-not $nodeCheck -or -not $npmCheck) {
-            Write-Error "Node.js or npm not found in PATH. Phase 1 may have failed."
-            exit 1
-        }
-        Write-Host "[PREREQ] Node.js: $(node --version)"
-        Write-Host "[PREREQ] npm: $(npm --version)"
-
-        # === OPENSPEC ===
-        Write-Host "=== Installing OpenSpec ${var.openspec_version} (global) ==="
-        npm install -g @fission-ai/openspec@${var.openspec_version} | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "OpenSpec npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $openspecCheck = Get-Command openspec -ErrorAction SilentlyContinue
-        if (-not $openspecCheck) { Write-Error "openspec not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] OpenSpec: $(openspec --version)"
-
-        # === MCP SERVER PACKAGES ===
-        $mcpPackages = @(${join(",", [for pkg in var.mcp_packages : format("\"%s\"", pkg)])})
-        if ($mcpPackages.Count -gt 0) {
-            Write-Host "=== Installing MCP server packages ==="
-            foreach ($pkg in $mcpPackages) {
-                Write-Host "  Installing: $pkg"
-                npm install -g $pkg | Write-Host
-                if ($LASTEXITCODE -ne 0) {
-                    Write-Warning "MCP package install failed for $pkg (non-fatal)"
-                }
-            }
-            Write-Host "[VERIFY] MCP server packages installed: $($mcpPackages.Count)"
-        } else {
-            Write-Host "[SKIP] No MCP server packages configured"
-        }
 
         # === NPM GLOBAL PACKAGE INVENTORY ===
         Write-Host "=== Listing global npm packages ==="
+        # Ensure SYSTEM profile npm directory exists (npm list -g fails without it)
+        $npmDir = "$env:APPDATA\npm"
+        if (-not (Test-Path $npmDir)) { New-Item -ItemType Directory -Path $npmDir -Force | Out-Null }
         npm list -g --depth=0 | Write-Host
         Write-Host "[SECURITY] Global package inventory logged (npm audit does not support --global)"
 
@@ -312,17 +258,17 @@ locals {
             pythonVersion   = (python --version).ToString()
             gitVersion      = (git --version).ToString()
             pwshVersion     = (pwsh --version).ToString()
-            azCliVersion    = (az --version | Select-Object -First 1).ToString()
-            openspecVersion = (openspec --version).ToString()
+            azCliVersion    = ((az version | ConvertFrom-Json).'azure-cli')
         } | ConvertTo-Json -Depth 3
         Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
         Write-Host "[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"
 
-        Write-Host "=== Phase 3 Complete: AI tooling installed ==="
+        Write-Host "=== Phase 2 Complete: Developer tools installed ==="
+        exit 0
         PWSH
       ]
     },
-    # ── Phase 4: Configuration & Policy ──
+    # ── Phase 3: Configuration & Policy ──
     {
       type        = "PowerShell"
       name        = "ConfigureAgents"
@@ -483,6 +429,7 @@ if (Test-Path $mcpSource) {
             -Wait -NoNewWindow
 
         Write-Host "=== Phase 4 Complete: Configuration and cleanup done ==="
+        exit 0
         PWSH
       ]
     },

@@ -123,11 +123,6 @@ variable "azure_cli_sha256" {
   default     = ""
 }
 
-variable "openspec_version" {
-  description = "OpenSpec npm package version"
-  type        = string
-}
-
 variable "openclaw_default_model" {
   description = "Default LLM model for OpenClaw"
   type        = string
@@ -142,12 +137,6 @@ variable "skills_repo_url" {
   description = "Git URL for the curated agent skills repository (empty to skip)"
   type        = string
   default     = ""
-}
-
-variable "mcp_packages" {
-  description = "List of MCP server npm packages to install globally"
-  type        = list(string)
-  default     = []
 }
 
 variable "tags" {

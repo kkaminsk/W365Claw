@@ -57,10 +57,8 @@ module "image_builder" {
   pwsh_sha256            = var.pwsh_sha256
   git_sha256             = var.git_sha256
   azure_cli_sha256       = var.azure_cli_sha256
-  openspec_version       = var.openspec_version
   openclaw_default_model = var.openclaw_default_model
   openclaw_gateway_port  = var.openclaw_gateway_port
   skills_repo_url        = var.skills_repo_url
-  mcp_packages           = var.mcp_packages
   tags                   = var.tags
 }

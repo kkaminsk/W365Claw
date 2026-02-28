@@ -169,12 +169,6 @@ variable "azure_cli_version" {
   default     = "2.83.0"
 }
 
-variable "openspec_version" {
-  description = "OpenSpec (@fission-ai/openspec) npm package version to install"
-  type        = string
-  default     = "0.9.1"
-}
-
 # ─── Installer SHA256 Checksums ───────────────────────────────────────────
 # Update these when bumping software versions. Obtain from official release pages.
 # VS Code and GitHub Desktop are intentionally excluded (floating latest URLs).
@@ -229,12 +223,6 @@ variable "skills_repo_url" {
   description = "Git URL for the curated agent skills repository (empty to skip skills pre-seeding)"
   type        = string
   default     = ""
-}
-
-variable "mcp_packages" {
-  description = "List of MCP server npm packages to install globally during the image build"
-  type        = list(string)
-  default     = ["@perplexity-ai/mcp-server"]
 }
 
 # ─── Tags ──────────────────────────────────────────────────────────────────
