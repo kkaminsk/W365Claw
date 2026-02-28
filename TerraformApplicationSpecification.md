@@ -65,6 +65,7 @@ terraform/
 │   └── image-builder/
 │       ├── main.tf                  # AIB template + trigger (inline scripts)
 │       ├── variables.tf
+│       ├── versions.tf
 │       └── outputs.tf
 ```
 
@@ -230,13 +231,13 @@ variable "source_image_offer" {
 variable "source_image_sku" {
   description = "Marketplace image SKU"
   type        = string
-  default     = "win11-24h2-ent"
+  default     = "win11-25h2-ent"
 }
 
 variable "source_image_version" {
   description = "Marketplace image version — MUST be pinned to a specific version for build reproducibility (do not use 'latest')"
   type        = string
-  default     = "26100.2894.250113"
+  default     = "26200.7840.260206"
 
   validation {
     condition     = var.source_image_version != "latest"
@@ -284,7 +285,53 @@ variable "azure_cli_version" {
 variable "openspec_version" {
   description = "OpenSpec (@fission-ai/openspec) npm package version to install"
   type        = string
-  default     = "latest"
+  default     = "0.9.1"
+}
+
+variable "openclaw_version" {
+  description = "OpenClaw version (recorded in SBOM; installed post-provisioning via Intune)"
+  type        = string
+  default     = "2026.2.14"
+}
+
+variable "claude_code_version" {
+  description = "Claude Code CLI version (recorded in SBOM; installed post-provisioning via Intune)"
+  type        = string
+  default     = "2.1.42"
+}
+
+# ─── Installer SHA256 Checksums ───────────────────────────────────────────
+# Update these when bumping software versions. Obtain from official release pages.
+# VS Code and GitHub Desktop are intentionally excluded (floating latest URLs).
+
+variable "node_sha256" {
+  description = "SHA256 checksum for the Node.js MSI installer"
+  type        = string
+  default     = ""
+}
+
+variable "python_sha256" {
+  description = "SHA256 checksum for the Python installer"
+  type        = string
+  default     = ""
+}
+
+variable "pwsh_sha256" {
+  description = "SHA256 checksum for the PowerShell 7 MSI installer"
+  type        = string
+  default     = ""
+}
+
+variable "git_sha256" {
+  description = "SHA256 checksum for the Git for Windows installer"
+  type        = string
+  default     = ""
+}
+
+variable "azure_cli_sha256" {
+  description = "SHA256 checksum for the Azure CLI MSI installer"
+  type        = string
+  default     = ""
 }
 
 # ─── OpenClaw Configuration ───────────────────────────────────────────────
@@ -299,6 +346,20 @@ variable "openclaw_gateway_port" {
   description = "Port for the OpenClaw gateway"
   type        = number
   default     = 18789
+}
+
+# ─── Agent Skills & MCP Servers ────────────────────────────────────────────
+
+variable "skills_repo_url" {
+  description = "Git URL for the curated agent skills repository (empty to skip skills pre-seeding)"
+  type        = string
+  default     = ""
+}
+
+variable "mcp_packages" {
+  description = "List of MCP server npm packages to install globally during the image build"
+  type        = list(string)
+  default     = ["@perplexity-ai/mcp-server"]
 }
 
 # ─── Tags ──────────────────────────────────────────────────────────────────
@@ -325,6 +386,10 @@ resource "azurerm_shared_image_gallery" "this" {
   resource_group_name = var.resource_group_name
   location            = var.location
   tags                = var.tags
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "azurerm_shared_image" "this" {
@@ -343,35 +408,17 @@ resource "azurerm_shared_image" "this" {
   }
 
   # ── Windows 365 ACG Import Requirements ──
-  # All five features are mandatory for Windows 365 ingestion.
-  # Missing any one will cause the import to fail.
-
-  features {
-    name  = "SecurityType"
-    value = "TrustedLaunchSupported"
-  }
-
-  features {
-    name  = "IsHibernateSupported"
-    value = "True"
-  }
-
-  features {
-    name  = "DiskControllerTypes"
-    value = "SCSI,NVMe"
-  }
-
-  features {
-    name  = "IsAcceleratedNetworkSupported"
-    value = "True"
-  }
-
-  features {
-    name  = "IsSecureBootSupported"
-    value = "True"
-  }
+  # All features are mandatory for Windows 365 ingestion.
+  trusted_launch_enabled              = true
+  hibernation_enabled                 = true
+  disk_controller_type_nvme_enabled   = true
+  accelerated_network_support_enabled = true
 
   tags = var.tags
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 ```
 
@@ -399,30 +446,50 @@ resource "azurerm_user_assigned_identity" "aib" {
 
 # 1. Virtual Machine Contributor — allows AIB to create/manage the build VM
 resource "azurerm_role_assignment" "aib_vm_contributor" {
-  scope                = var.resource_group_id
-  role_definition_name = "Virtual Machine Contributor"
-  principal_id         = azurerm_user_assigned_identity.aib.principal_id
+  scope                            = var.resource_group_id
+  role_definition_name             = "Virtual Machine Contributor"
+  principal_id                     = azurerm_user_assigned_identity.aib.principal_id
+  skip_service_principal_aad_check = true
+
+  lifecycle {
+    ignore_changes = [skip_service_principal_aad_check]
+  }
 }
 
 # 2. Network Contributor — allows AIB to create transient networking for the build VM
 resource "azurerm_role_assignment" "aib_network_contributor" {
-  scope                = var.resource_group_id
-  role_definition_name = "Network Contributor"
-  principal_id         = azurerm_user_assigned_identity.aib.principal_id
+  scope                            = var.resource_group_id
+  role_definition_name             = "Network Contributor"
+  principal_id                     = azurerm_user_assigned_identity.aib.principal_id
+  skip_service_principal_aad_check = true
+
+  lifecycle {
+    ignore_changes = [skip_service_principal_aad_check]
+  }
 }
 
 # 3. Managed Identity Operator — allows AIB to assign the identity to the build VM
 resource "azurerm_role_assignment" "aib_identity_operator" {
-  scope                = var.resource_group_id
-  role_definition_name = "Managed Identity Operator"
-  principal_id         = azurerm_user_assigned_identity.aib.principal_id
+  scope                            = var.resource_group_id
+  role_definition_name             = "Managed Identity Operator"
+  principal_id                     = azurerm_user_assigned_identity.aib.principal_id
+  skip_service_principal_aad_check = true
+
+  lifecycle {
+    ignore_changes = [skip_service_principal_aad_check]
+  }
 }
 
-# 4. Compute Gallery Image Contributor — allows AIB to write image versions to the gallery
+# 4. Compute Gallery Artifacts Publisher — allows AIB to write image versions to the gallery
 resource "azurerm_role_assignment" "aib_gallery_contributor" {
-  scope                = var.gallery_id
-  role_definition_name = "Compute Gallery Image Contributor"
-  principal_id         = azurerm_user_assigned_identity.aib.principal_id
+  scope                            = var.gallery_id
+  role_definition_name             = "Compute Gallery Artifacts Publisher"
+  principal_id                     = azurerm_user_assigned_identity.aib.principal_id
+  skip_service_principal_aad_check = true
+
+  lifecycle {
+    ignore_changes = [skip_service_principal_aad_check]
+  }
 }
 ```
 
@@ -433,12 +500,15 @@ resource "azurerm_role_assignment" "aib_gallery_contributor" {
 This is the core of the deployment. The AIB template is defined via the `azapi` provider because the `azurerm` provider lacks full `imageTemplates` resource support. All build scripts are inline — no external storage account is needed.
 
 ```hcl
+# ── Build timestamp (stored in state, avoids perpetual diff from timestamp()) ──
+resource "time_static" "build_time" {}
+
 locals {
   # Build a unique template name per version to allow parallel builds
   template_name = "aib-w365-dev-ai-${replace(var.image_version, ".", "-")}"
 
-  # End-of-life date: 90 days from build
-  end_of_life_date = timeadd(timestamp(), "2160h") # 90 days × 24 hours
+  # End-of-life date: 90 days from build (uses time_static to avoid perpetual diff)
+  end_of_life_date = timeadd(time_static.build_time.rfc3339, "2160h") # 90 days × 24 hours
 
   # ── Inline PowerShell Scripts ──
   # All scripts are embedded directly in the AIB template as inline
@@ -478,6 +548,20 @@ locals {
             }
         }
 
+        function Test-InstallerHash {
+            param([string]$FilePath, [string]$ExpectedHash)
+            if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {
+                Write-Host "[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification"
+                return
+            }
+            $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash
+            if ($actual -ne $ExpectedHash.ToUpper()) {
+                Write-Error "[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual"
+                exit 1
+            }
+            Write-Host "[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
+        }
+
         # ═══ NODE.JS ═══
         $NodeVersion = "${var.node_version}"
         $NodeMsiUrl = "https://nodejs.org/dist/$NodeVersion/node-$NodeVersion-x64.msi"
@@ -485,6 +569,7 @@ locals {
 
         Write-Host "=== Installing Node.js $NodeVersion ==="
         Get-InstallerWithRetry -Uri $NodeMsiUrl -OutFile $NodeInstaller
+        Test-InstallerHash -FilePath $NodeInstaller -ExpectedHash "${var.node_sha256}"
 
         $proc = Start-Process -FilePath "msiexec.exe" `
             -ArgumentList "/i `"$NodeInstaller`" /qn /norestart ALLUSERS=1 ADDLOCAL=ALL" `
@@ -501,6 +586,7 @@ locals {
 
         Write-Host "=== Installing Python $PythonVersion ==="
         Get-InstallerWithRetry -Uri $PythonUrl -OutFile $PythonInstaller
+        Test-InstallerHash -FilePath $PythonInstaller -ExpectedHash "${var.python_sha256}"
 
         $proc = Start-Process -FilePath $PythonInstaller `
             -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_pip=1 Include_test=0 Include_launcher=1" `
@@ -512,11 +598,12 @@ locals {
         Write-Host "[VERIFY] pip: $(python -m pip --version)"
 
         # ═══ POWERSHELL 7 ═══
+        Write-Host "=== Installing PowerShell 7 ==="
         $PwshVersion = "${var.pwsh_version}"
-        Write-Host "=== Installing PowerShell $PwshVersion ==="
         $PwshUrl = "https://github.com/PowerShell/PowerShell/releases/download/v$PwshVersion/PowerShell-$PwshVersion-win-x64.msi"
-        $PwshInstaller = "$env:TEMP\PowerShell-$PwshVersion-win-x64.msi"
+        $PwshInstaller = "$env:TEMP\PowerShell-7-x64.msi"
         Get-InstallerWithRetry -Uri $PwshUrl -OutFile $PwshInstaller
+        Test-InstallerHash -FilePath $PwshInstaller -ExpectedHash "${var.pwsh_sha256}"
 
         $proc = Start-Process -FilePath "msiexec.exe" `
             -ArgumentList "/i `"$PwshInstaller`" /qn /norestart ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ADD_FILE_CONTEXT_MENU_RUNPOWERSHELL=1 ENABLE_PSREMOTING=0 REGISTER_MANIFEST=1 USE_MU=0 ENABLE_MU=0 ADD_PATH=1" `
@@ -563,6 +650,20 @@ locals {
             }
         }
 
+        function Test-InstallerHash {
+            param([string]$FilePath, [string]$ExpectedHash)
+            if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {
+                Write-Host "[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification"
+                return
+            }
+            $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash
+            if ($actual -ne $ExpectedHash.ToUpper()) {
+                Write-Error "[INTEGRITY] SHA256 MISMATCH for $(Split-Path $FilePath -Leaf)! Expected: $ExpectedHash Got: $actual"
+                exit 1
+            }
+            Write-Host "[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
+        }
+
         # ═══ VISUAL STUDIO CODE ═══
         Write-Host "=== Installing Visual Studio Code (System) ==="
         $VSCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64-system/stable"
@@ -582,6 +683,7 @@ locals {
         $GitUrl = "https://github.com/git-for-windows/git/releases/download/v$${GitVersion}.windows.1/Git-$${GitVersion}-64-bit.exe"
         $GitInstaller = "$env:TEMP\Git-$${GitVersion}-64-bit.exe"
         Get-InstallerWithRetry -Uri $GitUrl -OutFile $GitInstaller
+        Test-InstallerHash -FilePath $GitInstaller -ExpectedHash "${var.git_sha256}"
 
         $proc = Start-Process -FilePath $GitInstaller `
             -ArgumentList "/VERYSILENT /NORESTART /PathOption=Cmd /NoAutoCrlf /SetupType=default" `
@@ -608,6 +710,7 @@ locals {
         $AzCliUrl = "https://azcliprod.blob.core.windows.net/msi/azure-cli-$AzCliVersion-x64.msi"
         $AzCliInstaller = "$env:TEMP\azure-cli-$AzCliVersion-x64.msi"
         Get-InstallerWithRetry -Uri $AzCliUrl -OutFile $AzCliInstaller
+        Test-InstallerHash -FilePath $AzCliInstaller -ExpectedHash "${var.azure_cli_sha256}"
 
         $proc = Start-Process -FilePath "msiexec.exe" `
             -ArgumentList "/i `"$AzCliInstaller`" /qn /norestart ALLUSERS=1" `
@@ -663,9 +766,6 @@ locals {
         Write-Host "[PREREQ] Node.js: $(node --version)"
         Write-Host "[PREREQ] npm: $(npm --version)"
 
-        # ═══ NPM AUDIT: Pre-installation security check ═══
-        # Audit will be run after installation to catch vulnerabilities
-
         # ═══ OPENSPEC ═══
         Write-Host "=== Installing OpenSpec ${var.openspec_version} (global) ==="
         npm install -g @fission-ai/openspec@${var.openspec_version} 2>&1 | Write-Host
@@ -699,10 +799,9 @@ locals {
             gitVersion      = (git --version 2>&1).ToString()
             pwshVersion     = (pwsh --version 2>&1).ToString()
             azCliVersion    = (az --version 2>&1 | Select-Object -First 1).ToString()
-            openclawVersion = (openclaw --version 2>&1).ToString()
-            claudeVersion   = (claude --version 2>&1).ToString()
             openspecVersion = (openspec --version 2>&1).ToString()
-            codexVersion   = (codex --version 2>&1).ToString()
+            openclawVersion = "${var.openclaw_version}"
+            claudeCodeVersion = "${var.claude_code_version}"
         } | ConvertTo-Json -Depth 3
         Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
         Write-Host "[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"
@@ -967,8 +1066,17 @@ module "image_builder" {
   pwsh_version           = var.pwsh_version
   azure_cli_version      = var.azure_cli_version
   openspec_version       = var.openspec_version
+  openclaw_version       = var.openclaw_version
+  claude_code_version    = var.claude_code_version
+  node_sha256            = var.node_sha256
+  python_sha256          = var.python_sha256
+  pwsh_sha256            = var.pwsh_sha256
+  git_sha256             = var.git_sha256
+  azure_cli_sha256       = var.azure_cli_sha256
   openclaw_default_model = var.openclaw_default_model
   openclaw_gateway_port  = var.openclaw_gateway_port
+  skills_repo_url        = var.skills_repo_url
+  mcp_packages           = var.mcp_packages
   tags                   = var.tags
 }
 ```

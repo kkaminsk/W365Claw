@@ -128,6 +128,16 @@ variable "openspec_version" {
   type        = string
 }
 
+variable "openclaw_version" {
+  description = "OpenClaw version (recorded in SBOM; not installed at build time)"
+  type        = string
+}
+
+variable "claude_code_version" {
+  description = "Claude Code CLI version (recorded in SBOM; not installed at build time)"
+  type        = string
+}
+
 variable "openclaw_default_model" {
   description = "Default LLM model for OpenClaw"
   type        = string
