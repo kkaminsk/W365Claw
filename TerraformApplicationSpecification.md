@@ -281,28 +281,10 @@ variable "azure_cli_version" {
   default     = "2.83.0"
 }
 
-variable "openclaw_version" {
-  description = "OpenClaw npm package version to install"
-  type        = string
-  default     = "2026.2.14"
-}
-
-variable "claude_code_version" {
-  description = "Claude Code (@anthropic-ai/claude-code) npm package version to install"
-  type        = string
-  default     = "2.1.42"
-}
-
 variable "openspec_version" {
   description = "OpenSpec (@fission-ai/openspec) npm package version to install"
   type        = string
   default     = "latest"
-}
-
-variable "codex_version" {
-  description = "OpenAI Codex CLI (@openai/codex) npm package version to install"
-  type        = string
-  default     = "0.101.0"
 }
 
 # ─── OpenClaw Configuration ───────────────────────────────────────────────
@@ -652,7 +634,7 @@ locals {
         PWSH
       ]
     },
-    # ── Phase 3: AI Agents (OpenClaw + Claude Code + OpenSpec) ──
+    # ── Phase 3: AI Tooling (OpenSpec + MCP) ──
     {
       type        = "PowerShell"
       name        = "InstallAIAgents"
@@ -684,26 +666,6 @@ locals {
         # ═══ NPM AUDIT: Pre-installation security check ═══
         # Audit will be run after installation to catch vulnerabilities
 
-        # ═══ OPENCLAW ═══
-        Write-Host "=== Installing OpenClaw ${var.openclaw_version} (global) ==="
-        npm install -g openclaw@${var.openclaw_version} 2>&1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "OpenClaw npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $openclawCheck = Get-Command openclaw -ErrorAction SilentlyContinue
-        if (-not $openclawCheck) { Write-Error "openclaw not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] OpenClaw: $(openclaw --version 2>&1)"
-
-        # ═══ CLAUDE CODE ═══
-        Write-Host "=== Installing Claude Code ${var.claude_code_version} (global) ==="
-        npm install -g @anthropic-ai/claude-code@${var.claude_code_version} 2>&1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "Claude Code npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $claudeCheck = Get-Command claude -ErrorAction SilentlyContinue
-        if (-not $claudeCheck) { Write-Error "claude not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] Claude Code: $(claude --version 2>&1)"
-
         # ═══ OPENSPEC ═══
         Write-Host "=== Installing OpenSpec ${var.openspec_version} (global) ==="
         npm install -g @fission-ai/openspec@${var.openspec_version} 2>&1 | Write-Host
@@ -713,16 +675,6 @@ locals {
         $openspecCheck = Get-Command openspec -ErrorAction SilentlyContinue
         if (-not $openspecCheck) { Write-Error "openspec not found in PATH after installation"; exit 1 }
         Write-Host "[VERIFY] OpenSpec: $(openspec --version 2>&1)"
-
-        # ═══ OPENAI CODEX CLI ═══
-        Write-Host "=== Installing OpenAI Codex CLI ${var.codex_version} (global) ==="
-        npm install -g @openai/codex@${var.codex_version} 2>&1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "Codex CLI npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $codexCheck = Get-Command codex -ErrorAction SilentlyContinue
-        if (-not $codexCheck) { Write-Error "codex not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] Codex CLI: $(codex --version 2>&1)"
 
         # ═══ NPM GLOBAL PACKAGE INVENTORY ═══
         Write-Host "=== Listing global npm packages ==="
@@ -755,7 +707,7 @@ locals {
         Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
         Write-Host "[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"
 
-        Write-Host "=== Phase 3 Complete: AI agents installed ==="
+        Write-Host "=== Phase 3 Complete: AI tooling installed ==="
         PWSH
       ]
     },
@@ -1014,10 +966,7 @@ module "image_builder" {
   git_version            = var.git_version
   pwsh_version           = var.pwsh_version
   azure_cli_version      = var.azure_cli_version
-  openclaw_version       = var.openclaw_version
-  claude_code_version    = var.claude_code_version
   openspec_version       = var.openspec_version
-  codex_version          = var.codex_version
   openclaw_default_model = var.openclaw_default_model
   openclaw_gateway_port  = var.openclaw_gateway_port
   tags                   = var.tags
@@ -1141,10 +1090,7 @@ python_version        = "3.14.3"
 git_version           = "2.53.0"
 pwsh_version          = "7.4.13"
 azure_cli_version     = "2.83.0"
-openclaw_version      = "2026.2.14"
-claude_code_version   = "2.1.42"
 openspec_version      = "latest"
-codex_version         = "0.101.0"
 
 # OpenClaw
 openclaw_default_model = "anthropic/claude-opus-4-6"
@@ -1239,7 +1185,7 @@ Remove-AzGalleryImageVersion `
 |---|---|
 | API keys baked into image | Never. Each user manages their own ANTHROPIC_API_KEY after login. |
 | AI agent runs as SYSTEM | OpenClaw runs in user context (Active Setup + user-level startup). Do not register as a SYSTEM service. |
-| Supply chain (npm packages) | Pinned to specific versions (`openclaw@${var.openclaw_version}`, `@anthropic-ai/claude-code@${var.claude_code_version}`, `openspec@${var.openspec_version}`, `@openai/codex@${var.codex_version}`). npm audit runs during build and fails on high/critical vulnerabilities. |
+| Supply chain (npm packages) | Pinned to specific versions for npm packages installed during the build (e.g., `openspec@${var.openspec_version}` and MCP packages). npm audit runs during build and fails on high/critical vulnerabilities. |
 | SBOM | Software Bill of Materials generated during build and stored at `C:\ProgramData\ImageBuild\sbom-*.json`. |
 | Build script integrity | Scripts are inline in the Terraform configuration — no external storage dependencies. Changes are tracked via source control. |
 | Image sprawl / cost | `end_of_life_date` set to 90 days from build. Retain only 3 versions. Tear down build infrastructure after each build. |
@@ -1257,10 +1203,7 @@ After the image build completes and before importing into Windows 365:
 - [ ] `pwsh --version` returns PowerShell 7.4+
 - [ ] `git --version` returns expected version
 - [ ] `az --version` returns expected Azure CLI version
-- [ ] `openclaw --version` returns expected version
-- [ ] `claude --version` returns expected version
 - [ ] `openspec --version` returns expected version
-- [ ] `codex --version` returns expected version
 - [ ] VS Code installed in `C:\Program Files\Microsoft VS Code`
 - [ ] GitHub Copilot extension installed (`code --list-extensions` includes `GitHub.copilot`)
 - [ ] GitHub Copilot Chat extension installed (`code --list-extensions` includes `GitHub.copilot-chat`)

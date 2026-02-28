@@ -118,13 +118,13 @@ variable "source_image_offer" {
 variable "source_image_sku" {
   description = "Marketplace image SKU"
   type        = string
-  default     = "win11-24h2-ent"
+  default     = "win11-25h2-ent"
 }
 
 variable "source_image_version" {
   description = "Marketplace image version — MUST be pinned to a specific version for build reproducibility (do not use 'latest')"
   type        = string
-  default     = "26100.2894.250113"
+  default     = "26200.7840.260206"
 
   validation {
     condition     = var.source_image_version != "latest"
@@ -169,24 +169,6 @@ variable "azure_cli_version" {
   default     = "2.83.0"
 }
 
-variable "openclaw_version" {
-  description = "OpenClaw npm package version to install"
-  type        = string
-  default     = "2026.2.14"
-}
-
-variable "claude_code_version" {
-  description = "Claude Code (@anthropic-ai/claude-code) npm package version to install"
-  type        = string
-  default     = "2.1.42"
-}
-
-variable "openspec_version" {
-  description = "OpenSpec (@fission-ai/openspec) npm package version to install"
-  type        = string
-  default     = "0.9.1"
-}
-
 # ─── Installer SHA256 Checksums ───────────────────────────────────────────
 # Update these when bumping software versions. Obtain from official release pages.
 # VS Code and GitHub Desktop are intentionally excluded (floating latest URLs).
@@ -221,12 +203,6 @@ variable "azure_cli_sha256" {
   default     = ""
 }
 
-variable "codex_version" {
-  description = "OpenAI Codex CLI (@openai/codex) npm package version to install"
-  type        = string
-  default     = "0.101.0"
-}
-
 # ─── OpenClaw Configuration ───────────────────────────────────────────────
 
 variable "openclaw_default_model" {
@@ -239,6 +215,14 @@ variable "openclaw_gateway_port" {
   description = "Port for the OpenClaw gateway"
   type        = number
   default     = 18789
+}
+
+# ─── Agent Skills & MCP Servers ────────────────────────────────────────────
+
+variable "skills_repo_url" {
+  description = "Git URL for the curated agent skills repository (empty to skip skills pre-seeding)"
+  type        = string
+  default     = ""
 }
 
 # ─── Tags ──────────────────────────────────────────────────────────────────

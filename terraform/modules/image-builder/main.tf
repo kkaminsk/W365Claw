@@ -49,7 +49,7 @@ locals {
         function Test-InstallerHash {
             param([string]$FilePath, [string]$ExpectedHash)
             if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {
-                Write-Host "[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) — skipping verification"
+                Write-Host "[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification"
                 return
             }
             $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash
@@ -60,7 +60,7 @@ locals {
             Write-Host "[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
         }
 
-        # ═══ NODE.JS ═══
+        # === NODE.JS ===
         $NodeVersion = "${var.node_version}"
         $NodeMsiUrl = "https://nodejs.org/dist/$NodeVersion/node-$NodeVersion-x64.msi"
         $NodeInstaller = "$env:TEMP\node-$NodeVersion-x64.msi"
@@ -77,7 +77,7 @@ locals {
         Write-Host "[VERIFY] Node.js: $(node --version)"
         Write-Host "[VERIFY] npm: $(npm --version)"
 
-        # ═══ PYTHON ═══
+        # === PYTHON ===
         $PythonVersion = "${var.python_version}"
         $PythonUrl = "https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-amd64.exe"
         $PythonInstaller = "$env:TEMP\python-$PythonVersion-amd64.exe"
@@ -95,7 +95,7 @@ locals {
         python -m pip install --upgrade pip --quiet
         Write-Host "[VERIFY] pip: $(python -m pip --version)"
 
-        # ═══ POWERSHELL 7 ═══
+        # === POWERSHELL 7 ===
         Write-Host "=== Installing PowerShell 7 ==="
         $PwshVersion = "${var.pwsh_version}"
         $PwshUrl = "https://github.com/PowerShell/PowerShell/releases/download/v$PwshVersion/PowerShell-$PwshVersion-win-x64.msi"
@@ -110,17 +110,18 @@ locals {
         Update-SessionEnvironment
         Write-Host "[VERIFY] PowerShell 7 installed"
 
-        # ═══ CLEANUP ═══
+        # === CLEANUP ===
         Remove-Item -Path $NodeInstaller, $PythonInstaller, $PwshInstaller -Force -ErrorAction SilentlyContinue
         Write-Host "=== Phase 1 Complete: Runtimes installed ==="
+        exit 0
         PWSH
       ]
     },
     # ── Restart after runtime installation ──
     {
-      type              = "WindowsRestart"
-      restartCommand    = "shutdown /r /f /t 5 /c \"Restart after runtime installation\""
-      restartTimeout    = "10m"
+      type                = "WindowsRestart"
+      restartCommand      = "shutdown /r /f /t 5 /c \"Restart after runtime installation\""
+      restartTimeout      = "10m"
       restartCheckCommand = "powershell -command \"node --version; python --version\""
     },
     # ── Phase 2: Developer Tools (VS Code, Git, GitHub Desktop) ──
@@ -151,7 +152,7 @@ locals {
         function Test-InstallerHash {
             param([string]$FilePath, [string]$ExpectedHash)
             if ([string]::IsNullOrWhiteSpace($ExpectedHash)) {
-                Write-Host "[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) — skipping verification"
+                Write-Host "[INTEGRITY] No SHA256 provided for $(Split-Path $FilePath -Leaf) - skipping verification"
                 return
             }
             $actual = (Get-FileHash -Path $FilePath -Algorithm SHA256).Hash
@@ -162,9 +163,9 @@ locals {
             Write-Host "[INTEGRITY] SHA256 verified for $(Split-Path $FilePath -Leaf)"
         }
 
-        # ═══ VISUAL STUDIO CODE ═══
+        # === VISUAL STUDIO CODE ===
         Write-Host "=== Installing Visual Studio Code (System) ==="
-        $VSCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64-system/stable"
+        $VSCodeUrl = "https://update.code.visualstudio.com/latest/win32-x64/stable"
         $VSCodeInstaller = "$env:TEMP\VSCodeSetup-x64.exe"
         Get-InstallerWithRetry -Uri $VSCodeUrl -OutFile $VSCodeInstaller
 
@@ -175,7 +176,7 @@ locals {
         Update-SessionEnvironment
         Write-Host "[VERIFY] VS Code installed to: C:\Program Files\Microsoft VS Code"
 
-        # ═══ GIT FOR WINDOWS ═══
+        # === GIT FOR WINDOWS ===
         Write-Host "=== Installing Git for Windows ==="
         $GitVersion = "${var.git_version}"
         $GitUrl = "https://github.com/git-for-windows/git/releases/download/v$${GitVersion}.windows.1/Git-$${GitVersion}-64-bit.exe"
@@ -190,7 +191,7 @@ locals {
         Update-SessionEnvironment
         Write-Host "[VERIFY] Git: $(git --version)"
 
-        # ═══ GITHUB DESKTOP ═══
+        # === GITHUB DESKTOP ===
         Write-Host "=== Installing GitHub Desktop (Machine-Wide Provisioner) ==="
         $GHDesktopUrl = "https://central.github.com/deployments/desktop/desktop/latest/GitHubDesktopSetup-x64.msi"
         $GHDesktopInstaller = "$env:TEMP\GitHubDesktop-x64.msi"
@@ -202,7 +203,7 @@ locals {
         if ($proc.ExitCode -ne 0) { Write-Error "GitHub Desktop installation failed ($($proc.ExitCode))"; exit 1 }
         Write-Host "[VERIFY] GitHub Desktop provisioner installed"
 
-        # ═══ AZURE CLI ═══
+        # === AZURE CLI ===
         $AzCliVersion = "${var.azure_cli_version}"
         Write-Host "=== Installing Azure CLI $AzCliVersion ==="
         $AzCliUrl = "https://azcliprod.blob.core.windows.net/msi/azure-cli-$AzCliVersion-x64.msi"
@@ -215,101 +216,32 @@ locals {
             -Wait -PassThru
         if ($proc.ExitCode -ne 0) { Write-Error "Azure CLI installation failed ($($proc.ExitCode))"; exit 1 }
         Update-SessionEnvironment
-        Write-Host "[VERIFY] Azure CLI: $(az --version 2>&1 | Select-Object -First 1)"
+        Write-Host "[VERIFY] Azure CLI: $(az --version | Select-Object -First 1)"
 
-        # ═══ GITHUB COPILOT (VS Code Extension) ═══
+        # === GITHUB COPILOT (VS Code Extension) ===
         Write-Host "=== Installing GitHub Copilot VS Code Extension ==="
         $codeBin = "C:\Program Files\Microsoft VS Code\bin\code.cmd"
         if (Test-Path $codeBin) {
-            & $codeBin --install-extension GitHub.copilot --force 2>&1 | Write-Host
-            & $codeBin --install-extension GitHub.copilot-chat --force 2>&1 | Write-Host
+            & $codeBin --install-extension GitHub.copilot --force | Write-Host
+            & $codeBin --install-extension GitHub.copilot-chat --force | Write-Host
             Write-Host "[VERIFY] GitHub Copilot extensions installed"
         } else {
-            Write-Error "VS Code not found at expected path — cannot install Copilot extension"
+            Write-Error "VS Code not found at expected path - cannot install Copilot extension"
             exit 1
         }
 
-        # ═══ CLEANUP ═══
+        # === CLEANUP ===
         Remove-Item -Path $VSCodeInstaller, $GitInstaller, $GHDesktopInstaller, $AzCliInstaller -Force -ErrorAction SilentlyContinue
-        Write-Host "=== Phase 2 Complete: Developer tools installed ==="
-        PWSH
-      ]
-    },
-    # ── Phase 3: AI Agents (OpenClaw + Claude Code) ──
-    {
-      type        = "PowerShell"
-      name        = "InstallAIAgents"
-      runElevated = true
-      runAsSystem = true
-      inline = [
-        <<-PWSH
-        $ErrorActionPreference = "Stop"
-        $ProgressPreference = "SilentlyContinue"
 
-        function Update-SessionEnvironment {
-            $machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
-            $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
-            $env:Path = "$machinePath;$userPath"
-        }
-
-        Update-SessionEnvironment
-
-        # Verify prerequisites
-        $nodeCheck = Get-Command node -ErrorAction SilentlyContinue
-        $npmCheck = Get-Command npm -ErrorAction SilentlyContinue
-        if (-not $nodeCheck -or -not $npmCheck) {
-            Write-Error "Node.js or npm not found in PATH. Phase 1 may have failed."
-            exit 1
-        }
-        Write-Host "[PREREQ] Node.js: $(node --version)"
-        Write-Host "[PREREQ] npm: $(npm --version)"
-
-        # ═══ OPENCLAW ═══
-        Write-Host "=== Installing OpenClaw ${var.openclaw_version} (global) ==="
-        npm install -g openclaw@${var.openclaw_version} 2>&1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "OpenClaw npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $openclawCheck = Get-Command openclaw -ErrorAction SilentlyContinue
-        if (-not $openclawCheck) { Write-Error "openclaw not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] OpenClaw: $(openclaw --version 2>&1)"
-
-        # ═══ CLAUDE CODE ═══
-        Write-Host "=== Installing Claude Code ${var.claude_code_version} (global) ==="
-        npm install -g @anthropic-ai/claude-code@${var.claude_code_version} 2>&1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "Claude Code npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $claudeCheck = Get-Command claude -ErrorAction SilentlyContinue
-        if (-not $claudeCheck) { Write-Error "claude not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] Claude Code: $(claude --version 2>&1)"
-
-        # ═══ OPENSPEC ═══
-        Write-Host "=== Installing OpenSpec ${var.openspec_version} (global) ==="
-        npm install -g @fission-ai/openspec@${var.openspec_version} 2>&1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "OpenSpec npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $openspecCheck = Get-Command openspec -ErrorAction SilentlyContinue
-        if (-not $openspecCheck) { Write-Error "openspec not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] OpenSpec: $(openspec --version 2>&1)"
-
-        # ═══ OPENAI CODEX CLI ═══
-        Write-Host "=== Installing OpenAI Codex CLI ${var.codex_version} (global) ==="
-        npm install -g @openai/codex@${var.codex_version} 2>&1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Write-Error "Codex CLI npm install failed ($LASTEXITCODE)"; exit 1 }
-        Update-SessionEnvironment
-
-        $codexCheck = Get-Command codex -ErrorAction SilentlyContinue
-        if (-not $codexCheck) { Write-Error "codex not found in PATH after installation"; exit 1 }
-        Write-Host "[VERIFY] Codex CLI: $(codex --version 2>&1)"
-
-        # ═══ NPM GLOBAL PACKAGE INVENTORY ═══
+        # === NPM GLOBAL PACKAGE INVENTORY ===
         Write-Host "=== Listing global npm packages ==="
-        npm list -g --depth=0 2>&1 | Write-Host
+        # Ensure SYSTEM profile npm directory exists (npm list -g fails without it)
+        $npmDir = "$env:APPDATA\npm"
+        if (-not (Test-Path $npmDir)) { New-Item -ItemType Directory -Path $npmDir -Force | Out-Null }
+        npm list -g --depth=0 | Write-Host
         Write-Host "[SECURITY] Global package inventory logged (npm audit does not support --global)"
 
-        # ═══ SBOM GENERATION ═══
+        # === SBOM GENERATION ===
         Write-Host "=== Generating Software Bill of Materials (SBOM) ==="
         $sbomDir = "C:\ProgramData\ImageBuild"
         New-Item -ItemType Directory -Path $sbomDir -Force | Out-Null
@@ -321,25 +253,22 @@ locals {
         # Record installed software versions
         $softwareManifest = @{
             buildDate       = (Get-Date -Format "yyyy-MM-dd'T'HH:mm:ss'Z'")
-            nodeVersion     = (node --version 2>&1).ToString()
-            npmVersion      = (npm --version 2>&1).ToString()
-            pythonVersion   = (python --version 2>&1).ToString()
-            gitVersion      = (git --version 2>&1).ToString()
-            pwshVersion     = (pwsh --version 2>&1).ToString()
-            azCliVersion    = (az --version 2>&1 | Select-Object -First 1).ToString()
-            openclawVersion = (openclaw --version 2>&1).ToString()
-            claudeVersion   = (claude --version 2>&1).ToString()
-            openspecVersion = (openspec --version 2>&1).ToString()
-            codexVersion   = (codex --version 2>&1).ToString()
+            nodeVersion     = (node --version).ToString()
+            npmVersion      = (npm --version).ToString()
+            pythonVersion   = (python --version).ToString()
+            gitVersion      = (git --version).ToString()
+            pwshVersion     = (pwsh --version).ToString()
+            azCliVersion    = ((az version | ConvertFrom-Json).'azure-cli')
         } | ConvertTo-Json -Depth 3
         Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
         Write-Host "[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"
 
-        Write-Host "=== Phase 3 Complete: AI agents installed ==="
+        Write-Host "=== Phase 2 Complete: Developer tools installed ==="
+        exit 0
         PWSH
       ]
     },
-    # ── Phase 4: Configuration & Policy ──
+    # ── Phase 3: Configuration & Policy ──
     {
       type        = "PowerShell"
       name        = "ConfigureAgents"
@@ -349,7 +278,7 @@ locals {
         <<-PWSH
         $ErrorActionPreference = "Stop"
 
-        # ═══ CLAUDE CODE: Enterprise Managed Settings ═══
+        # === CLAUDE CODE: Enterprise Managed Settings ===
         Write-Host "=== Configuring Claude Code enterprise policy ==="
         $claudeConfigDir = "C:\ProgramData\ClaudeCode"
         New-Item -ItemType Directory -Path $claudeConfigDir -Force | Out-Null
@@ -365,7 +294,7 @@ locals {
         Set-Content -Path $managedSettingsPath -Value $managedSettings -Encoding UTF8
         Write-Host "[CONFIG] Claude Code managed settings: $managedSettingsPath"
 
-        # ═══ OPENCLAW: Configuration Template ═══
+        # === OPENCLAW: Configuration Template ===
         Write-Host "=== Creating OpenClaw configuration template ==="
         $openclawTemplateDir = "C:\ProgramData\OpenClaw"
         New-Item -ItemType Directory -Path $openclawTemplateDir -Force | Out-Null
@@ -390,7 +319,50 @@ locals {
         Set-Content -Path $templatePath -Value $openclawConfig -Encoding UTF8
         Write-Host "[CONFIG] OpenClaw template: $templatePath"
 
-        # ═══ ACTIVE SETUP: First-Login Configuration Hydration ═══
+        # === CURATED AGENT SKILLS ===
+        $skillsRepoUrl = "${var.skills_repo_url}"
+        $skillsDir = "C:\ProgramData\OpenClaw\skills"
+        if ($skillsRepoUrl -ne "") {
+            Write-Host "=== Cloning curated agent skills ==="
+            New-Item -ItemType Directory -Path $skillsDir -Force | Out-Null
+            git clone --depth 1 $skillsRepoUrl "$skillsDir\approved" | Write-Host
+            if ($LASTEXITCODE -ne 0) {
+                Write-Warning "Skills clone failed - skills will need to be installed post-provisioning"
+            } else {
+                $skillCount = (Get-ChildItem -Path "$skillsDir\approved" -Filter "SKILL.md" -Recurse).Count
+                Write-Host "[CONFIG] Curated skills cloned: $skillCount skills found"
+            }
+        } else {
+            Write-Host "[SKIP] No skills repository configured"
+        }
+
+        # === MCP SERVER CONFIGURATION TEMPLATE ===
+        Write-Host "=== Creating MCP server configuration template ==="
+        $mcpConfigDir = "C:\ProgramData\OpenClaw\mcp"
+        New-Item -ItemType Directory -Path $mcpConfigDir -Force | Out-Null
+
+        # Template with placeholder API keys - real keys delivered via Intune env vars
+        $mcpConfig = @{
+            servers = @{
+                "microsoft-docs" = @{
+                    transport = "http"
+                    url       = "https://learn.microsoft.com/api/mcp"
+                }
+                "perplexity" = @{
+                    transport = "stdio"
+                    command   = "npx"
+                    args      = @("-y", "@perplexity-ai/mcp-server")
+                    env       = @{
+                        PERPLEXITY_API_KEY = "__PERPLEXITY_API_KEY__"
+                    }
+                }
+            }
+        } | ConvertTo-Json -Depth 5
+
+        Set-Content -Path "$mcpConfigDir\mcporter.json" -Value $mcpConfig -Encoding UTF8
+        Write-Host "[CONFIG] MCP server config template: $mcpConfigDir\mcporter.json"
+
+        # === ACTIVE SETUP: First-Login Configuration Hydration ===
         Write-Host "=== Registering Active Setup for first-login hydration ==="
 
         # Hydration script OVERWRITES existing config to ensure consistency
@@ -405,6 +377,22 @@ if (Test-Path $templateFile) {
     New-Item -ItemType Directory -Path $workspaceDir -Force | Out-Null
     Copy-Item -Path $templateFile -Destination $configFile -Force
 }
+
+# Hydrate curated agent skills
+$skillsSource = "C:\ProgramData\OpenClaw\skills"
+$skillsDest = "$env:USERPROFILE\.agents\skills"
+if (Test-Path $skillsSource) {
+    New-Item -ItemType Directory -Path $skillsDest -Force | Out-Null
+    Copy-Item -Path "$skillsSource\*" -Destination $skillsDest -Recurse -Force
+}
+
+# Hydrate MCP server configuration
+$mcpSource = "C:\ProgramData\OpenClaw\mcp\mcporter.json"
+$mcpDest = "$openclawDir\workspace\config"
+if (Test-Path $mcpSource) {
+    New-Item -ItemType Directory -Path $mcpDest -Force | Out-Null
+    Copy-Item -Path $mcpSource -Destination "$mcpDest\mcporter.json" -Force
+}
 '@
 
         $hydrationScriptPath = "$openclawTemplateDir\hydrate-config.ps1"
@@ -418,7 +406,7 @@ if (Test-Path $templateFile) {
         Set-ItemProperty -Path $activeSetupKey -Name "Version" -Value "1,0,0,0"
         Write-Host "[CONFIG] Active Setup registered: OpenClaw-ConfigHydration"
 
-        # ═══ TEAMS OPTIMISATION PREREQUISITES ═══
+        # === TEAMS OPTIMISATION PREREQUISITES ===
         Write-Host "=== Setting Teams optimisation prerequisites ==="
         $teamsRegPath = "HKLM:\SOFTWARE\Microsoft\Teams"
         if (-not (Test-Path $teamsRegPath)) {
@@ -427,13 +415,13 @@ if (Test-Path $templateFile) {
         Set-ItemProperty -Path $teamsRegPath -Name "IsWVDEnvironment" -Value 1 -Type DWord -Force
         Write-Host "[CONFIG] Teams IsWVDEnvironment = 1"
 
-        # ═══ IMAGE CLEANUP & OPTIMISATION ═══
+        # === IMAGE CLEANUP & OPTIMISATION ===
         Write-Host "=== Cleaning up image ==="
         Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
         Stop-Service -Name wuauserv -Force -ErrorAction SilentlyContinue
         Remove-Item -Path "C:\Windows\SoftwareDistribution\Download\*" -Recurse -Force -ErrorAction SilentlyContinue
         Start-Service -Name wuauserv -ErrorAction SilentlyContinue
-        npm cache clean --force 2>&1 | Out-Null
+        npm cache clean --force | Out-Null
 
         Write-Host "[CLEANUP] Running DISM component store cleanup..."
         Start-Process -FilePath "dism.exe" `
@@ -441,12 +429,13 @@ if (Test-Path $templateFile) {
             -Wait -NoNewWindow
 
         Write-Host "=== Phase 4 Complete: Configuration and cleanup done ==="
+        exit 0
         PWSH
       ]
     },
     # ── Windows Update ──
     {
-      type = "WindowsUpdate"
+      type           = "WindowsUpdate"
       searchCriteria = "IsInstalled=0"
       filters = [
         "exclude:$_.Title -like '*Preview*'",
@@ -464,18 +453,21 @@ if (Test-Path $templateFile) {
   # Distributor: publish to Azure Compute Gallery
   distribute = [
     {
-      type               = "SharedImage"
-      galleryImageId     = var.image_definition_id
-      runOutputName      = "w365-dev-ai-${var.image_version}"
-      excludeFromLatest  = var.exclude_from_latest
-      replicationRegions = [var.location]
-      storageAccountType = "Standard_LRS"
+      type              = "SharedImage"
+      galleryImageId    = var.image_definition_id
+      runOutputName     = "w365-dev-ai-${var.image_version}"
+      excludeFromLatest = var.exclude_from_latest
+      targetRegions = [
+        {
+          name               = var.location
+          replicaCount       = var.replica_count
+          storageAccountType = "Standard_LRS"
+        }
+      ]
       versioning = {
         scheme = "Latest"
         major  = tonumber(split(".", var.image_version)[0])
       }
-      endOfLifeDate = local.end_of_life_date
-      replicaCount  = var.replica_count
     }
   ]
 
