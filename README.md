@@ -1,42 +1,65 @@
 # W365Claw
 
-Automated Windows 365 developer image build using Terraform and Azure VM Image Builder. Produces gallery images pre-loaded with OpenClaw, Claude Code, and a full developer toolchain.
+Automated Windows 365 developer image build using Terraform and Azure VM Image Builder. Produces Azure Compute Gallery images pre-loaded with a full developer toolchain, ready for Windows 365 Cloud PC provisioning.
 
-## What's Included
+AI agents (OpenClaw, Claude Code, Codex CLI) are delivered **post-provisioning** via Intune in user context — not baked into the image. The image handles runtimes, developer tools, enterprise policy, and configuration templates.
 
-The image installs and configures:
+## Companion Book
 
-- **Runtimes:** Node.js, Python, PowerShell 7
-- **Developer Tools:** VS Code, Git, GitHub Desktop
-- **AI Agents:** OpenClaw, Claude Code, OpenAI Codex CLI
-- **AI Dev Tools:** GitHub Copilot (VS Code extension)
-- **Enterprise Config:** Claude Code managed settings, OpenClaw config hydration via Active Setup, Teams VDI optimisation
-- **Security:** SBOM generation, npm audit gate (fails on high/critical vulnerabilities)
+This repository is the companion code for **[Deploying OpenClaw with Windows 365: A Practitioner's Guide to Custom Image Engineering and Deployment](https://github.com/kkaminsk/W365ClawBook)** by Kevin Kaminski, Microsoft MVP for Windows 365. The book covers the full end-to-end architecture, security model, build pipeline, and operational runbooks. Download the [PDF](https://raw.githubusercontent.com/kkaminsk/W365ClawBook/main/W365Claw.pdf).
+
+## What's in the Image
+
+| Category | Components |
+|---|---|
+| **Runtimes** | Node.js 24.x, Python 3.14.x, PowerShell 7.4.x |
+| **Developer Tools** | VS Code (System install), Git 2.53.x, GitHub Desktop, Azure CLI 2.83.x |
+| **Enterprise Config** | Claude Code managed-settings.json, OpenClaw config hydration via Active Setup, VS Code context menu integration |
+| **Security** | SBOM generation, SHA-256 installer checksums, pinned software versions |
+
+## What's Delivered Post-Provisioning (via Intune)
+
+| Component | Mechanism |
+|---|---|
+| **OpenClaw** | Intune Win32 app (per-user, `npm install -g openclaw`) |
+| **Claude Code** | Intune Win32 app (per-user, `npm install -g @anthropic-ai/claude-code`) |
+| **OpenAI Codex CLI** | Intune Win32 app (per-user) |
+| **OpenSpec** | Intune Win32 app (per-user) |
+| **API Keys** | Intune Settings Catalog (environment variables) |
+| **VS Code Extensions** | Intune script (GitHub Copilot, etc.) |
+| **Agent Skills / MCP Config** | Active Setup hydration from ProgramData templates |
 
 ## Architecture
 
 ```
-terraform/
-├── main.tf                          # Root module — orchestrates gallery, identity, image-builder
-├── variables.tf                     # All configurable inputs with defaults
-├── outputs.tf                       # Gallery IDs, build log info, next steps runbook
-├── versions.tf                      # Provider requirements (azurerm, azapi, time)
-├── terraform.tfvars                 # Environment-specific values (git-ignored)
-└── modules/
-    ├── gallery/                     # Azure Compute Gallery + W365-compliant image definition
-    ├── identity/                    # User-assigned managed identity + least-privilege RBAC
-    └── image-builder/               # AIB template with phased inline PowerShell customizers
-
-openspec/
-└── changes/
-    ├── w365-dev-image-terraform/    # Original build proposal, design, specs, tasks
-    └── terraform-audit-remediation/ # Audit fix proposals (H1, H2, M1-M5, L1, L4)
+W365Claw/
+├── terraform/
+│   ├── main.tf                          # Root module — orchestrates gallery, identity, image-builder
+│   ├── variables.tf                     # All configurable inputs with defaults
+│   ├── outputs.tf                       # Gallery IDs, build log info, next steps runbook
+│   ├── versions.tf                      # Provider requirements (azurerm, azapi, time)
+│   ├── terraform.tfvars                 # Environment-specific values (git-ignored)
+│   └── modules/
+│       ├── gallery/                     # Azure Compute Gallery + W365-compliant image definition
+│       ├── identity/                    # User-assigned managed identity + least-privilege RBAC
+│       └── image-builder/               # AIB template with phased inline PowerShell customizers
+├── scripts/
+│   ├── Initialize-BuildWorkstation.ps1  # Prerequisite checker and installer
+│   ├── Initialize-TerraformVars.ps1     # Generates terraform.tfvars from tenant context
+│   └── Teardown-BuildResources.ps1      # Targeted teardown (preserves gallery resources)
+├── openspec/
+│   └── changes/                         # OpenSpec proposals: design, specs, and task tracking
+├── CLAUDE.md                            # Claude Code project context
+├── ConfigurationSpecification.md        # Full configuration specification
+├── TerraformApplicationSpecification.md # Terraform HCL specification and runbook
+├── TerraformAudit.md                    # Engineering audit findings and remediation
+└── supply-chain-integrity.md            # SBOM and supply chain documentation
 ```
 
 ## Prerequisites
 
 - Terraform >= 1.5
-- Azure CLI >= 2.60 (for authentication)
+- Azure CLI >= 2.60
 - Git >= 2.40
 - Az PowerShell module >= 12.0 (for post-build verification)
 - Azure subscription with these resource providers registered:
@@ -57,7 +80,13 @@ Run the prerequisite script to check and install everything automatically:
 .\scripts\Initialize-BuildWorkstation.ps1 -Force
 ```
 
-The script checks all prerequisites, installs what's missing (via winget), logs into Azure, registers resource providers, and runs `terraform init`. See [ConfigurationSpecification.md](ConfigurationSpecification.md) for full details.
+Generate `terraform.tfvars` from your tenant context:
+
+```powershell
+.\scripts\Initialize-TerraformVars.ps1
+```
+
+The scripts check all prerequisites, install what's missing (via winget), log into Azure, register resource providers, and run `terraform init`. See [ConfigurationSpecification.md](ConfigurationSpecification.md) for full details.
 
 ## Quick Start
 
@@ -104,23 +133,32 @@ Get-AzGalleryImageVersion `
 
 ## Windows 365 Compliance
 
-The image definition includes all required feature flags:
+The image definition includes all required feature flags for Windows 365 ACG import:
 
 | Feature | Value |
 |---------|-------|
-| SecurityType | TrustedLaunchSupported |
-| IsHibernateSupported | True |
-| DiskControllerTypes | SCSI, NVMe |
-| IsAcceleratedNetworkSupported | True |
-| IsSecureBootSupported | True |
+| Trusted Launch | Enabled |
+| Hibernation | Enabled |
+| NVMe Disk Controller | Enabled |
+| Accelerated Networking | Enabled |
+| Hyper-V Generation | V2 |
+| Architecture | x64 |
+| OS State | Generalized |
 
 ## Documentation
 
-- **[TerraformApplicationSpecification.md](TerraformApplicationSpecification.md)** — Full specification with all HCL, runbook, and security considerations
-- **[TerraformAudit.md](TerraformAudit.md)** — Engineering audit with findings and remediation status
+- **[ConfigurationSpecification.md](ConfigurationSpecification.md)** — Full configuration specification with build workstation setup
+- **[TerraformApplicationSpecification.md](TerraformApplicationSpecification.md)** — Complete Terraform HCL specification, runbook, and security considerations
+- **[TerraformAudit.md](TerraformAudit.md)** — Engineering audit findings and remediation status
+- **[supply-chain-integrity.md](supply-chain-integrity.md)** — SBOM generation and supply chain documentation
+- **[W365ClawBook](https://github.com/kkaminsk/W365ClawBook)** — Companion book with full architecture, security model, and operational guidance
 
 ## Cost
 
 Build-time infrastructure (identity, AIB template, build VM) can be removed after the build. The gallery and image versions are protected by `prevent_destroy` and persist for Windows 365 provisioning.
 
-**Workflow:** `terraform apply` → wait for build (~60-90 min) → verify → `.\scripts\Teardown-BuildResources.ps1`
+**Workflow:** `terraform apply` → wait for build (~75–120 min) → verify → `.\scripts\Teardown-BuildResources.ps1`
+
+## License
+
+See [LICENSE](LICENSE).
