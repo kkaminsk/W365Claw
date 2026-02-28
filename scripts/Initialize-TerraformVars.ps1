@@ -461,8 +461,6 @@ try {
     $gitRelease = Get-LatestGitHubRelease "git-for-windows/git" "Git for Windows"
     $pwshRelease = Get-LatestGitHubRelease "PowerShell/PowerShell" "PowerShell"
     $azCliRelease = Get-LatestGitHubRelease "Azure/azure-cli" "Azure CLI"
-    $detectedOpenspec = Get-LatestNpmVersion "@fission-ai/openspec"
-
     # Helper: pick detected or existing or hardcoded default
     function Pick-Default {
         param([string]$Detected, [string]$ExistingKey, [string]$Fallback)
@@ -495,8 +493,6 @@ try {
     $defaults["git_version"]           = Pick-Default $(if ($gitRelease) { $gitRelease.Version } else { $null }) "git_version" "2.53.0"
     $defaults["pwsh_version"]          = Pick-Default $(if ($pwshRelease) { $pwshRelease.Version } else { $null }) "pwsh_version" "7.4.13"
     $defaults["azure_cli_version"]     = Pick-Default $(if ($azCliRelease) { $azCliRelease.Version } else { $null }) "azure_cli_version" "2.83.0"
-    $defaults["openspec_version"]      = Pick-Default $detectedOpenspec "openspec_version" "0.9.1"
-
     $defaults["openclaw_default_model"]= if ($existing["openclaw_default_model"]) { $existing["openclaw_default_model"] } else { "anthropic/claude-opus-4-6" }
     $defaults["openclaw_gateway_port"] = if ($existing["openclaw_gateway_port"]) { $existing["openclaw_gateway_port"] } else { "18789" }
 
@@ -588,8 +584,6 @@ try {
     $vals["git_version"]           = Read-ValueWithDefault "Git Version" $defaults["git_version"]
     $vals["pwsh_version"]          = Read-ValueWithDefault "PowerShell Version" $defaults["pwsh_version"]
     $vals["azure_cli_version"]     = Read-ValueWithDefault "Azure CLI Version" $defaults["azure_cli_version"]
-    $vals["openspec_version"]      = Read-ValueWithDefault "OpenSpec Version" $defaults["openspec_version"]
-
     Write-Step "SHA256 Checksums (leave empty to skip verification)"
     $vals["node_sha256"]           = Read-ValueWithDefault "Node SHA256" $defaults["node_sha256"]
     $vals["python_sha256"]         = Read-ValueWithDefault "Python SHA256" $defaults["python_sha256"]
@@ -640,7 +634,6 @@ try {
         "build_vm_size", "build_timeout_minutes", "os_disk_size_gb",
         "source_image_publisher", "source_image_offer", "source_image_sku", "source_image_version",
         "node_version", "python_version", "git_version", "pwsh_version", "azure_cli_version",
-        "openspec_version",
         "node_sha256", "python_sha256", "pwsh_sha256", "git_sha256", "azure_cli_sha256",
         "openclaw_default_model", "openclaw_gateway_port",
         "skills_repo_url"
@@ -728,8 +721,6 @@ python_version        = $(Format-TfValue "python_version" $vals["python_version"
 git_version           = $(Format-TfValue "git_version" $vals["git_version"])
 pwsh_version          = $(Format-TfValue "pwsh_version" $vals["pwsh_version"])
 azure_cli_version     = $(Format-TfValue "azure_cli_version" $vals["azure_cli_version"])
-openspec_version      = $(Format-TfValue "openspec_version" $vals["openspec_version"])
-
 # Installer SHA256 Checksums (update when bumping versions)
 # Obtain from official release pages. Leave empty to skip verification.
 node_sha256           = $(Format-TfValue "node_sha256" $vals["node_sha256"])
@@ -744,7 +735,6 @@ openclaw_gateway_port  = $(Format-TfValue "openclaw_gateway_port" $vals["opencla
 
 # Agent Skills & MCP Servers
 skills_repo_url        = $(Format-TfValue "skills_repo_url" $vals["skills_repo_url"])
-mcp_packages           = ["@perplexity-ai/mcp-server"]
 
 # Tags
 tags = {

@@ -428,7 +428,7 @@ if (Test-Path $mcpSource) {
             -ArgumentList "/Online /Cleanup-Image /StartComponentCleanup /ResetBase" `
             -Wait -NoNewWindow
 
-        Write-Host "=== Phase 4 Complete: Configuration and cleanup done ==="
+        Write-Host "=== Phase 3 Complete: Configuration and cleanup done ==="
         exit 0
         PWSH
       ]

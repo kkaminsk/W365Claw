@@ -168,8 +168,11 @@ function Get-ProviderStatus {
 }
 
 function Test-TerraformInitialized {
-    $tfDir = Join-Path $TerraformDir ".terraform"
-    return (Test-Path $tfDir -PathType Container)
+    # The .terraform directory is created even on partial/failed init.
+    # The lock file (.terraform.lock.hcl) is only written after ALL providers
+    # resolve successfully, making it a reliable success indicator.
+    $lockFile = Join-Path $TerraformDir ".terraform.lock.hcl"
+    return (Test-Path $lockFile -PathType Leaf)
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -252,6 +255,15 @@ function Invoke-PreFlightChecks {
         foreach ($provider in $RequiredProviders) {
             $shortName = $provider -replace "Microsoft\.", "RP: "
             $state = Get-ProviderStatus $provider
+            # Azure API can transiently return "Registering" after registration completes.
+            # Poll briefly to avoid false negatives.
+            if ($state -eq "Registering") {
+                for ($retry = 0; $retry -lt 6; $retry++) {
+                    Start-Sleep -Seconds $ProviderRegistrationPollSeconds
+                    $state = Get-ProviderStatus $provider
+                    if ($state -ne "Registering") { break }
+                }
+            }
             if ($state -eq "Registered") {
                 $results[$shortName] = @{ Status = $true; Detail = "Registered" }
             } else {
