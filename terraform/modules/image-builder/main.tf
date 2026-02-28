@@ -314,8 +314,6 @@ locals {
             pwshVersion     = (pwsh --version).ToString()
             azCliVersion    = (az --version | Select-Object -First 1).ToString()
             openspecVersion = (openspec --version).ToString()
-            openclawVersion = "${var.openclaw_version}"
-            claudeCodeVersion = "${var.claude_code_version}"
         } | ConvertTo-Json -Depth 3
         Set-Content -Path "$sbomDir\sbom-software-manifest.json" -Value $softwareManifest -Encoding UTF8
         Write-Host "[SBOM] Software manifest: $sbomDir\sbom-software-manifest.json"

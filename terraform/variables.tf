@@ -175,18 +175,6 @@ variable "openspec_version" {
   default     = "0.9.1"
 }
 
-variable "openclaw_version" {
-  description = "OpenClaw version (recorded in SBOM; installed post-provisioning via Intune)"
-  type        = string
-  default     = "2026.2.14"
-}
-
-variable "claude_code_version" {
-  description = "Claude Code CLI version (recorded in SBOM; installed post-provisioning via Intune)"
-  type        = string
-  default     = "2.1.42"
-}
-
 # ─── Installer SHA256 Checksums ───────────────────────────────────────────
 # Update these when bumping software versions. Obtain from official release pages.
 # VS Code and GitHub Desktop are intentionally excluded (floating latest URLs).

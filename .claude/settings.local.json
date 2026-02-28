@@ -50,12 +50,7 @@
       "Bash(MSYS_NO_PATHCONV=1 az resource show:*)",
       "Bash(MSYS_NO_PATHCONV=1 az resource delete:*)",
       "Bash(MSYS_NO_PATHCONV=1 terraform state rm:*)",
-      "Bash(MSYS_NO_PATHCONV=1 az storage blob download:*)",
-      "Bash(LC_ALL=C grep:*)",
-      "Bash(LC_ALL=en_US.UTF-8 grep:*)",
-      "Bash(curl:*)",
-      "Bash(MSYS_NO_PATHCONV=1 az image builder show:*)",
-      "Bash(MSYS_NO_PATHCONV=1 az image builder delete:*)"
+      "Bash(MSYS_NO_PATHCONV=1 az storage blob download:*)"
     ]
   }
 }
