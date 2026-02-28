@@ -25,7 +25,7 @@ This repository is the companion code for **[Deploying OpenClaw with Windows 365
 | **Claude Code** | Intune Win32 app (per-user, `npm install -g @anthropic-ai/claude-code`) |
 | **OpenAI Codex CLI** | Intune Win32 app (per-user) |
 | **OpenSpec** | Intune Win32 app (per-user) |
-| **API Keys** | Intune Settings Catalog (environment variables) |
+| **API Keys** | Intune script (user-context environment variables) |
 | **VS Code Extensions** | Intune script (GitHub Copilot, etc.) |
 | **Agent Skills / MCP Config** | Active Setup hydration from ProgramData templates |
 
