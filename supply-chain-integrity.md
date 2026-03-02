@@ -1,6 +1,6 @@
 # Supply Chain Integrity: W365Claw Image Build
 
-**Date:** 2026-02-17
+**Date:** 2026-02-28 (updated)
 **Status:** Implemented
 **Audit Finding:** Critical — Codex Code Audit (codexcodeaudit.md, Finding #1)
 **OpenSpec:** `openspec/changes/supply-chain-integrity/`
@@ -12,7 +12,6 @@
 The W365Claw image build process downloads software installers and npm packages from the public internet during Azure VM Image Builder execution. Prior to this remediation:
 
 - **No checksum verification** — Downloaded MSI/EXE installers were executed without verifying SHA256 hashes against known-good values
-- **Floating version pins** — `openspec_version` defaulted to `"latest"`, making builds non-reproducible
 - **No integrity gate** — A compromised upstream release (supply chain attack) would be silently baked into every provisioned Windows 365 developer image
 
 This is a critical risk because the built images are deployed to production Cloud PCs used by the development team.
@@ -58,13 +57,16 @@ Five new variables added to `terraform/variables.tf`:
 
 These are passed through the module chain: `terraform/main.tf` → `terraform/modules/image-builder/variables.tf` → inline script interpolation.
 
-### 3. OpenSpec Version Pinned
+### 3. npm Tooling Moved to Post-Provisioning
 
-| Before | After |
-|--------|-------|
-| `openspec_version = "latest"` | `openspec_version = "0.9.1"` |
+All npm-based tooling — OpenSpec, OpenClaw, Claude Code, Codex CLI, and MCP server packages — has been **removed from the image build**. These are now delivered post-provisioning via Intune Win32 app packages:
 
-This was the only npm package using a floating version. All other packages (OpenClaw, Claude Code, Codex CLI) were already pinned.
+| Package | Intune Assignment | Rationale |
+|---------|-------------------|-----------|
+| OpenClaw, Claude Code, Codex CLI, OpenSpec | **Required** (per-user) | Core tooling; auto-installed on every developer Cloud PC |
+| MCP servers (Perplexity, Jira, etc.) | **Available** (per-user) | Optional; developers install from Company Portal on demand |
+
+This eliminates npm-related supply chain risk from the image build entirely. Version pinning and integrity verification for npm packages is now managed in the Intune deployment scripts.
 
 ### 4. Intentional Exceptions
 
@@ -125,42 +127,40 @@ azure_cli_sha256 = "mno345..."
 
 ## npm Package Integrity
 
-npm packages are verified through a different mechanism:
+npm packages (agents, OpenSpec, MCP servers) are no longer installed during the image build. They are delivered post-provisioning via Intune Win32 apps. Integrity controls for npm packages are managed at the Intune deployment level:
 
-1. **Version pinning** — All packages pinned to exact versions (no `latest`, `^`, or `~`)
-2. **npm audit gate** — `npm audit --global --audit-level=high` runs after installation and **fails the build** if high/critical vulnerabilities are found
-3. **SBOM generation** — A Software Bill of Materials is written to `C:\ProgramData\ImageBuild\sbom-npm-global.json` during every build
+1. **Version pinning** — All packages pinned to exact versions in Intune deployment scripts (no `latest`, `^`, or `~`)
+2. **SBOM generation** — The image build SBOM at `C:\ProgramData\ImageBuild\sbom-npm-global.json` records only build-time npm packages (currently just the Node.js built-in npm). Agent/tooling versions should be inventoried separately via Intune remediation scripts if needed for compliance.
 
-npm's built-in integrity checking (via `package-lock.json` SHA512 hashes) does not apply to global installs. The version pin + audit gate is the primary control.
+npm's built-in integrity checking (via `package-lock.json` SHA512 hashes) does not apply to global installs. The version pin in the Intune script is the primary control.
 
 ## Verification
 
-After a build, the SBOM at `C:\ProgramData\ImageBuild\sbom-software-manifest.json` records all installed versions:
+After a build, the SBOM at `C:\ProgramData\ImageBuild\sbom-software-manifest.json` records all build-time installed versions:
 
 ```json
 {
-  "buildDate": "2026-02-17T...",
+  "buildDate": "2026-02-28T...",
   "nodeVersion": "v24.13.1",
+  "npmVersion": "10.x.x",
   "pythonVersion": "Python 3.14.3",
   "gitVersion": "git version 2.53.0.windows.1",
   "pwshVersion": "PowerShell 7.4.13",
-  "azCliVersion": "azure-cli 2.83.0",
-  "openclawVersion": "2026.2.14",
-  "claudeVersion": "2.1.42",
-  "openspecVersion": "0.9.1",
-  "codexVersion": "codex-cli 0.101.0"
+  "azCliVersion": "azure-cli 2.83.0"
 }
 ```
+
+Agent and tooling versions (OpenClaw, Claude Code, Codex CLI, OpenSpec) are not included in the image SBOM because they are delivered post-provisioning via Intune.
 
 ## Files Modified
 
 | File | Change |
 |------|--------|
-| `terraform/variables.tf` | Added 5 `*_sha256` variables; pinned `openspec_version` to `0.9.1` |
-| `terraform/main.tf` | Pass SHA256 variables to image-builder module |
-| `terraform/modules/image-builder/variables.tf` | Accept SHA256 variables |
-| `terraform/modules/image-builder/main.tf` | Added `Test-InstallerHash` function; call after each download |
-| `terraform/terraform.tfvars` | Pinned `openspec_version = "0.9.1"` |
+| `terraform/variables.tf` | Added 5 `*_sha256` variables; removed `openspec_version` and `mcp_packages` |
+| `terraform/main.tf` | Pass SHA256 variables to image-builder module; removed `openspec_version` and `mcp_packages` passthrough |
+| `terraform/modules/image-builder/variables.tf` | Accept SHA256 variables; removed `openspec_version` and `mcp_packages` |
+| `terraform/modules/image-builder/main.tf` | Added `Test-InstallerHash` function; removed Phase 3 (OpenSpec + MCP installs); SBOM moved to Phase 2 |
+| `terraform/terraform.tfvars` | Removed `openspec_version` and `mcp_packages` |
 
 ## Future Improvements
 
